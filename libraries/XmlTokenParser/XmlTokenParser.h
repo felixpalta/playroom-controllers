@@ -7,10 +7,11 @@
 #include "WProgram.h"
 #endif
 
+#include "xml_token_max_length.h"
+
 class XmlTokenParser
 {
 public:
-	static const size_t XML_TOKEN_MAX_BUF_LENGTH = 128;
 
 	bool find_string_after_whitespace(Stream& s, const char* str);
 
@@ -35,7 +36,7 @@ public:
 
 	void skip_whitespace(Stream& s);
 private:
-	char buf[XML_TOKEN_MAX_BUF_LENGTH];
+	char buf[XML_TOKEN_MAX_LENGTH];
 };
 
 #endif // __XMLTOKENPARSER_H__

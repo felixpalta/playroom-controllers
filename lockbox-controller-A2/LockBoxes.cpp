@@ -14,6 +14,8 @@ boolean LockBoxes::check_number_convert_to_internal(int& n)
 		n = internal_number;
 		return true;
 	}
+	Serial.print("Invalid lockbox number: ");
+	Serial.println(n);
 	return false;
 }
 
