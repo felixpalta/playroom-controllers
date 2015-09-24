@@ -49,6 +49,7 @@ void loop() {
 				{
 					Serial.print("XML Parser ERROR:");
 					Serial.println(status);
+					xml_resp_writer.send_err_repsonse(client, "Unable to parse XML request");
 				}
 				else
 				{

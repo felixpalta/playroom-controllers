@@ -15,12 +15,18 @@ XmlRqParser::ErrorType XmlRqParser::process_stream(Stream& s, XmlRqParsingOutput
 	if (!out)
 		return ERROR_OUTPUT_NULLPTR;
 
-	bool ok = token_parser.expect_opening_tag(s, RQ_TAG_NAME);
+	bool rq_open_tag_found = false;
+	while (s.available())
+	{
+		rq_open_tag_found = token_parser.expect_opening_tag(s, RQ_TAG_NAME);
+		if (rq_open_tag_found)
+			break;
+	}
 
-	if (!ok)
+	if (!rq_open_tag_found)
 		return ERROR_RQ_TAG_NAME;
 
-	ok = token_parser.find_attribute(s, TYPE_ATTR_NAME, MAX_RQ_TYPE_ATTR_VALUE_LENGTH);
+	bool ok = token_parser.find_attribute(s, TYPE_ATTR_NAME, MAX_RQ_TYPE_ATTR_VALUE_LENGTH);
 	if (!ok)
 		return ERROR_TYPE_ATTR_VALUE;
 
