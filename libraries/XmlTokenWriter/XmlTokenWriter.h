@@ -1,0 +1,49 @@
+#ifndef __XMLTOKENWRITER_H__
+#define __XMLTOKENWRITER_H__
+
+#if defined(ARDUINO) && ARDUINO >= 100
+#include "arduino.h"
+#else
+#include "WProgram.h"
+#endif
+
+class XmlTokenWriter
+{
+private:
+	// <
+	void write_left_simple_bracket(Stream& s);
+	// </
+	void write_left_closing_bracket(Stream& s);
+
+	typedef enum
+	{
+		ERROR_NONE,
+		ERROR_ZERO_STRING,
+		ERROR_NULL_PTR,
+	} Error;
+
+	Error error;
+
+	bool check_string_set_error(const char* str);
+
+public:
+	
+	const char* get_error();
+
+	// <tagname + space
+	void write_tag_opening(Stream& s, const char* str);
+	// > + newline
+	void write_right_simple_bracket(Stream& s);
+	
+	// /> + newline
+	void write_right_closing_bracket(Stream& s);
+	
+	// </tagname>
+	void write_tag_closing(Stream& s, const char *str);
+
+	// attr_name="attr_value" + space
+	void write_attribute_text(Stream& s, const char* attr_name, const char *attr_value);
+	void write_attribute_num(Stream& s, const char* attr_name, int n);
+};
+
+#endif //__XMLTOKENWRITER_H__

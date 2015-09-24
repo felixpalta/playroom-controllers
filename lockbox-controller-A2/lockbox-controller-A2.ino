@@ -1,4 +1,5 @@
 
+#include <XmlTokenWriter.h>
 #include <XmlTokenParser.h>
 #include "request_processing.h"
 #include "XmlRespWriter.h"
