@@ -64,18 +64,23 @@ void loop() {
 						bool result = process_request(action, lock_box_number);
 						if (result)
 						{
+							Serial.println("Request executed OK");
 							xml_resp_writer.send_ack_response(client);
 							break;
 						}
 						else
 						{
-							xml_resp_writer.send_err_repsonse(client, "Request cannot be processed");
+							const char *err = "Request executed with error";
+							Serial.println(err);
+							xml_resp_writer.send_err_repsonse(client, err);
 							break;
 						}
 					}
 					else
 					{
-						xml_resp_writer.send_err_repsonse(client, "Request data invalid");
+						const char *err = "Request data invalid";
+						Serial.println(err);
+						xml_resp_writer.send_err_repsonse(client, err);
 						break;
 					}
 				}
