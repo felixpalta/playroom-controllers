@@ -6,7 +6,7 @@ void XmlTokenParser::skip_whitespace(Stream& s)
 	while (s.available())
 	{
 		char c = s.peek();
-		if (isWhitespace(c))
+		if (isSpace(c))
 			s.read();
 		else
 			return;
