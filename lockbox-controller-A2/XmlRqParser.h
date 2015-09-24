@@ -11,20 +11,22 @@
 
 #include "lockbox-controller-rq-valid-protocol-values.h"
 #include "XmlTokenParser.h"
+#include "xml_token_max_length.h"
 
 typedef struct
 {
 	bool type_attr_found;
-	char type_attr_buf[MAX_RQ_TYPE_ATTR_VALUE_LENGTH];
+	TokenBuffer type_attr_buf;
 
 	bool proto_attr_found;
-	char proto_attr_buf[MAX_PROTO_ATTR_VALUE_LENGTH];
+	TokenBuffer proto_attr_buf;
 
 	bool serial_attr_found;
-	char serial_attr_buf[MAX_SERIAL_ATTR_VALUE_LENGTH];
+	TokenBuffer serial_attr_buf;
 
 	bool lockbox_attr_found;
-	char lockbox_attr_buf[MAX_LOCKBOX_ATTR_VALUE_LENGTH];
+	TokenBuffer lockbox_attr_buf;
+
 } XmlRqParsingOutput;
 
 class XmlRqParser

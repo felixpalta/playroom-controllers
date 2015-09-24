@@ -13,19 +13,15 @@ void XmlTokenParser::skip_whitespace(Stream& s)
 	}
 }
 
-bool XmlTokenParser::read_string_until_terminator(Stream& s, size_t max_len, char terminator)
+bool XmlTokenParser::read_string_until_terminator(Stream& s, char terminator)
 {
-	if (max_len < 1)
-		return false;
-	if (max_len + 1 > sizeof(buf))
-		return false;
 	if (terminator < 0)
 		return false;
 	if (!s.available())
 		return false;
 	size_t index = 0;
 	bool terminator_found = false;
-	while (index < max_len)
+	while (index < sizeof(buf))
 	{
 		int c = s.read();
 		if (c < 0)
@@ -38,7 +34,10 @@ bool XmlTokenParser::read_string_until_terminator(Stream& s, size_t max_len, cha
 		*(buf + index) = (char)c;
 		index++;
 	}
-	buf[index] = '\0';
+	if (index >= sizeof(buf))
+		buf[sizeof(buf) - 1] = '\0';
+	else
+		buf[index] = '\0';
 	return terminator_found;
 }
 
@@ -67,10 +66,8 @@ bool XmlTokenParser::find_string_after_whitespace(Stream& s, const char* str)
 	return true;
 }
 
-bool XmlTokenParser::find_attribute(Stream& s, const char *attr_name, size_t max_attr_length)
+bool XmlTokenParser::find_attribute(Stream& s, const char *attr_name)
 {
-	if (max_attr_length + 1 > sizeof(buf))
-		return buf;
 
 	bool ok = find_string_after_whitespace(s, attr_name);
 	if (!ok)
@@ -84,15 +81,15 @@ bool XmlTokenParser::find_attribute(Stream& s, const char *attr_name, size_t max
 	if (!ok)
 		return false;
 
-	ok = read_string_until_terminator(s, max_attr_length, '"');
+	ok = read_string_until_terminator(s, '"');
 
 	return ok;
 }
 
-void XmlTokenParser::copy_buf_to_attr_buf(char *attr_buf, size_t attr_buf_size)
+void XmlTokenParser::null_terminated_copy_of_buf(TokenBuffer* dst)
 {
-	strncpy(attr_buf, buf, attr_buf_size);
-	attr_buf[attr_buf_size - 1] = '\0';
+	strncpy(*dst, buf, sizeof(*dst) - 1);
+	(*dst)[sizeof(*dst) - 1] = '\0';
 }
 
 // <

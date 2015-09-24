@@ -26,26 +26,26 @@ XmlRqParser::ErrorType XmlRqParser::process_stream(Stream& s, XmlRqParsingOutput
 	if (!rq_open_tag_found)
 		return ERROR_RQ_TAG_NAME;
 
-	bool ok = token_parser.find_attribute(s, TYPE_ATTR_NAME, MAX_RQ_TYPE_ATTR_VALUE_LENGTH);
+	bool ok = token_parser.find_attribute(s, TYPE_ATTR_NAME);
 	if (!ok)
 		return ERROR_TYPE_ATTR_VALUE;
 
 	out->type_attr_found = true;
-	token_parser.copy_buf_to_attr_buf(out->type_attr_buf, sizeof(out->type_attr_buf));
+	token_parser.null_terminated_copy_of_buf(&out->type_attr_buf);
 	
-	ok = token_parser.find_attribute(s, PROTOVER_ATTR_NAME, MAX_PROTO_ATTR_VALUE_LENGTH);
+	ok = token_parser.find_attribute(s, PROTOVER_ATTR_NAME);
 	if (!ok)
 		return ERROR_PROTOVER_ATTR_VALUE;
 
 	out->proto_attr_found = true;
-	token_parser.copy_buf_to_attr_buf(out->proto_attr_buf, sizeof(out->proto_attr_buf));
+	token_parser.null_terminated_copy_of_buf(&out->proto_attr_buf);
 
-	ok = token_parser.find_attribute(s, SERIAL_ATTR_NAME, MAX_SERIAL_ATTR_VALUE_LENGTH);
+	ok = token_parser.find_attribute(s, SERIAL_ATTR_NAME);
 	if (!ok)
 		return ERROR_SERIAL_ATTR_VALUE;
 
 	out->serial_attr_found = true;
-	token_parser.copy_buf_to_attr_buf(out->serial_attr_buf, sizeof(out->serial_attr_buf));
+	token_parser.null_terminated_copy_of_buf(&out->serial_attr_buf);
 
 	ok = token_parser.expect_right_simple_bracket(s);
 	if (!ok)
@@ -55,11 +55,11 @@ XmlRqParser::ErrorType XmlRqParser::process_stream(Stream& s, XmlRqParsingOutput
 	if (!ok)
 		return ERROR_DATA_TAG_NAME;
 
-	ok = token_parser.find_attribute(s, LOCKBOX_ATTR_NAME, MAX_LOCKBOX_ATTR_VALUE_LENGTH);
+	ok = token_parser.find_attribute(s, LOCKBOX_ATTR_NAME);
 	if (!ok)
 		return ERROR_LOCKBOX_ATTR_VALUE;
 	out->lockbox_attr_found = true;
-	token_parser.copy_buf_to_attr_buf(out->lockbox_attr_buf, sizeof(out->lockbox_attr_buf));
+	token_parser.null_terminated_copy_of_buf(&out->lockbox_attr_buf);
 
 	ok = token_parser.expect_right_closing_bracket(s);
 	if (!ok)

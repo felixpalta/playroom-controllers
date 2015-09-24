@@ -15,11 +15,13 @@ public:
 
 	bool find_string_after_whitespace(Stream& s, const char* str);
 
-	bool find_attribute(Stream& s, const char *attr_name, size_t max_attr_length);
+	bool find_attribute(Stream& s, const char *attr_name);
 
-	bool read_string_until_terminator(Stream& s, size_t max_len, char terminator);
+	bool read_string_until_terminator(Stream& s, char terminator);
 
-	void copy_buf_to_attr_buf(char *attr_buf, size_t attr_buf_size);
+	// dst buffer should be at least XML_TOKEN_MAX_LENGTH bytes
+	// dst will be null-terminated after the copy;
+	void null_terminated_copy_of_buf(TokenBuffer* dst);
 
 	// <
 	bool expect_left_simple_bracket(Stream& s);
@@ -36,7 +38,7 @@ public:
 
 	void skip_whitespace(Stream& s);
 private:
-	char buf[XML_TOKEN_MAX_LENGTH];
+	TokenBuffer buf;
 };
 
 #endif // __XMLTOKENPARSER_H__
