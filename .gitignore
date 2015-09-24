@@ -1,12 +1,7 @@
 /*
 !.gitignore
+!*.md
 
-!playroom-controllers/
-
-playroom-controllers/*
-!playroom-controllers/.gitignore
-!playroom-controllers/table-controller-A1/
-!playroom-controllers/lockbox-controller-A2/
 
 !libraries/
 
