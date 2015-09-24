@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9C0549AA-B9C1-4BA1-A4B0-65A20C0BECDA}</ProjectGuid>
+    <ProjectGuid>{3ABDC269-FADD-468A-8EA8-2935F7A56031}</ProjectGuid>
     <RootNamespace>lockboxcontrollerA2</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -47,7 +47,7 @@
       <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\variants\mega;C:\Users\user\Dropbox\Arduino\lockbox-controller-A2;C:\Users\user\Dropbox\Arduino\libraries\EthernetV2_0;C:\Users\user\Dropbox\Arduino\libraries\EthernetV2_0\utility;C:\Program Files (x86)\Arduino\libraries\SPI;C:\Program Files (x86)\Arduino\libraries\SPI\utility;C:\Users\user\Dropbox\Arduino\libraries\XmlTokenParser;C:\Users\user\Dropbox\Arduino\libraries\XmlTokenParser\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\libraries;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\Extensions\cs0zvdln.5fc\Micro Platforms\default\debuggers;C:\Users\user\Dropbox\Arduino\libraries;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\avr\;c:\program files (x86)\arduino\hardware\tools\avr\avr\;c:\program files (x86)\arduino\hardware\tools\avr\lib\gcc\avr\4.3.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>C:\Users\user\Dropbox\Arduino\lockbox-controller-A2\__vm\.lockbox-controller-A2.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>__AVR_ATmega2560__;_VMDEBUG=1;ARDUINO=106;ARDUINO_MAIN;__AVR__;__avr__;F_CPU=16000000L;__cplusplus;GCC_VERSION=40302;ARDUINO_ARCH_AVR;ARDUINO_AVR_MEGA2560;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AVR_ATmega2560__;ARDUINO=106;ARDUINO_MAIN;__AVR__;__avr__;F_CPU=16000000L;__cplusplus;GCC_VERSION=40302;ARDUINO_ARCH_AVR;ARDUINO_AVR_MEGA2560;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -56,15 +56,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\variants\mega;C:\Users\user\Dropbox\Arduino\lockbox-controller-A2;C:\Users\user\Dropbox\Arduino\libraries\EthernetV2_0;C:\Users\user\Dropbox\Arduino\libraries\EthernetV2_0\utility;C:\Program Files (x86)\Arduino\libraries\SPI;C:\Program Files (x86)\Arduino\libraries\SPI\utility;C:\Users\user\Dropbox\Arduino\libraries\XmlTokenParser;C:\Users\user\Dropbox\Arduino\libraries\XmlTokenParser\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\libraries;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\Extensions\cs0zvdln.5fc\Micro Platforms\default\debuggers;C:\Users\user\Dropbox\Arduino\libraries;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\avr\;c:\program files (x86)\arduino\hardware\tools\avr\avr\;c:\program files (x86)\arduino\hardware\tools\avr\lib\gcc\avr\4.3.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>C:\Users\user\Dropbox\Arduino\lockbox-controller-A2\__vm\.lockbox-controller-A2.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>__AVR_ATmega2560__;ARDUINO=106;ARDUINO_MAIN;__AVR__;__avr__;F_CPU=16000000L;__cplusplus;GCC_VERSION=40302;ARDUINO_ARCH_AVR;ARDUINO_AVR_MEGA2560;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -81,17 +77,27 @@
     <ClInclude Include="lockbox-controller-pin-config.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="lockbox-controller-rq-base-protocol.h" />
-    <ClInclude Include="lockbox-controller-rq-valid-protocol-values.h" />
+    <ClInclude Include="lockbox-controller-rq-base-protocol.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="lockbox-controller-rq-valid-protocol-values.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="lockbox-controller-server-config.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClInclude Include="LockBoxes.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="request_processing.h" />
-    <ClInclude Include="XmlRespWriter.h" />
-    <ClInclude Include="XmlRqParser.h" />
+    <ClInclude Include="request_processing.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="XmlRespWriter.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="XmlRqParser.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="__vm\.lockbox-controller-A2.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
