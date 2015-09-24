@@ -43,7 +43,7 @@ void XmlTokenWriter::write_tag_opening(Stream& s, const char* str)
 	{
 		return;
 	}
-	write_left_closing_bracket(s);
+	write_left_simple_bracket(s);
 	s.print(str);
 	s.print(" ");
 }
