@@ -6,6 +6,18 @@ void LockBoxes::begin()
 	close_all();
 }
 
+const char* LockBoxes::get_last_error() const
+{
+	switch (error_code)
+	{
+	case ERROR_INVALID_LOCKBOX_NUMBER:
+		return "Invalid lockbox number";
+	case ERROR_NONE:
+	default:
+		return "Lockboxes: no error";
+	}
+}
+
 boolean LockBoxes::check_number_convert_to_internal(int& n)
 {
 	int internal_number = n - 1;
@@ -16,6 +28,7 @@ boolean LockBoxes::check_number_convert_to_internal(int& n)
 	}
 	Serial.print("Invalid lockbox number: ");
 	Serial.println(n);
+	
 	return false;
 }
 
@@ -24,7 +37,10 @@ boolean LockBoxes::check_number_convert_to_internal(int& n)
 boolean LockBoxes::open(int n)
 {
 	if (!check_number_convert_to_internal(n))
+	{	
+		error_code = ERROR_INVALID_LOCKBOX_NUMBER;
 		return false;
+	}
 
 	digitalWrite(lockbox_pins[n], HIGH);
 	pinMode(lockbox_pins[n], OUTPUT);
@@ -44,7 +60,10 @@ boolean LockBoxes::open_all()
 boolean LockBoxes::close(int n)
 {
 	if (!check_number_convert_to_internal(n))
+	{
+		error_code = ERROR_INVALID_LOCKBOX_NUMBER;
 		return false;
+	}
 
 	digitalWrite(lockbox_pins[n], LOW);
 	pinMode(lockbox_pins[n], OUTPUT);

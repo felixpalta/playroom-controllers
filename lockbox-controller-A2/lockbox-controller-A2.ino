@@ -70,7 +70,7 @@ void loop() {
 						}
 						else
 						{
-							const char *err = "Request executed with error";
+							const char *err = lock_boxes.get_last_error();
 							Serial.println(err);
 							xml_resp_writer.send_err_repsonse(client, err);
 							break;
