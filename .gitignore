@@ -1,0 +1,16 @@
+/*
+!.gitignore
+
+!playroom-controllers/
+
+playroom-controllers/*
+!playroom-controllers/.gitignore
+!playroom-controllers/table-controller-A1/
+!playroom-controllers/lockbox-controller-A2/
+
+!libraries/
+
+libraries/*
+!libraries/.gitignore
+!libraries/EthernetV2_0
+
