@@ -78,7 +78,7 @@ void loop() {
 					}
 					else
 					{
-						const char *err = "Request data invalid";
+						const char *err = get_request_error();
 						Serial.println(err);
 						xml_resp_writer.send_err_repsonse(client, err);
 						break;

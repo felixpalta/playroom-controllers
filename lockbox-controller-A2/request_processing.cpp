@@ -7,6 +7,36 @@
 
 extern LockBoxes lock_boxes;
 
+typedef enum
+{
+	ERROR_NONE,
+	ERROR_BAD_TYPE,
+	ERROR_BAD_PROTOVER,
+	ERROR_BAD_SERIAL,
+	ERROR_BAD_LOCKBOX_NUMBER,
+}
+RqError;
+
+static RqError error_code;
+
+const char *get_request_error()
+{
+	switch (error_code)
+	{
+	case ERROR_BAD_TYPE:
+		return "Invalid type attribute";
+	case ERROR_BAD_PROTOVER:
+		return "Invalid protocol version";
+	case ERROR_BAD_SERIAL:
+		return "Invalid serial number";
+	case ERROR_BAD_LOCKBOX_NUMBER:
+		return "Invalid lockbox number value";
+	case ERROR_NONE:
+	default:
+		return "Request processing: no error";
+	}
+}
+
 void print_request(const XmlRqParsingOutput& data)
 {
 
@@ -69,19 +99,19 @@ bool verify_request(XmlRqParsingOutput& data, ActionType& type_attribut, int& lo
 
 	if (type_attribut == INVALID)
 	{
-		Serial.println("Unexpected type attribute");
+		error_code = ERROR_BAD_TYPE;
 		return false;
 	}
 
 	if (strncmp(data.proto_attr_buf, PROTOVER_ATTR_VALUE, sizeof(data.proto_attr_buf) - 1) != 0)
 	{
-		Serial.println("Invalid protocol version");
+		error_code = ERROR_BAD_PROTOVER;
 		return false;
 	}
 
 	if (strncmp(data.serial_attr_buf, SERIAL_ATTR_VALUE, sizeof(data.serial_attr_buf) - 1) != 0)
 	{
-		Serial.println("Invalid serial number");
+		error_code = ERROR_BAD_SERIAL;
 		return false;
 	}
 
@@ -89,7 +119,7 @@ bool verify_request(XmlRqParsingOutput& data, ActionType& type_attribut, int& lo
 
 	if (lockbox_attr_len == 0 || lockbox_attr_len > sizeof(data.lockbox_attr_buf) - 1)
 	{
-		Serial.println("Invalid lockbox value length");
+		error_code = ERROR_BAD_LOCKBOX_NUMBER;
 		return false;
 	}
 
