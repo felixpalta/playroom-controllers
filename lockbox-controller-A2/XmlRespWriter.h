@@ -9,6 +9,8 @@
 	#include "WProgram.h"
 #endif
 
+#include "XmlTokenWriter.h"
+
 class XmlRespWriter
 {
  public:
@@ -19,6 +21,8 @@ private:
 	void write_open_tag(Stream& s, const char* type_attr_value);
 	void write_err_tag(Stream& s, const char* err_msg);
 	void write_close_tag(Stream& s);
+
+	XmlTokenWriter xml_token_writer;
 };
 
 extern XmlRespWriter xml_resp_writer;

@@ -24,38 +24,22 @@ void XmlRespWriter::write_open_tag(Stream& s, const char* type_attr_value)
 	if (!type_attr_value)
 		return;
 
-	s.print("<");
-	s.print(RESP_TAG_NAME);
-	s.print(' ');
-	s.print(TYPE_ATTR_NAME);
-	s.print("=\"");
-	s.print(type_attr_value);
-	s.print('"');
-	s.print(' ');
-	s.print(PROTOVER_ATTR_NAME);
-	s.print("=\"");
-	s.print(PROTOVER_ATTR_VALUE);
-	s.print('"');
-	s.println('>');
+	xml_token_writer.write_tag_opening(s, RESP_TAG_NAME);
+	xml_token_writer.write_attribute_text(s, TYPE_ATTR_NAME, type_attr_value);
+	xml_token_writer.write_attribute_text(s, PROTOVER_ATTR_NAME, PROTOVER_ATTR_VALUE);
+	xml_token_writer.write_right_simple_bracket(s);
+
 }
 void XmlRespWriter::write_err_tag(Stream& s, const char* err_msg)
 {
-	if (!err_msg)
-		return;
-	s.print('<');
-	s.print(ERR_TAG_NAME);
-	s.print(' ');
-	s.print(TXT_ATTR_NAME);
-	s.print("=\"");
-	s.print(err_msg);
-	s.print('"');
-	s.println("/>");
+	xml_token_writer.write_tag_opening(s, ERR_TAG_NAME);
+	xml_token_writer.write_attribute_text(s, TXT_ATTR_NAME, err_msg);
+	xml_token_writer.write_right_simple_bracket(s);
 }
 void XmlRespWriter::write_close_tag(Stream& s)
 {
-	s.print("</");
-	s.print(RESP_TAG_NAME);
-	s.println('>');
+	xml_token_writer.write_tag_closing(s, RESP_TAG_NAME);
+
 }
 
 
