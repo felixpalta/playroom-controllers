@@ -40,7 +40,7 @@ void loop() {
 	// listen for incoming clients
 	EthernetClient client = server.available();
 	if (client) {
-		Serial.println("new client");
+		Serial.println("\nnew client");
 		if (client.connected()){
 			while (client.available()) {
 				XmlRqParsingOutput data;
@@ -50,6 +50,7 @@ void loop() {
 					Serial.print("XML Parser ERROR:");
 					Serial.println(status);
 					xml_resp_writer.send_err_repsonse(client, "Unable to parse XML request");
+					break;
 				}
 				else
 				{
@@ -64,11 +65,18 @@ void loop() {
 						if (result)
 						{
 							xml_resp_writer.send_ack_response(client);
+							break;
 						}
 						else
 						{
 							xml_resp_writer.send_err_repsonse(client, "Request cannot be processed");
+							break;
 						}
+					}
+					else
+					{
+						xml_resp_writer.send_err_repsonse(client, "Request data invalid");
+						break;
 					}
 				}
 			}
