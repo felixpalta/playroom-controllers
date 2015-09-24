@@ -8,4 +8,5 @@
 libraries/*
 !libraries/.gitignore
 !libraries/EthernetV2_0
+!libraries/XmlTokenParser
 

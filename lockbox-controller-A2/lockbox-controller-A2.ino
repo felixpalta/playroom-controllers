@@ -1,4 +1,5 @@
 
+#include <XmlTokenParser.h>
 #include "request_processing.h"
 #include "XmlRespWriter.h"
 #include "XmlRqParser.h"
@@ -16,6 +17,8 @@ EthernetServer server(lockbox_controller_port);
 
 LockBoxes lock_boxes;
 
+XmlRqParser xml_parser;
+
 void setup() {
 	// Open serial communications and wait for port to open:
 	Serial.begin(9600);
@@ -31,7 +34,6 @@ void setup() {
 	Serial.println(String(" : ") + lockbox_controller_port);
 
 	lock_boxes.begin();
-	xml_parser.reset();
 }
 
 void loop() {
