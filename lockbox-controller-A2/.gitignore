@@ -1,0 +1,7 @@
+__vm/
+*.suo
+*.sln
+*.filters
+Release/
+Debug/
+
