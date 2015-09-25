@@ -3,6 +3,10 @@
 
 static const size_t NUMBER_OF_SECTOR_PINS = 15;
 
+// NOTE: If active level is LOW,
+// then external pull-down resistors should be connected to the pins.
+static const int SECTOR_PIN_ACTIVE_LEVEL = HIGH;
+
 static const int sector_pins[NUMBER_OF_SECTOR_PINS] =
 {
 	3,	// Sector 1
