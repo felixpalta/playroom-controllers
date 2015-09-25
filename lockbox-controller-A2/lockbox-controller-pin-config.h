@@ -3,7 +3,7 @@
 
 static const size_t LOCKBOX_PIN_NUMBER = 24;
 
-int lockbox_pins[LOCKBOX_PIN_NUMBER] =
+static const int lockbox_pins[LOCKBOX_PIN_NUMBER] =
 {
 	22, // Lockbox 1
 	23, // Lockbox 2
