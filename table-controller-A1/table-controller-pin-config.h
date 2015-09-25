@@ -23,4 +23,6 @@ static const int sector_pins[NUMBER_OF_SECTOR_PINS] =
 	18,	// Sector 15
 };
 
+
+
 #endif // __TABLE_CONTROLLER_PIN_CONFIG_H__
