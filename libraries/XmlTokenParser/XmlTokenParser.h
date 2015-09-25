@@ -37,6 +37,9 @@ public:
 	bool expect_closing_tag(Stream& s, const char *tag_name);
 
 	void skip_whitespace(Stream& s);
+
+	const char* get_internal_buf();
+
 private:
 	TokenBuffer buf;
 };

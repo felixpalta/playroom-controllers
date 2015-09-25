@@ -13,10 +13,18 @@
 #include "XmlTokenParser.h"
 #include "xml_token_max_length.h"
 
+typedef enum
+{
+	RQ_TYPE_INVALID,
+	RQ_TYPE_LOCKBOX_OPEN,
+	RQ_TYPE_LOCKBOX_CLOSE,
+	RQ_TYPE_ALIVE,
+
+} RqType;
+
 typedef struct
 {
-	bool type_attr_found;
-	TokenBuffer type_attr_buf;
+	RqType request_type;
 
 	bool proto_attr_found;
 	TokenBuffer proto_attr_buf;
@@ -41,6 +49,7 @@ public:
 		ERROR_RQ_CLOSING_TAG_NAME,
 		ERROR_TYPE_ATTR_NAME,
 		ERROR_TYPE_ATTR_VALUE,
+		ERROR_TYPE_ATTR_INVALID,
 		ERROR_PROTOVER_ATTR_NAME,
 		ERROR_PROTOVER_ATTR_VALUE,
 		ERROR_SERIAL_ATTR_NAME,
@@ -54,6 +63,7 @@ public:
 	ErrorType process_stream(Stream& s, XmlRqParsingOutput* out);
 
 private:
+	bool parse_request_type(const char* str, RqType& request_type);
 	XmlTokenParser token_parser;
 	
 };

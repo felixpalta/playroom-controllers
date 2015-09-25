@@ -19,8 +19,7 @@ typedef enum
 } ActionType;
 
 void print_request(const XmlRqParsingOutput& data);
-bool process_request(ActionType action, int lock_box_number);
-bool verify_request(XmlRqParsingOutput& data, ActionType& type_attribut, int& lock_box_number);
+bool verify_and_process_request(XmlRqParsingOutput& data);
 const char *get_request_error();
 
 #endif

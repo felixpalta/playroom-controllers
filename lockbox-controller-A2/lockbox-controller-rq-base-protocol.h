@@ -7,6 +7,12 @@ static const char RQ_TAG_NAME[] = "request";
 
 static const char TYPE_ATTR_NAME[] = "t";
 
+static const char TYPE_ATTR_LOCKBOX_OPEN_VALUE[] = "lockbox-open";
+
+static const char TYPE_ATTR_LOCKBOX_CLOSE_VALUE[] = "lockbox-close";
+
+static const char TYPE_ATTR_ALIVE_VALUE[] = "alive";
+
 static const char PROTOVER_ATTR_NAME[] = "protoVer";
 
 static const char SERIAL_ATTR_NAME[] = "serial";

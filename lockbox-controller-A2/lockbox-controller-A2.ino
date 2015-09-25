@@ -40,10 +40,13 @@ void setup() {
 void loop() {
 	// listen for incoming clients
 	EthernetClient client = server.available();
-	if (client) {
+	if (client) 
+	{
 		Serial.println("\nnew client");
-		if (client.connected()){
-			while (client.available()) {
+		if (client.connected())
+		{
+			while (client.available()) 
+			{
 				XmlRqParsingOutput data;
 				XmlRqParser::ErrorType status = xml_parser.process_stream(client, &data);
 				if (status != XmlRqParser::ERROR_NONE)
@@ -57,25 +60,12 @@ void loop() {
 				{
 					Serial.println("XML Parser OK");
 					print_request(data);
-					ActionType action = INVALID;
-					int lock_box_number = -1;
-					bool ok = verify_request(data, action, lock_box_number);
+					bool ok = verify_and_process_request(data);
 					if (ok)
 					{
-						bool result = process_request(action, lock_box_number);
-						if (result)
-						{
-							Serial.println("Request executed OK");
-							xml_resp_writer.send_ack_response(client);
-							break;
-						}
-						else
-						{
-							const char *err = lock_boxes.get_last_error();
-							Serial.println(err);
-							xml_resp_writer.send_err_repsonse(client, err);
-							break;
-						}
+						Serial.println("Request verified and executed OK");
+						xml_resp_writer.send_ack_response(client);
+						break;
 					}
 					else
 					{

@@ -1,5 +1,10 @@
 #include "XmlTokenParser.h"
 
+const char* XmlTokenParser::get_internal_buf()
+{
+	buf[sizeof(buf) - 1] = '\0';
+	return buf;
+}
 
 void XmlTokenParser::skip_whitespace(Stream& s)
 {
