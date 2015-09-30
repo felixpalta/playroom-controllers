@@ -1,6 +1,12 @@
 #ifndef __TABLE_CONTROLLER_PIN_CONFIG_H__
 #define __TABLE_CONTROLLER_PIN_CONFIG_H__
 
+#if defined(ARDUINO) && ARDUINO >= 100
+#include "arduino.h"
+#else
+#include "WProgram.h"
+#endif
+
 static const size_t NUMBER_OF_SECTORS = 15;
 
 // NOTE: If active level is LOW,
