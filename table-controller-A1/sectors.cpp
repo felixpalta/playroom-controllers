@@ -9,6 +9,18 @@
 
 #define N_ELEMS(a) (sizeof(a)/sizeof(a[0]))
 
+enum
+{
+	SECTOR_MOST_LEFT = 0,
+
+	SECTOR_MOST_RIGHT = 14,
+
+	SECTOR_NONE = -1,
+
+	SECTOR_INVALID = -2,
+
+};
+
 void sectors_init()
 {
 	Serial.println("Sector pins initialized");
@@ -54,6 +66,13 @@ static bool check_number_convert_to_internal(int& n)
 	return false;
 }
 
+static int convert_to_external(int n)
+{
+	if (check_number(n))
+		return n + 1;
+	return SECTOR_INVALID;
+}
+
 bool sector_number_led_pin_write(int n, bool on)
 {
 	if (!check_number_convert_to_internal(n))
@@ -78,18 +97,6 @@ bool sector_arrow_led_pin_write(int n, bool on)
 }
 
 typedef int Sector;
-
-enum
-{
-	SECTOR_MOST_LEFT = 0,
-
-	SECTOR_MOST_RIGHT = 14,
-
-	SECTOR_NONE = -1,
-
-	SECTOR_INVALID = -2,
-
-};
 
 static Sector next_right(const Sector s)
 {
@@ -120,7 +127,7 @@ static Sector check_enabled_sector()
 	for (Sector i = 0; i < (Sector) N_ELEMS(sector_pins); ++i)
 	{
 		const SectorPins sp = sector_pins[i];
-		bool on = digitalRead(sp.sensor_pin);
+		bool on = (digitalRead(sp.sensor_pin) == SECTOR_PIN_ACTIVE_LEVEL);
 		if (on)
 		{
 			++on_count;
@@ -144,6 +151,7 @@ static Sector check_enabled_sector()
 		}
 		Serial.print("sectors not adjacent: ");
 		Serial.print(enabled_sectors[0]);
+		Serial.print(" ");
 		Serial.println(enabled_sectors[1]);
 		return SECTOR_INVALID;
 	default:
@@ -156,7 +164,7 @@ static bool check_sector_is_on(Sector s)
 {
 	if (!check_number(s))
 		return false;
-	return digitalRead(sector_pins[s].sensor_pin);
+	return digitalRead(sector_pins[s].sensor_pin) == SECTOR_PIN_ACTIVE_LEVEL;
 }
 
 typedef enum
@@ -172,10 +180,6 @@ typedef enum
 	DIRECTION_RIGHT,
 	DIRECTION_LEFT,
 } Direction;
-
-static const unsigned long SECTOR_TURN_TIME_MS = 5000;
-
-static const int FULL_TURN_LIMIT = 15;
 
 static Sector prev_sector;
 
@@ -232,8 +236,8 @@ void sectors_process_sensors()
 		Sector second_left_sector = prev_left(prev_left(prev_sector));
 
 		Sector s = check_enabled_sector();
-		bool right_is_on = digitalRead(sector_pins[second_right_sector].sensor_pin);
-		bool left_is_on = digitalRead(sector_pins[second_left_sector].sensor_pin);
+		bool right_is_on = (digitalRead(sector_pins[second_right_sector].sensor_pin) == SECTOR_PIN_ACTIVE_LEVEL);
+		bool left_is_on = (digitalRead(sector_pins[second_left_sector].sensor_pin) == SECTOR_PIN_ACTIVE_LEVEL);
 
 		if (s == prev_sector)
 		{
@@ -310,7 +314,7 @@ void sectors_process_sensors()
 			switch (s)
 			{
 			case SECTOR_NONE:
-				sectors_rotation_stopped_callback(prev_sector);
+				sectors_rotation_stopped_callback(convert_to_external(prev_sector));
 				break;
 			case SECTOR_INVALID:
 				Serial.println("Invalid sector detected while waiting for STOP");
@@ -321,7 +325,7 @@ void sectors_process_sensors()
 					Serial.println("Wrong number sector detected while waiting for STOP");
 					break;
 				}
-				sectors_rotation_stopped_callback(s);
+				sectors_rotation_stopped_callback(convert_to_external(s));
 				break;
 			}
 			reset_sector_sensors_state();

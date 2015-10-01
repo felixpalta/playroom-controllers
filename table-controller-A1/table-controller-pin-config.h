@@ -11,7 +11,7 @@ static const size_t NUMBER_OF_SECTORS = 15;
 
 // NOTE: If active level is LOW,
 // then external pull-down resistors should be connected to the pins.
-static const int SECTOR_PIN_ACTIVE_LEVEL = HIGH;
+static const int SECTOR_PIN_ACTIVE_LEVEL = LOW;
 
 struct SectorPins
 {
@@ -40,5 +40,9 @@ static const SectorPins sector_pins[NUMBER_OF_SECTORS] =
 	{ 18, 50, 51 }, // Sector 15
 
 };
+
+static const unsigned long SECTOR_TURN_TIME_MS = 5000;
+
+static const int FULL_TURN_LIMIT = 15;
 
 #endif // __TABLE_CONTROLLER_PIN_CONFIG_H__
