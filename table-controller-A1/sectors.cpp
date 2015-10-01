@@ -1,4 +1,4 @@
-
+#include "sectors.h"
 #include "table-controller-pin-config.h"
 
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -38,6 +38,8 @@ static bool check_number(int n)
 	{
 		return true;
 	}
+	Serial.print("Invalid sector number: ");
+	Serial.println(n);
 	return false;
 }
 
@@ -49,9 +51,6 @@ static bool check_number_convert_to_internal(int& n)
 		n = internal_number;
 		return true;
 	}
-	Serial.print("Invalid sector number: ");
-	Serial.println(n);
-
 	return false;
 }
 
@@ -78,9 +77,6 @@ bool sector_arrow_led_pin_write(int n, bool on)
 	return true;
 }
 
-void sectors_rotation_started_callback();
-void sectors_roatation_stopped_callback(int sector_n);
-
 typedef int Sector;
 
 enum
@@ -95,7 +91,7 @@ enum
 
 };
 
-Sector next_right(const Sector s)
+static Sector next_right(const Sector s)
 {
 	if (s >= SECTOR_MOST_LEFT && s < SECTOR_MOST_RIGHT)
 		return s + 1;
@@ -106,7 +102,7 @@ Sector next_right(const Sector s)
 	return SECTOR_INVALID;
 }
 
-Sector prev_left(const Sector s)
+static Sector prev_left(const Sector s)
 {
 	if (s > SECTOR_MOST_LEFT && s <= SECTOR_MOST_RIGHT)
 		return s - 1;
@@ -116,59 +112,8 @@ Sector prev_left(const Sector s)
 	Serial.println(s);
 	return SECTOR_INVALID;
 }
-//
-//struct SectorsEnabled
-//{
-//	int number; // should be 0, 1 or 2. It is an error if more than 2 sectors are enabled.
-//	Sector sector; // if 'number' is 1 or 2, then 'sector' holds number of one of the enabled sectors (doesn't matter which one).
-//	SectorsEnabled(int n = 0, Sector s = SECTOR_INVALID);
-//};
-//
-//// Returns number of sectors that are enabled.
-//// Normally should be > 0 && <= 2.
-//// Also, if number of sectors is 2, checks whether these
-//// sectors are adjacent.
-//SectorsEnabled check_enabled_sectors()
-//{
-//	int on_count = 0;
-//	Sector enabled_sectors[2];
-//	for (Sector i = 0; i < (Sector) N_ELEMS(sector_pins); ++i)
-//	{
-//		const SectorPins sp = sector_pins[i];
-//		bool on = digitalRead(sp.sensor_pin);
-//		if (on)
-//		{
-//			++on_count;
-//			if (on_count >= 3)
-//				break;
-//			enabled_sectors[on_count - 1] = i;
-//		}
-//	}
-//
-//	switch (on_count)
-//	{
-//	case 0:
-//		return SectorsEnabled();
-//	case 1:
-//		return SectorsEnabled(1, enabled_sectors[0]);
-//	case 2:
-//		if ((enabled_sectors[1] == next_right(enabled_sectors[0])) ||
-//			(enabled_sectors[1] == prev_left(enabled_sectors[0])))
-//		{
-//			return SectorsEnabled(2, enabled_sectors[0]);
-//		}
-//		Serial.print("sectors not adjacent: ");
-//		Serial.print(enabled_sectors[0]);
-//		Serial.println(enabled_sectors[1]);
-//		return SectorsEnabled();
-//	default:
-//		Serial.println("too many sectors are on");
-//		return SectorsEnabled();
-//	}
-//	
-//}
 
-Sector check_enabled_sector()
+static Sector check_enabled_sector()
 {
 	int on_count = 0;
 	Sector enabled_sectors[2];
@@ -207,9 +152,186 @@ Sector check_enabled_sector()
 	}
 }
 
-bool check_sector_is_on(Sector s)
+static bool check_sector_is_on(Sector s)
 {
 	if (!check_number(s))
 		return false;
 	return digitalRead(sector_pins[s].sensor_pin);
+}
+
+typedef enum
+{
+	STATE_READY,
+	STATE_WAIT_FOR_DIRECTION,
+	STATE_WAIT_FOR_NEXT_SECTOR,
+	STATE_WAIT_FOR_STOP,
+} State;
+
+typedef enum
+{
+	DIRECTION_RIGHT,
+	DIRECTION_LEFT,
+} Direction;
+
+static const unsigned long SECTOR_TURN_TIME_MS = 5000;
+
+static const int FULL_TURN_LIMIT = 15;
+
+static Sector prev_sector;
+
+static Sector correct_sectors_counter;
+
+static State state = STATE_READY;
+
+unsigned long prev_time;
+
+Direction dir;
+
+static void reset_sector_sensors_state()
+{
+	state = STATE_READY;
+	correct_sectors_counter = 0;
+}
+
+void sectors_process_sensors()
+{
+	// at this point s is either a valid sector number or a SECTOR_NONE.
+	if (state == STATE_READY)
+	{
+		Sector s = check_enabled_sector();
+		switch (s)
+		{
+		case SECTOR_NONE:
+			return;
+		case SECTOR_INVALID:
+			reset_sector_sensors_state();
+			return;
+		default:
+			if (!check_number(s))
+			{
+				reset_sector_sensors_state();
+				return;
+			}
+			prev_time = millis();
+			prev_sector = s;
+			state = STATE_WAIT_FOR_DIRECTION;
+			return;
+
+		}
+	}
+	else if (state == STATE_WAIT_FOR_DIRECTION)
+	{
+		if (millis() - prev_time >= 2 * SECTOR_TURN_TIME_MS)
+		{
+			Serial.println("Waited for direction detection for too long...");
+			reset_sector_sensors_state();
+			return;
+		}
+
+		Sector second_right_sector = next_right(next_right(prev_sector));
+		Sector second_left_sector = prev_left(prev_left(prev_sector));
+
+		Sector s = check_enabled_sector();
+		bool right_is_on = digitalRead(sector_pins[second_right_sector].sensor_pin);
+		bool left_is_on = digitalRead(sector_pins[second_left_sector].sensor_pin);
+
+		if (s == prev_sector)
+		{
+			prev_time = millis();
+			return;
+		}
+
+		if (s == SECTOR_NONE || (!right_is_on && !left_is_on))
+		{
+			return;
+		}
+		if (right_is_on && left_is_on)
+		{
+			Serial.println("ERROR: Both right and left movement are detected.");
+			reset_sector_sensors_state();
+			return;
+		}
+		// at this point either right_is_on == true or left_is_on == true.
+		
+		
+		if (right_is_on)
+		{
+			dir = DIRECTION_RIGHT;
+			prev_sector = second_right_sector;
+		}
+		else
+		{
+			dir = DIRECTION_LEFT;
+			prev_sector = second_left_sector;
+		}
+
+		prev_time = millis();
+		state = STATE_WAIT_FOR_NEXT_SECTOR;
+		correct_sectors_counter = 0; // maybe should be + 2
+		return;
+	}
+	else if (state == STATE_WAIT_FOR_NEXT_SECTOR)
+	{
+		if (millis() - prev_time >= SECTOR_TURN_TIME_MS)
+		{
+			Serial.println("Waited too long for next sector");
+			reset_sector_sensors_state();
+			return;
+		}
+
+		Sector expected_sector;
+		if (dir == DIRECTION_RIGHT)
+			expected_sector = next_right(prev_sector);
+		else
+			expected_sector = prev_left(prev_sector);
+		
+		bool ok = check_sector_is_on(expected_sector);
+		if (ok)
+		{
+			prev_time = millis();
+			prev_sector = expected_sector;
+			++correct_sectors_counter;
+
+			if (correct_sectors_counter >= FULL_TURN_LIMIT)
+			{
+				sectors_rotation_started_callback();
+				state = STATE_WAIT_FOR_STOP;
+				correct_sectors_counter = 0;
+				return;
+			}
+		}
+		
+	}
+	else if (state == STATE_WAIT_FOR_STOP)
+	{
+		Sector s = check_enabled_sector();
+		if (millis() - prev_time >= SECTOR_TURN_TIME_MS)
+		{
+			switch (s)
+			{
+			case SECTOR_NONE:
+				sectors_rotation_stopped_callback(prev_sector);
+				break;
+			case SECTOR_INVALID:
+				Serial.println("Invalid sector detected while waiting for STOP");
+				break;
+			default:
+				if (!check_number(s))
+				{
+					Serial.println("Wrong number sector detected while waiting for STOP");
+					break;
+				}
+				sectors_rotation_stopped_callback(s);
+				break;
+			}
+			reset_sector_sensors_state();
+			return;
+		}
+		if (s != SECTOR_NONE && s != prev_sector && check_number(s))
+		{
+			prev_time = millis();
+			prev_sector = s;
+		}
+
+	}
 }
