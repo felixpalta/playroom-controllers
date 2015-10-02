@@ -18,8 +18,6 @@ EthernetServer server(lockbox_controller_port);
 
 LockBoxes lock_boxes;
 
-XmlRqParser xml_parser;
-
 void setup() {
 	// Open serial communications and wait for port to open:
 	Serial.begin(9600);
@@ -42,13 +40,15 @@ void loop() {
 	EthernetClient client = server.available();
 	if (client) 
 	{
+		XmlRqParser xml_parser(client);
+
 		Serial.println("\nnew client");
 		if (client.connected())
 		{
 			while (client.available()) 
 			{
 				XmlRqParsingOutput data;
-				XmlRqParser::ErrorType status = xml_parser.process_stream(client, &data);
+				XmlRqParser::ErrorType status = xml_parser.process_stream(&data);
 				if (status != XmlRqParser::ERROR_NONE)
 				{
 					Serial.print("XML Parser ERROR:");

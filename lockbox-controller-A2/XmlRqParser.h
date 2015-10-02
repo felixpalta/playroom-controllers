@@ -58,9 +58,9 @@ public:
 		ERROR_DATA_TAG_NAME,
 	} ErrorType;
 
-	XmlRqParser();
+	XmlRqParser(Stream& s) : token_parser(s) {}
 
-	ErrorType process_stream(Stream& s, XmlRqParsingOutput* out);
+	ErrorType process_stream(XmlRqParsingOutput* out);
 
 private:
 	bool parse_request_type(const char* str, RqType& request_type);

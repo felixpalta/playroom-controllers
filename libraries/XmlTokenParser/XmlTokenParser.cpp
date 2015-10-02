@@ -6,7 +6,7 @@ const char* XmlTokenParser::get_internal_buf()
 	return buf;
 }
 
-void XmlTokenParser::skip_whitespace(Stream& s)
+void XmlTokenParser::skip_whitespace()
 {
 	while (s.available())
 	{
@@ -18,7 +18,7 @@ void XmlTokenParser::skip_whitespace(Stream& s)
 	}
 }
 
-bool XmlTokenParser::read_string_until_terminator(Stream& s, char terminator)
+bool XmlTokenParser::read_string_until_terminator(char terminator)
 {
 	if (terminator < 0)
 		return false;
@@ -46,10 +46,10 @@ bool XmlTokenParser::read_string_until_terminator(Stream& s, char terminator)
 	return terminator_found;
 }
 
-bool XmlTokenParser::find_string_after_whitespace(Stream& s, const char* str)
+bool XmlTokenParser::find_string_after_whitespace(const char* str)
 {
 
-	skip_whitespace(s);
+	skip_whitespace();
 
 	const size_t next_token_length = strlen(str);
 
@@ -71,22 +71,22 @@ bool XmlTokenParser::find_string_after_whitespace(Stream& s, const char* str)
 	return true;
 }
 
-bool XmlTokenParser::find_attribute(Stream& s, const char *attr_name)
+bool XmlTokenParser::find_attribute(const char *attr_name)
 {
 
-	bool ok = find_string_after_whitespace(s, attr_name);
+	bool ok = find_string_after_whitespace(attr_name);
 	if (!ok)
 		return false;
 
-	ok = find_string_after_whitespace(s, "=");
+	ok = find_string_after_whitespace("=");
 	if (!ok)
 		return false;
 
-	ok = find_string_after_whitespace(s, "\"");
+	ok = find_string_after_whitespace("\"");
 	if (!ok)
 		return false;
 
-	ok = read_string_until_terminator(s, '"');
+	ok = read_string_until_terminator('"');
 
 	return ok;
 }
@@ -98,42 +98,42 @@ void XmlTokenParser::null_terminated_copy_of_buf(TokenBuffer* dst)
 }
 
 // <
-bool XmlTokenParser::expect_left_simple_bracket(Stream& s)
+bool XmlTokenParser::expect_left_simple_bracket()
 {
-	return find_string_after_whitespace(s, "<");
+	return find_string_after_whitespace("<");
 }
 // >
-bool XmlTokenParser::expect_right_simple_bracket(Stream& s)
+bool XmlTokenParser::expect_right_simple_bracket()
 {
-	return find_string_after_whitespace(s, ">");
+	return find_string_after_whitespace(">");
 }
 
 // </ 
-bool XmlTokenParser::expect_left_closing_bracket(Stream& s)
+bool XmlTokenParser::expect_left_closing_bracket()
 {
-	return find_string_after_whitespace(s, "</");
+	return find_string_after_whitespace("</");
 }
 // />
-bool XmlTokenParser::expect_right_closing_bracket(Stream& s)
+bool XmlTokenParser::expect_right_closing_bracket()
 {
-	return find_string_after_whitespace(s, "/>");
+	return find_string_after_whitespace("/>");
 }
 
-bool XmlTokenParser::expect_opening_tag(Stream& s, const char *tag_name)
+bool XmlTokenParser::expect_opening_tag(const char *tag_name)
 {
-	bool ok = expect_left_simple_bracket(s);
+	bool ok = expect_left_simple_bracket();
 	if (!ok)
 		return false;
 
-	return find_string_after_whitespace(s, tag_name);
+	return find_string_after_whitespace(tag_name);
 }
-bool XmlTokenParser::expect_closing_tag(Stream& s, const char *tag_name)
+bool XmlTokenParser::expect_closing_tag(const char *tag_name)
 {
-	bool ok = expect_left_closing_bracket(s);
+	bool ok = expect_left_closing_bracket();
 	if (!ok)
 		return false;
-	ok = find_string_after_whitespace(s, tag_name);
+	ok = find_string_after_whitespace(tag_name);
 	if (!ok)
 		return false;
-	return expect_right_simple_bracket(s);
+	return expect_right_simple_bracket();
 }
