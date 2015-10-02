@@ -14,18 +14,19 @@
 class XmlRespWriter
 {
  public:
-	 void send_ack_response(Stream& s);
-	 void send_err_repsonse(Stream& s, const char* err_msg);
+
+	 XmlRespWriter(Stream& s) : xml_token_writer(s) {}
+
+	 void send_ack_response();
+	 void send_err_repsonse(const char* err_msg);
 
 private:
-	void write_open_tag(Stream& s, const char* type_attr_value);
-	void write_err_tag(Stream& s, const char* err_msg);
-	void write_close_tag(Stream& s);
+	void write_open_tag(const char* type_attr_value);
+	void write_err_tag(const char* err_msg);
+	void write_close_tag();
 
 	XmlTokenWriter xml_token_writer;
 };
-
-extern XmlRespWriter xml_resp_writer;
 
 #endif
 

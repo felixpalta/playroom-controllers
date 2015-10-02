@@ -41,6 +41,7 @@ void loop() {
 	if (client) 
 	{
 		XmlRqParser xml_parser(client);
+		XmlRespWriter xml_resp_writer(client);
 
 		Serial.println("\nnew client");
 		if (client.connected())
@@ -53,7 +54,7 @@ void loop() {
 				{
 					Serial.print("XML Parser ERROR:");
 					Serial.println(status);
-					xml_resp_writer.send_err_repsonse(client, "Unable to parse XML request");
+					xml_resp_writer.send_err_repsonse("Unable to parse XML request");
 					break;
 				}
 				else
@@ -64,14 +65,14 @@ void loop() {
 					if (ok)
 					{
 						Serial.println("Request verified and executed OK");
-						xml_resp_writer.send_ack_response(client);
+						xml_resp_writer.send_ack_response();
 						break;
 					}
 					else
 					{
 						const char *err = get_request_error();
 						Serial.println(err);
-						xml_resp_writer.send_err_repsonse(client, err);
+						xml_resp_writer.send_err_repsonse(err);
 						break;
 					}
 				}

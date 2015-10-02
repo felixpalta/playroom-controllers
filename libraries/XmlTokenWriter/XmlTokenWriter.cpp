@@ -26,53 +26,53 @@ bool XmlTokenWriter::check_string_set_error(const char* str)
 }
 
 // <
-void XmlTokenWriter::write_left_simple_bracket(Stream& s)
+void XmlTokenWriter::write_left_simple_bracket()
 {
 	s.print("<");
 }
 // </
-void XmlTokenWriter::write_left_closing_bracket(Stream& s)
+void XmlTokenWriter::write_left_closing_bracket()
 {
 	s.print("</");
 }
 
 // <tagname + space
-void XmlTokenWriter::write_tag_opening(Stream& s, const char* str)
+void XmlTokenWriter::write_tag_opening(const char* str)
 {
 	if (!check_string_set_error(str))
 	{
 		return;
 	}
-	write_left_simple_bracket(s);
+	write_left_simple_bracket();
 	s.print(str);
 	s.print(" ");
 }
 // > + newline
-void XmlTokenWriter::write_right_simple_bracket(Stream& s)
+void XmlTokenWriter::write_right_simple_bracket()
 {
 	s.println(">");
 }
 
 // /> + newline
-void XmlTokenWriter::write_right_closing_bracket(Stream& s)
+void XmlTokenWriter::write_right_closing_bracket()
 {
 	s.println("/>");
 }
 
 // </tagname>
-void XmlTokenWriter::write_tag_closing(Stream& s, const char *str)
+void XmlTokenWriter::write_tag_closing(const char *str)
 {
 	if (!check_string_set_error(str))
 	{
 		return;
 	}
-	write_left_closing_bracket(s);
+	write_left_closing_bracket();
 	s.print(str);
-	write_right_simple_bracket(s);
+	write_right_simple_bracket();
 }
 
 // attr_name="attr_value" + space
-void XmlTokenWriter::write_attribute_text(Stream& s, const char* attr_name, const char *attr_value)
+void XmlTokenWriter::write_attribute_text(const char* attr_name, const char *attr_value)
 {
 	if (!check_string_set_error(attr_name))
 	{
@@ -89,7 +89,7 @@ void XmlTokenWriter::write_attribute_text(Stream& s, const char* attr_name, cons
 	s.print("\"");
 	s.print(" ");
 }
-void XmlTokenWriter::write_attribute_num(Stream& s, const char* attr_name, int n)
+void XmlTokenWriter::write_attribute_num(const char* attr_name, int n)
 {
 	if (!check_string_set_error(attr_name))
 	{

@@ -10,10 +10,12 @@
 class XmlTokenWriter
 {
 private:
+
+	Stream& s;
 	// <
-	void write_left_simple_bracket(Stream& s);
+	void write_left_simple_bracket();
 	// </
-	void write_left_closing_bracket(Stream& s);
+	void write_left_closing_bracket();
 
 	typedef enum
 	{
@@ -28,22 +30,24 @@ private:
 
 public:
 	
+	XmlTokenWriter(Stream& stream) : s(stream) {}
+
 	const char* get_error();
 
 	// <tagname + space
-	void write_tag_opening(Stream& s, const char* str);
+	void write_tag_opening(const char* str);
 	// > + newline
-	void write_right_simple_bracket(Stream& s);
+	void write_right_simple_bracket();
 	
 	// /> + newline
-	void write_right_closing_bracket(Stream& s);
+	void write_right_closing_bracket();
 	
 	// </tagname>
-	void write_tag_closing(Stream& s, const char *str);
+	void write_tag_closing(const char *str);
 
 	// attr_name="attr_value" + space
-	void write_attribute_text(Stream& s, const char* attr_name, const char *attr_value);
-	void write_attribute_num(Stream& s, const char* attr_name, int n);
+	void write_attribute_text(const char* attr_name, const char *attr_value);
+	void write_attribute_num(const char* attr_name, int n);
 };
 
 #endif //__XMLTOKENWRITER_H__
