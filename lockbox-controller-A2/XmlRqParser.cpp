@@ -26,6 +26,17 @@ bool XmlRqParser::parse_request_type(const char* str, RqType& request_type)
 		return true;
 	}
 
+	if (strncmp(str, TYPE_ATTR_LOCKBOX_ALL_OPEN_VALUE, sizeof(TYPE_ATTR_LOCKBOX_ALL_OPEN_VALUE) - 1) == 0)
+	{
+		request_type = RQ_TYPE_LOCKBOX_ALL_OPEN;
+		return true;
+	}
+
+	if (strncmp(str, TYPE_ATTR_LOCKBOX_ALL_CLOSE_VALUE, sizeof(TYPE_ATTR_LOCKBOX_ALL_CLOSE_VALUE) - 1) == 0)
+	{
+		request_type = RQ_TYPE_LOCKBOX_ALL_CLOSE;
+		return true;
+	}
 	request_type = RQ_TYPE_INVALID;
 	return false;
 }

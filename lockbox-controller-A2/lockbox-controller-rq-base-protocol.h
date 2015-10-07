@@ -11,6 +11,10 @@ static const char TYPE_ATTR_LOCKBOX_OPEN_VALUE[] = "lockbox-open";
 
 static const char TYPE_ATTR_LOCKBOX_CLOSE_VALUE[] = "lockbox-close";
 
+static const char TYPE_ATTR_LOCKBOX_ALL_OPEN_VALUE[] = "lockbox-all-open";
+
+static const char TYPE_ATTR_LOCKBOX_ALL_CLOSE_VALUE[] = "lockbox-all-close";
+
 static const char TYPE_ATTR_ALIVE_VALUE[] = "alive";
 
 static const char PROTOVER_ATTR_NAME[] = "protoVer";

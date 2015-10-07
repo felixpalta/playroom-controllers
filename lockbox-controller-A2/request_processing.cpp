@@ -151,6 +151,24 @@ static bool process_request(XmlRqParsingOutput& data)
 			return false;
 		}
 		return true;
+	case RQ_TYPE_LOCKBOX_ALL_CLOSE:
+		ok = lock_boxes.close_all();
+		if (!ok)
+		{
+			processing_error_occured = true;
+			processing_err_msg = lock_boxes.get_last_error();
+			return false;
+		}
+		return true;
+	case RQ_TYPE_LOCKBOX_ALL_OPEN:
+		ok = lock_boxes.open_all();
+		if (!ok)
+		{
+			processing_error_occured = true;
+			processing_err_msg = lock_boxes.get_last_error();
+			return false;
+		}
+		return true;
 	default:
 		error_code = ERROR_INVALID_RQ_TYPE;
 		return false;
@@ -175,6 +193,8 @@ static bool verify_request(XmlRqParsingOutput& data)
 	case RQ_TYPE_ALIVE:
 	case RQ_TYPE_LOCKBOX_OPEN:
 	case RQ_TYPE_LOCKBOX_CLOSE:
+	case RQ_TYPE_LOCKBOX_ALL_OPEN:
+	case RQ_TYPE_LOCKBOX_ALL_CLOSE:
 		break;
 	default:
 		error_code = ERROR_INVALID_RQ_TYPE;
