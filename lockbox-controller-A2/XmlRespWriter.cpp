@@ -3,7 +3,7 @@
 // 
 
 #include "XmlRespWriter.h"
-#include "lockbox-controller-rq-base-protocol.h"
+#include <playroom-protocol.h>
 #include "lockbox-controller-rq-valid-protocol-values.h"
 
 void XmlRespWriter::send_ack_response()

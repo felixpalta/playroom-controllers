@@ -3,7 +3,7 @@
 // 
 
 #include "XmlRqParser.h"
-#include "lockbox-controller-rq-base-protocol.h"
+#include <playroom-protocol.h>
 #include "lockbox-controller-rq-valid-protocol-values.h"
 
 bool XmlRqParser::parse_request_type(const char* str, RqType& request_type)

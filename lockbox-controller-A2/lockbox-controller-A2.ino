@@ -1,4 +1,4 @@
-
+#include <playroom-protocol.h>
 #include <XmlTokenWriter.h>
 #include <XmlTokenParser.h>
 #include "request_processing.h"

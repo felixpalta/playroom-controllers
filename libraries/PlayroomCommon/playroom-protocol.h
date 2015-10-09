@@ -1,5 +1,5 @@
-#ifndef __LOCKBOX_CONTROLLER_RQ_BASE_PROTOCOL_H__
-#define __LOCKBOX_CONTROLLER_RQ_BASE_PROTOCOL_H__
+#ifndef __PLAYROOM_PROTOCOL_H__
+#define __PLAYROOM_PROTOCOL_H__
 
 static const char RESP_TAG_NAME[] = "response";
 
@@ -35,4 +35,4 @@ static const char ERR_TAG_NAME[] = "err";
 
 static const char TXT_ATTR_NAME[] = "txt";
 
-#endif // __LOCKBOX_CONTROLLER_RQ_BASE_PROTOCOL_H__
+#endif // __PLAYROOM_PROTOCOL_H__
