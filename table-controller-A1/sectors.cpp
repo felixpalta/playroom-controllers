@@ -73,6 +73,26 @@ static int convert_to_external(int n)
   return SECTOR_INVALID;
 }
 
+
+bool sector_all_number_leds_write(bool on)
+{
+  for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
+  {
+    SectorPins sp = sector_pins[i];
+    digitalWrite(sp.number_led_pin, on);
+  }
+  return true;
+}
+bool sector_all_arrow_leds_write(bool on)
+{
+  for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
+  {
+    SectorPins sp = sector_pins[i];
+    digitalWrite(sp.arrow_led_pin, on);
+  }
+  return true;
+}
+
 bool sector_number_led_pin_write(int n, bool on)
 {
   if (!check_number_convert_to_internal(n))
@@ -195,6 +215,8 @@ static void reset_sector_sensors_state()
 {
   state = STATE_READY;
   correct_sectors_counter = 0;
+  sector_all_number_leds_write(false);
+  sector_all_arrow_leds_write(false);
 }
 
 void read_sector_sensors_and_light_their_leds()
@@ -293,6 +315,7 @@ void sectors_process_sensors()
   }
   else if (state == STATE_WAIT_FOR_NEXT_SECTOR)
   {
+    read_sector_sensors_and_light_their_leds();
     if (millis() - prev_time >= SECTOR_TURN_TIME_MS)
     {
       Serial.println("Waited too long for next sector");
