@@ -81,12 +81,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="OutWriter.h" />
     <ClInclude Include="sectors.h" />
     <ClInclude Include="table-controller-pin-config.h" />
     <ClInclude Include="table-controller-server-config.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="table-controller-valid-protocol-values.h" />
     <ClInclude Include="__vm\.table-controller-A1.vsarduino.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OutWriter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
