@@ -1,3 +1,9 @@
+#include <playroom-protocol.h>
+#include <XmlTokenWriter.h>
+#include <XmlTokenParser.h>
+#include <SPI.h>
+#include <EthernetV2_0.h>
+#include "table-controller-server-config.h"
 #include "sectors.h"
 
 #define DBG_PIN 13
