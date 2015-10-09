@@ -34,7 +34,7 @@ void XmlRespWriter::write_err_tag(const char* err_msg)
 {
   xml_token_writer.write_tag_opening(ERR_TAG_NAME);
   xml_token_writer.write_attribute_text(TXT_ATTR_NAME, err_msg);
-  xml_token_writer.write_right_simple_bracket();
+  xml_token_writer.write_right_closing_bracket();
 }
 void XmlRespWriter::write_response_close_tag()
 {

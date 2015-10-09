@@ -35,7 +35,7 @@ void OutWriter::write_err_tag(const char* err_msg)
 {
   xml_writer.write_tag_opening(ERR_TAG_NAME);
   xml_writer.write_attribute_text(TXT_ATTR_NAME, err_msg);
-  xml_writer.write_right_simple_bracket();
+  xml_writer.write_right_closing_bracket();
 }
 void OutWriter::write_response_close_tag()
 {
@@ -57,4 +57,19 @@ void OutWriter::write_request_open_tag(const char* type_attr_value)
 void OutWriter::write_request_close_tag()
 {
   xml_writer.write_tag_closing(RQ_TAG_NAME);
+}
+
+void OutWriter::send_barrel_play_request()
+{
+  write_request_open_tag(TYPE_ATTR_BARREL_PLAY_VALUE);
+  write_request_close_tag();
+}
+
+void OutWriter::send_barrel_sector_request(int n)
+{
+  write_request_open_tag(TYPE_ATTR_BARREL_SECTOR_VALUE);
+  xml_writer.write_tag_opening(DATA_TAG_NAME);
+  xml_writer.write_attribute_num(SECTOR_ATTR_NAME, n);
+  xml_writer.write_right_closing_bracket();
+  write_request_close_tag();
 }
