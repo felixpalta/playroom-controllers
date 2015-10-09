@@ -56,7 +56,7 @@ static void blink(int n)
   }
 }
 
-bool get_connect_msg(int code, const char **msg)
+static bool get_connect_msg(int code, const char **msg)
 {
   static const int SUCCESS = 1;
   static const int TIMED_OUT = -1;
@@ -67,6 +67,7 @@ bool get_connect_msg(int code, const char **msg)
   switch (code)
   {
   case SUCCESS:
+    *msg = "Connection OK";
     return true;
   case TIMED_OUT:
     *msg = "Connection timed out";
@@ -115,10 +116,11 @@ static bool connect_to_server()
   return true;
 }
 
-void sectors_rotation_started_callback()
-{
-  Serial.println("ROTATION STARTED CALLBACK");
+#define BARREL_PLAY_RQ 1
+#define BARREL_SECTOR_RQ 2
 
+static void send_request(int rq_type, int n)
+{
   if (!connect_to_server())
   {
     return;
@@ -132,7 +134,19 @@ void sectors_rotation_started_callback()
 
   OutWriter out_writer(client);
 
-  out_writer.send_barrel_play_request();
+  switch (rq_type)
+  {
+    case BARREL_PLAY_RQ:
+      out_writer.send_barrel_play_request();
+      break;
+    case BARREL_SECTOR_RQ:
+      out_writer.send_barrel_sector_request(n);
+      break;
+    default:
+      Serial.print("Uknown request type: ");
+      Serial.println(rq_type);
+      return;
+  }
 
   if (!client.connected())
   {
@@ -157,11 +171,20 @@ void sectors_rotation_started_callback()
   Serial.println("Stopping the client...");
   client.stop();
   return;
+}
 
+void sectors_rotation_started_callback()
+{
+  Serial.println("ROTATION STARTED CALLBACK");
+
+  send_request(BARREL_PLAY_RQ, /* not used */ 0);
+  blink(2);
 }
 void sectors_rotation_stopped_callback(int sector_n)
 {
   Serial.print("ROTATION STOPPED CALLBACK: ");
   Serial.println(sector_n);
+  
+  send_request(BARREL_SECTOR_RQ, sector_n);
   blink(sector_n);
 }
