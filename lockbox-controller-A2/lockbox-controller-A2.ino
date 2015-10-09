@@ -25,7 +25,11 @@ void setup() {
   digitalWrite(SDCARD_CS, HIGH);//Deselect the SD card
 
   // start the Ethernet connection and the server:
-  Ethernet.begin(lockbox_controller_mac, lockbox_controller_ip);
+  if (!Ethernet.begin(lockbox_controller_mac))
+  {
+    Serial.println("DHCP failed, trying to set IP manually...");
+    Ethernet.begin(lockbox_controller_mac, lockbox_controller_ip);
+  }
 
   server.begin();
   Serial.print("Lockbox controller is at ");

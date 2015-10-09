@@ -4,9 +4,12 @@
 byte lockbox_controller_mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 
-IPAddress lockbox_controller_ip(10,77,102,185);
+// NOTE: This ip (lockbox_controller_ip) will be set,
+// only if failed to obtain IP by DHCP.
 
-//IPAddress lockbox_controller_ip(192, 168, 1, 77);
+//IPAddress lockbox_controller_ip(10,77,102,185);
+
+IPAddress lockbox_controller_ip(192, 168, 1, 77);
 
 
 uint16_t lockbox_controller_port = 10541;
