@@ -8,6 +8,8 @@ void setup()
 	Serial.println("Hello from Table Controller");
 	sectors_init();
 	pinMode(DBG_PIN, OUTPUT);
+    digitalWrite(DBG_PIN, LOW);
+
 }
 
 void loop()

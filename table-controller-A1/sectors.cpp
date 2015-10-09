@@ -197,8 +197,18 @@ static void reset_sector_sensors_state()
 	correct_sectors_counter = 0;
 }
 
+void read_sector_sensors_and_light_their_leds()
+{  
+  for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
+  {
+    SectorPins sp = sector_pins[i];
+    digitalWrite(sp.number_led_pin, digitalRead(sp.sensor_pin));
+  }
+}
+
 void sectors_process_sensors()
 {
+  
 	// at this point s is either a valid sector number or a SECTOR_NONE.
 	if (state == STATE_READY)
 	{
@@ -216,9 +226,12 @@ void sectors_process_sensors()
 				reset_sector_sensors_state();
 				return;
 			}
-			prev_time = millis();
+                        prev_time = millis();
 			prev_sector = s;
 			state = STATE_WAIT_FOR_DIRECTION;
+                        Serial.print(prev_time);
+                        Serial.print(": First sector: ");
+                        Serial.println(s);
 			return;
 
 		}
@@ -272,6 +285,11 @@ void sectors_process_sensors()
 		prev_time = millis();
 		state = STATE_WAIT_FOR_NEXT_SECTOR;
 		correct_sectors_counter = 0; // maybe should be + 2
+                        Serial.print(prev_time);
+                        Serial.print(": Sector after first: ");
+                        Serial.println(s);
+                        Serial.print("Direction: ");
+                        Serial.println(dir == DIRECTION_RIGHT ? "RIGHT" : "LEFT");
 		return;
 	}
 	else if (state == STATE_WAIT_FOR_NEXT_SECTOR)
@@ -284,10 +302,17 @@ void sectors_process_sensors()
 		}
 
 		Sector expected_sector;
+        Sector next_expected_sector;
 		if (dir == DIRECTION_RIGHT)
+                {
 			expected_sector = next_right(prev_sector);
+                        next_expected_sector = next_right(expected_sector);
+                }
 		else
+                {
 			expected_sector = prev_left(prev_sector);
+                        next_expected_sector = prev_left(expected_sector);
+                }
 		
 		bool ok = check_sector_is_on(expected_sector);
 		if (ok)
@@ -308,6 +333,7 @@ void sectors_process_sensors()
 	}
 	else if (state == STATE_WAIT_FOR_STOP)
 	{
+		read_sector_sensors_and_light_their_leds();
 		Sector s = check_enabled_sector();
 		if (millis() - prev_time >= SECTOR_TURN_TIME_MS)
 		{
