@@ -3,6 +3,7 @@
 #include <XmlTokenParser.h>
 #include <SPI.h>
 #include <EthernetV2_0.h>
+#include "OutWriter.h"
 #include "table-controller-server-config.h"
 #include "sectors.h"
 

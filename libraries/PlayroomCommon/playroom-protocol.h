@@ -31,6 +31,12 @@ static const char TYPE_ATTR_ERR_VALUE[] = "err";
 
 static const char TYPE_ATTR_GAME_START_VALUE[] = "game-start";
 
+static const char TYPE_ATTR_BARREL_PLAY_VALUE[] = "barrel-play";
+
+static const char TYPE_ATTR_BARREL_SECTOR_VALUE[] = "barrel-sector";
+
+static const char SECTOR_ATTR_NAME[] = "sector";
+
 static const char ERR_TAG_NAME[] = "err";
 
 static const char TXT_ATTR_NAME[] = "txt";
