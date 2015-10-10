@@ -9,7 +9,7 @@ byte table_controller_mac[] = {
 
 //IPAddress table_controller_ip(10,77,102,185);
 
-IPAddress table_controller_ip(192, 168, 1, 88);
+IPAddress table_controller_ip(192, 168, 1, 120);
 
 
 uint16_t table_controller_port = 10542;

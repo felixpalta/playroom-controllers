@@ -17,6 +17,9 @@ EthernetClient client;
 
 void setup()
 {
+  pinMode(DBG_PIN, OUTPUT);
+  digitalWrite(DBG_PIN, LOW);
+  
   Serial.begin(9600);
   Serial.println("Hello from Table Controller");
 
@@ -29,14 +32,13 @@ void setup()
     Serial.println("DHCP failed, trying to set IP manually...");
     Ethernet.begin(table_controller_mac, table_controller_ip);
   }
-
+  delay(1000);
   Serial.print("Table controller is at ");
   Serial.print(Ethernet.localIP());
   Serial.println(String(" : ") + table_controller_port);
 
   sectors_init();
-  pinMode(DBG_PIN, OUTPUT);
-  digitalWrite(DBG_PIN, LOW);
+  
 
 }
 

@@ -306,9 +306,11 @@ void sectors_process_sensors()
     prev_time = millis();
     state = STATE_WAIT_FOR_NEXT_SECTOR;
     correct_sectors_counter = 0; // maybe should be + 2
-    Serial.println(s);
+    
+
     Serial.print(prev_time);
     Serial.print(": Sector after first: ");
+    Serial.println(s);
     Serial.print("Direction: ");
     Serial.println(dir == DIRECTION_RIGHT ? "RIGHT" : "LEFT");
     return;
