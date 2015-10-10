@@ -25,12 +25,14 @@ void setup()
 
   pinMode(SDCARD_CS, OUTPUT);
   digitalWrite(SDCARD_CS, HIGH);//Deselect the SD card
-
+  
+  Serial.println("Attempting to lease IP via DHCP...");
+  
   // start the Ethernet connection and the server:
   if (!Ethernet.begin(table_controller_mac))
   {
     Serial.println("DHCP failed, trying to set IP manually...");
-    Ethernet.begin(table_controller_mac, table_controller_ip);
+    Ethernet.begin(table_controller_mac, table_controller_ip, DNS_IP, GATEWAY_IP, SUBNET_MASK);
   }
   delay(1000);
   Serial.print("Table controller is at ");
