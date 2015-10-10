@@ -7,6 +7,7 @@
 #include "OutWriter.h"
 #include "table-controller-server-config.h"
 #include "sectors.h"
+#include "sector_test_mode.h"
 
 #define DBG_PIN 13
 
@@ -23,6 +24,8 @@ void setup()
   Serial.begin(9600);
   Serial.println("Hello from Table Controller");
 
+#ifndef SECTOR_TEST_MODE
+
   pinMode(SDCARD_CS, OUTPUT);
   digitalWrite(SDCARD_CS, HIGH);//Deselect the SD card
   
@@ -38,6 +41,7 @@ void setup()
   Serial.print("Table controller is at ");
   Serial.print(Ethernet.localIP());
   Serial.println(String(" : ") + table_controller_port);
+#endif
 
   sectors_init();
   

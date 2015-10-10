@@ -1,5 +1,6 @@
 #include "sectors.h"
 #include "table-controller-pin-config.h"
+#include "sector_test_mode.h"
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
@@ -230,7 +231,9 @@ void read_sector_sensors_and_light_their_leds()
 
 void sectors_process_sensors()
 {
-  
+#ifdef SECTOR_TEST_MODE
+  read_sector_sensors_and_light_their_leds();
+#else
   // at this point s is either a valid sector number or a SECTOR_NONE.
   if (state == STATE_READY)
   {
@@ -395,4 +398,5 @@ void sectors_process_sensors()
     }
 
   }
+#endif // SECTOR_TEST_MODE
 }
