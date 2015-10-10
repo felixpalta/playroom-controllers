@@ -339,6 +339,13 @@ void sectors_process_sensors()
     }
 
     bool ok = check_sector_is_on(expected_sector);
+    
+    if (!ok)
+    {
+      ok = check_sector_is_on(next_expected_sector);
+      if (ok)
+        expected_sector = next_expected_sector;
+    }
     if (ok)
     {
       prev_time = millis();

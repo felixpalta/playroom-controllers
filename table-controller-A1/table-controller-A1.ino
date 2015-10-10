@@ -96,6 +96,8 @@ static bool connect_to_server()
   Serial.print("Connecting to server by DNS name: ");
   Serial.println(PLAYROOM_SERVER_DNS_ADDRESS);
   int code = client.connect(PLAYROOM_SERVER_DNS_ADDRESS, table_controller_port);
+  Serial.print("Code: ");
+  Serial.println(code);
   const char *err_msg = NULL;
   if (!get_connect_msg(code, &err_msg))
   {
@@ -105,6 +107,8 @@ static bool connect_to_server()
     Serial.print("Connecting to server by IP address: ");
     Serial.println(PLAYROOM_SERVER_IP_ADDRESS);
     code = client.connect(PLAYROOM_SERVER_IP_ADDRESS, table_controller_port);
+    Serial.print("Code: ");
+    Serial.println(code);
     err_msg = NULL;
     if (!get_connect_msg(code, &err_msg))
     {
