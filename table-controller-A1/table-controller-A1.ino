@@ -32,15 +32,23 @@ void setup()
   Serial.println("Attempting to lease IP via DHCP...");
   
   // start the Ethernet connection and the server:
-  if (!Ethernet.begin(table_controller_mac))
+  if (Ethernet.begin(table_controller_mac))
+  {
+    Serial.println("IP received via DHCP");
+    Serial.print("Table controller is at ");
+    Serial.print(Ethernet.localIP());
+  }
+  else
   {
     Serial.println("DHCP failed, trying to set IP manually...");
     Ethernet.begin(table_controller_mac, table_controller_ip, DNS_IP, GATEWAY_IP, SUBNET_MASK);
+    Serial.print("Static IP: "); Serial.println(table_controller_ip);
+    Serial.print("Subnet mask: "); Serial.println(SUBNET_MASK);
+    Serial.print("Gateway: "); Serial.println(GATEWAY_IP);
+    Serial.print("DNS: "); Serial.println(DNS_IP);
   }
-  delay(1000);
-  Serial.print("Table controller is at ");
-  Serial.print(Ethernet.localIP());
-  Serial.println(String(" : ") + table_controller_port);
+  
+  Serial.print("Server port: "); Serial.println(table_controller_port);
 #endif
 
   sectors_init();
