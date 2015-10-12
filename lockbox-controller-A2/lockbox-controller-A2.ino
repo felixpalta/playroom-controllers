@@ -17,6 +17,9 @@ EthernetServer server(lockbox_controller_port);
 LockBoxes lock_boxes;
 
 void setup() {
+  pinMode(DBG_PIN, OUTPUT);
+  digitalWrite(DBG_PIN, LOW);
+  
   // Open serial communications and wait for port to open:
   Serial.begin(9600);
   pinMode(SDCARD_CS, OUTPUT);
