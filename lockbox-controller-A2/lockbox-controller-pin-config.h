@@ -1,6 +1,11 @@
 #ifndef __LOCKBOX_CONTROLLER_PIN_CONFIG_H__
 #define __LOCKBOX_CONTROLLER_PIN_CONFIG_H__
 
+#define W5200_CS  10
+#define SDCARD_CS 4
+
+#define DBG_PIN 13
+
 static const size_t LOCKBOX_PIN_NUMBER = 24;
 
 static const int lockbox_pins[LOCKBOX_PIN_NUMBER] =

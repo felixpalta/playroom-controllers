@@ -7,14 +7,12 @@
 #include <SPI.h>
 #include <EthernetV2_0.h>
 #include "lockbox-controller-server-config.h"
+#include "lockbox-controller-pin-config.h"
 #include "LockBoxes.h"
 
 // Initialize the Ethernet server library
 // with the IP address and port you want to use 
 EthernetServer server(lockbox_controller_port);
-
-#define W5200_CS  10
-#define SDCARD_CS 4
 
 LockBoxes lock_boxes;
 
