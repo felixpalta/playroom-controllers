@@ -5,16 +5,12 @@
 #include <EthernetV2_0.h>
 #include <playroom-server-address.h>
 #include "OutWriter.h"
+#include "table-controller-pin-config.h"
 #include "table-controller-server-config.h"
 #include "sectors.h"
 #include "sector_test_mode.h"
 
-#define DBG_PIN 13
-
 EthernetClient client;
-
-#define W5200_CS  10
-#define SDCARD_CS 4
 
 void setup()
 {

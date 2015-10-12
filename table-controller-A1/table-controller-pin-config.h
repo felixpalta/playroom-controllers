@@ -30,7 +30,7 @@ struct SectorPins
 #define W5200_CS  10
 #define SDCARD_CS 4
 
-#define DGB_PIN 13
+#define DBG_PIN 13
 
 static const SectorPins sector_pins[NUMBER_OF_SECTORS] =
 {
