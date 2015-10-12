@@ -20,24 +20,36 @@ struct SectorPins
   int arrow_led_pin;
 };
 
+/* NOTE:
+    Pins 0, 1 are used by UART0 and cannot be used as common GPIO.
+    Pins 50, 51, 52, 53 are used by SPI interface and cannot be used as common GPIO.
+    Pins 4 and 10 are used as CS for SD card and for Ethernet shield and cannot be used as common GPIO.
+    Pin 13 is used for debug indication.
+*/
+
+#define W5200_CS  10
+#define SDCARD_CS 4
+
+#define DGB_PIN 13
+
 static const SectorPins sector_pins[NUMBER_OF_SECTORS] =
 {
   /* sensor pin, number led pin, arrow led pin */
-  { 3, 22, 23 }, // Sector 1
-  { 4, 24, 25 }, // Sector 2
-  { 5, 26, 27 }, // Sector 3
-  { 6, 28, 29 }, // Sector 4
-  { 7, 30, 31 }, // Sector 5
-  { 8, 32, 33 }, // Sector 6
-  { 9, 34, 35 }, // Sector 7
-  { 10, 36, 37 }, // Sector 8
-  { 11, 38, 39 }, // Sector 9
-  { 12, 40, 41 }, // Sector 10
-  { 14, 42, 43 }, // Sector 11
-  { 15, 44, 45 }, // Sector 12
-  { 16, 46, 47 }, // Sector 13
-  { 17, 48, 49 }, // Sector 14
-  { 18, 50, 51 }, // Sector 15
+  { 12, 20, 23 }, // Sector 1
+  { 11, 21, 25 }, // Sector 2
+  {  9, 22, 27 }, // Sector 3
+  {  8, 24, 29 }, // Sector 4
+  {  7, 26, 31 }, // Sector 5
+  {  6, 28, 33 }, // Sector 6
+  {  5, 30, 35 }, // Sector 7
+  {  3, 32, 37 }, // Sector 8
+  {  2, 34, 39 }, // Sector 9
+  { 14, 36, 41 }, // Sector 10
+  { 15, 38, 43 }, // Sector 11
+  { 16, 40, 45 }, // Sector 12
+  { 17, 42, 47 }, // Sector 13
+  { 18, 44, 48 }, // Sector 14
+  { 19, 46, 49 }, // Sector 15
 
 };
 
