@@ -8,7 +8,7 @@ static const IPAddress GATEWAY_IP(192,168,1,1);
 
 static const IPAddress DNS_IP(GATEWAY_IP);
 
-static const IPAddress SUBNET_MASK(255,255,0,0);
+static const IPAddress SUBNET_MASK(255,255,255,0);
 
 ///////////////////////////////////////////////////
 
