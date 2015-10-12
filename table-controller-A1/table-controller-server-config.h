@@ -17,8 +17,9 @@ static const IPAddress SUBNET_MASK(255,255,255,0);
 
 //IPAddress table_controller_ip(10,77,102,185);
 
-static const IPAddress table_controller_ip(192, 168, 1, 120);
+static const IPAddress table_controller_ip(192, 168, 1, 10);
 
 static const uint16_t table_controller_port = 10542;
 
 #endif // __TABLE_CONTROLLER_SERVER_CONFIG_H__
+
