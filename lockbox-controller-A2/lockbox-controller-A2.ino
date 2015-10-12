@@ -22,21 +22,35 @@ void setup() {
   
   // Open serial communications and wait for port to open:
   Serial.begin(9600);
+  Serial.println("Hello from Lockbox Controller");
+  
   pinMode(SDCARD_CS, OUTPUT);
   digitalWrite(SDCARD_CS, HIGH);//Deselect the SD card
 
+  
+  Serial.println("Attempting to lease IP via DHCP...");
+  
   // start the Ethernet connection and the server:
-  if (!Ethernet.begin(lockbox_controller_mac))
+  if (Ethernet.begin(lockbox_controller_mac))
+  {
+    Serial.println("IP received via DHCP");
+    Serial.println("Table controller is at ");
+    Serial.println(Ethernet.localIP());
+  }
+  else
   {
     Serial.println("DHCP failed, trying to set IP manually...");
-    Ethernet.begin(lockbox_controller_mac, lockbox_controller_ip);
+    Ethernet.begin(lockbox_controller_mac, lockbox_controller_ip, DNS_IP, GATEWAY_IP, SUBNET_MASK);
+    Serial.print("Static IP: "); Serial.println(lockbox_controller_ip);
+    Serial.print("Subnet mask: "); Serial.println(SUBNET_MASK);
+    Serial.print("Gateway: "); Serial.println(GATEWAY_IP);
+    Serial.print("DNS: "); Serial.println(DNS_IP);
   }
-
+  
+  Serial.print("Server port: "); Serial.println(lockbox_controller_port);
+  
   server.begin();
-  Serial.print("Lockbox controller is at ");
-  Serial.print(Ethernet.localIP());
-  Serial.println(String(" : ") + lockbox_controller_port);
-
+  
   lock_boxes.begin();
 }
 
@@ -91,3 +105,4 @@ void loop() {
     
   }
 }
+
