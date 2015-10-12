@@ -35,8 +35,8 @@ void setup()
   if (Ethernet.begin(table_controller_mac))
   {
     Serial.println("IP received via DHCP");
-    Serial.print("Table controller is at ");
-    Serial.print(Ethernet.localIP());
+    Serial.println("Table controller is at ");
+    Serial.println(Ethernet.localIP());
   }
   else
   {
