@@ -38,8 +38,8 @@ void setup()
   else
   {
     Serial.println("DHCP failed, trying to set IP manually...");
-    Ethernet.begin(table_controller_mac, table_controller_ip, DNS_IP, GATEWAY_IP, SUBNET_MASK);
-    Serial.print("Static IP: "); Serial.println(table_controller_ip);
+    Ethernet.begin(table_controller_mac, TABLE_CONTROLLER_IP, DNS_IP, GATEWAY_IP, SUBNET_MASK);
+    Serial.print("Static IP: "); Serial.println(TABLE_CONTROLLER_IP);
     Serial.print("Subnet mask: "); Serial.println(SUBNET_MASK);
     Serial.print("Gateway: "); Serial.println(GATEWAY_IP);
     Serial.print("DNS: "); Serial.println(DNS_IP);
@@ -47,7 +47,8 @@ void setup()
   // give the Ethernet shield a second to initialize:
   delay(1000);
   
-  Serial.print("Server port: "); Serial.println(table_controller_port);
+  Serial.print("Listening port: "); Serial.println(TABLE_CONTROLLER_LISTENING_PORT);
+  Serial.print("Outgoing port: "); Serial.println(PLAYROOM_SERVER_LISTENING_PORT);
   
 #endif
 
@@ -130,7 +131,7 @@ static bool connect_to_server()
 #ifdef DNS_SERVER_NAME_PRESENT
   Serial.print("Connecting to server by DNS name: ");
   Serial.println(PLAYROOM_SERVER_DNS_ADDRESS);
-  code = client.connect(PLAYROOM_SERVER_DNS_ADDRESS, table_controller_port);
+  code = client.connect(PLAYROOM_SERVER_DNS_ADDRESS, PLAYROOM_SERVER_LISTENING_PORT);
   Serial.print("Code: ");
   Serial.println(code);
 #endif
@@ -142,7 +143,7 @@ static bool connect_to_server()
       Serial.println(err_msg);
     Serial.print("Connecting to server by IP address: ");
     Serial.println(PLAYROOM_SERVER_IP_ADDRESS);
-    code = client.connect(PLAYROOM_SERVER_IP_ADDRESS, table_controller_port);
+    code = client.connect(PLAYROOM_SERVER_IP_ADDRESS, PLAYROOM_SERVER_LISTENING_PORT);
     Serial.print("Code: ");
     Serial.println(code);
     err_msg = NULL;

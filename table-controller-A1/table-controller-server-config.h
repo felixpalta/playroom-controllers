@@ -12,14 +12,14 @@ static const IPAddress SUBNET_MASK(255,255,255,0);
 
 ///////////////////////////////////////////////////
 
-// NOTE: This ip (table_controller_ip) will be set,
+// NOTE: This ip (TABLE_CONTROLLER_IP) will be set,
 // only if failed to obtain IP by DHCP.
 
-//IPAddress table_controller_ip(10,77,102,185);
+//IPAddress TABLE_CONTROLLER_IP(10,77,102,185);
 
-static const IPAddress table_controller_ip(192, 168, 1, 10);
+static const IPAddress TABLE_CONTROLLER_IP(192, 168, 1, 10);
 
-static const uint16_t table_controller_port = 10540;
+static const uint16_t TABLE_CONTROLLER_LISTENING_PORT = 10541;
 
 #endif // __TABLE_CONTROLLER_SERVER_CONFIG_H__
 
