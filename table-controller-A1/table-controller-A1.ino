@@ -43,13 +43,14 @@ void setup()
     Serial.print("Gateway: "); Serial.println(GATEWAY_IP);
     Serial.print("DNS: "); Serial.println(DNS_IP);
   }
+  // give the Ethernet shield a second to initialize:
+  delay(1000);
   
   Serial.print("Server port: "); Serial.println(table_controller_port);
+  
 #endif
 
   sectors_init();
-  
-
 }
 
 void loop()

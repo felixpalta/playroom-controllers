@@ -47,6 +47,9 @@ void setup() {
     Serial.print("DNS: "); Serial.println(DNS_IP);
   }
   
+  // give the Ethernet shield a second to initialize:
+  delay(1000);
+  
   Serial.print("Server port: "); Serial.println(lockbox_controller_port);
   
   server.begin();
