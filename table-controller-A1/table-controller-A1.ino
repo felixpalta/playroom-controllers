@@ -3,6 +3,7 @@
 #include <XmlTokenParser.h>
 #include <SPI.h>
 #include <EthernetV2_0.h>
+#include <MsTimer2.h>
 #include <playroom-server-address.h>
 #include "OutWriter.h"
 #include "table-controller-pin-config.h"
@@ -51,11 +52,32 @@ void setup()
 #endif
 
   sectors_init();
+  
+  Serial.println("Starting MsTimer2...");
+  MsTimer2::set(10, sectors_process_sensors);
+  MsTimer2::start();
 }
 
 void loop()
 {
-  sectors_process_sensors();
+  SectorEventData sector_event_data;
+  if (is_sector_event_ready(&sector_event_data))
+  {
+    reset_sector_event();
+    SectorEvent event_type = sector_event_data.event;
+    switch (event_type)
+    {
+      case SECTOR_EVENT_STARTED:
+        sectors_rotation_started_callback();
+        break;
+      case SECTOR_EVENT_STOPPED:
+        sectors_rotation_stopped_callback(sector_event_data.sector_number);
+        break;
+      default:
+        Serial.print("Unexpected event type: "); Serial.println(event_type);
+        break;
+    }
+  }
 }
 
 static void blink(int n)

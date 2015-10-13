@@ -9,7 +9,26 @@ bool sector_all_number_leds_write(bool on);
 bool sector_all_arrow_leds_write(bool on);
 void sectors_process_sensors();
 
-extern void sectors_rotation_started_callback();
-extern void sectors_rotation_stopped_callback(int sector_n);
+typedef enum
+{
+  SECTOR_EVENT_NONE,
+  SECTOR_EVENT_STARTED,
+  SECTOR_EVENT_STOPPED,
+} SectorEvent;
+
+struct SectorEventData
+{
+  SectorEvent event;
+  int sector_number;
+  void set_event_started() { event = SECTOR_EVENT_STARTED; };
+  void set_event_stopped(int sector) { event = SECTOR_EVENT_STOPPED; sector_number = sector; }
+  void reset() { event = SECTOR_EVENT_NONE; sector_number = -1; }
+  SectorEventData()
+    : event(SECTOR_EVENT_NONE), sector_number(-1) {};
+};
+  
+bool is_sector_event_ready(SectorEventData *data);
+
+void reset_sector_event();
 
 #endif // __SECTORS_H__

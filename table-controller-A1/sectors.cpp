@@ -22,6 +22,28 @@ enum
 
 };
 
+static bool event_is_ready = false;
+
+static SectorEventData sector_event_data;
+
+bool is_sector_event_ready(SectorEventData *data)
+{
+  noInterrupts();
+  bool retval = event_is_ready;
+  if (event_is_ready)
+    *data = sector_event_data;
+  interrupts();
+  return retval;
+}
+
+void reset_sector_event()
+{
+  noInterrupts();
+  event_is_ready = false;
+  sector_event_data.reset();
+  interrupts();
+}
+
 void sectors_init()
 {
   Serial.println("Sector pins initialized");
@@ -357,7 +379,8 @@ void sectors_process_sensors()
 
       if (correct_sectors_counter >= FULL_TURN_LIMIT)
       {
-        sectors_rotation_started_callback();
+        event_is_ready = true;
+        sector_event_data.set_event_started();
         state = STATE_WAIT_FOR_STOP;
         correct_sectors_counter = 0;
         return;
@@ -374,7 +397,8 @@ void sectors_process_sensors()
       switch (s)
       {
       case SECTOR_NONE:
-        sectors_rotation_stopped_callback(convert_to_external(prev_sector));
+        event_is_ready = true;
+        sector_event_data.set_event_stopped(convert_to_external(prev_sector));
         break;
       case SECTOR_INVALID:
         Serial.println("Invalid sector detected while waiting for STOP");
@@ -385,7 +409,8 @@ void sectors_process_sensors()
           Serial.println("Wrong number sector detected while waiting for STOP");
           break;
         }
-        sectors_rotation_stopped_callback(convert_to_external(s));
+        event_is_ready = true;
+        sector_event_data.set_event_stopped(convert_to_external(s));
         break;
       }
       reset_sector_sensors_state();
