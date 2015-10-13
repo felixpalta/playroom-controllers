@@ -29,7 +29,8 @@ private:
 
   void write_request_open_tag(const char* type_attr_value);
   void write_request_close_tag();
-
+  void finalize_message();
+  
   XmlTokenWriter xml_token_writer;
 };
 

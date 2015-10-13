@@ -6,16 +6,23 @@
 #include <playroom-protocol.h>
 #include "lockbox-controller-rq-valid-protocol-values.h"
 
+void XmlRespWriter::finalize_message()
+{
+  xml_token_writer.write_newline();
+}
+
 void XmlRespWriter::send_ack_response()
 {
   write_response_open_tag(TYPE_ATTR_ACK_VALUE);
   write_response_close_tag();
+  finalize_message();
 }
 void XmlRespWriter::send_err_repsonse(const char* err_msg)
 {
   write_response_open_tag(TYPE_ATTR_ERR_VALUE);
   write_err_tag(err_msg);
   write_response_close_tag();
+  finalize_message();
 }
 
 
@@ -62,4 +69,5 @@ void XmlRespWriter::send_game_start_request()
 {
   write_request_open_tag(TYPE_ATTR_GAME_START_VALUE);
   write_request_close_tag();
+  finalize_message();
 }
