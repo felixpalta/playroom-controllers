@@ -11,5 +11,7 @@ libraries/*
 !libraries/EthernetV2_0
 !libraries/XmlTokenParser
 !libraries/XmlTokenWriter
+!libraries/PlayroomCommon
+!libraries/MsTimer2
 
 
