@@ -127,20 +127,26 @@ static bool connect_to_server()
 {
   int code;
   const char *err_msg = NULL;
-  
-#ifdef DNS_SERVER_NAME_PRESENT
-  Serial.print("Connecting to server by DNS name: ");
-  Serial.println(PLAYROOM_SERVER_DNS_ADDRESS);
-  code = client.connect(PLAYROOM_SERVER_DNS_ADDRESS, PLAYROOM_SERVER_LISTENING_PORT);
-  Serial.print("Code: ");
-  Serial.println(code);
-#endif
+  bool connect_ok = false;
 
-  if (!get_connect_msg(code, &err_msg))
+  if (DNS_SERVER_NAME_PRESENT)
   {
-    Serial.println("Connection to server by DNS name failed");
-    if (err_msg)
-      Serial.println(err_msg);
+    Serial.print("Connecting to server by DNS name: ");
+    Serial.println(PLAYROOM_SERVER_DNS_ADDRESS);
+    code = client.connect(PLAYROOM_SERVER_DNS_ADDRESS, PLAYROOM_SERVER_LISTENING_PORT);
+    Serial.print("Code: ");
+    Serial.println(code);
+    connect_ok = get_connect_msg(code, &err_msg);
+    if (!connect_ok)
+    {
+      Serial.println("Connection to server by DNS name failed");
+      if (err_msg)
+        Serial.println(err_msg);
+    }
+  }
+
+  if (!connect_ok)
+  {
     Serial.print("Connecting to server by IP address: ");
     Serial.println(PLAYROOM_SERVER_IP_ADDRESS);
     code = client.connect(PLAYROOM_SERVER_IP_ADDRESS, PLAYROOM_SERVER_LISTENING_PORT);

@@ -4,13 +4,9 @@
 // NOTE: The client will first attempt to connect to the server by DNS name,
 // then, if that failed, it will try to connect by IP address.
 
-//#define DNS_SERVER_NAME_PRESENT
+static const bool DNS_SERVER_NAME_PRESENT = false;
 
-#ifdef DNS_SERVER_NAME_PRESENT
-
-static const char PLAYROOM_SERVER_DNS_ADDRESS[] = "localhost";
-
-#endif
+static const char PLAYROOM_SERVER_DNS_ADDRESS[] = "server1";
 
 static const IPAddress PLAYROOM_SERVER_IP_ADDRESS(10,77,102,224);
 
