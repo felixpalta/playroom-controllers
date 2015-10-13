@@ -7,16 +7,23 @@
 #include <playroom-protocol.h>
 #include "table-controller-valid-protocol-values.h"
 
+void OutWriter::finalize_message()
+{
+  xml_writer.write_newline();
+}
+
 void OutWriter::send_ack_response()
 {
   write_response_open_tag(TYPE_ATTR_ACK_VALUE);
   write_response_close_tag();
+  finalize_message();
 }
 void OutWriter::send_err_repsonse(const char* err_msg)
 {
   write_response_open_tag(TYPE_ATTR_ERR_VALUE);
   write_err_tag(err_msg);
   write_response_close_tag();
+  finalize_message();
 }
 
 
@@ -63,6 +70,7 @@ void OutWriter::send_barrel_play_request()
 {
   write_request_open_tag(TYPE_ATTR_BARREL_PLAY_VALUE);
   write_request_close_tag();
+  finalize_message();
 }
 
 void OutWriter::send_barrel_sector_request(int n)
@@ -72,4 +80,5 @@ void OutWriter::send_barrel_sector_request(int n)
   xml_writer.write_attribute_num(SECTOR_ATTR_NAME, n);
   xml_writer.write_right_closing_bracket();
   write_request_close_tag();
+  finalize_message();
 }
