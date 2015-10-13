@@ -124,12 +124,17 @@ static bool get_connect_msg(int code, const char **msg)
 
 static bool connect_to_server()
 {
+  int code;
+  const char *err_msg = NULL;
+  
+#ifdef DNS_SERVER_NAME_PRESENT
   Serial.print("Connecting to server by DNS name: ");
   Serial.println(PLAYROOM_SERVER_DNS_ADDRESS);
-  int code = client.connect(PLAYROOM_SERVER_DNS_ADDRESS, table_controller_port);
+  code = client.connect(PLAYROOM_SERVER_DNS_ADDRESS, table_controller_port);
   Serial.print("Code: ");
   Serial.println(code);
-  const char *err_msg = NULL;
+#endif
+
   if (!get_connect_msg(code, &err_msg))
   {
     Serial.println("Connection to server by DNS name failed");
@@ -194,7 +199,7 @@ static void send_request(int rq_type, int n)
     client.stop();
     return;
   }
-  Serial.println("Response from server: ");
+  Serial.println("Raw response from server: ");
   
   static const unsigned long READ_TIMEOUT = 1000;
   
@@ -212,7 +217,7 @@ static void send_request(int rq_type, int n)
     }
     if (millis() - last_read_time >= READ_TIMEOUT)
     {
-      Serial.println("Read timeout!");
+      Serial.println("\nRead timeout!");
       break;
     }
   }

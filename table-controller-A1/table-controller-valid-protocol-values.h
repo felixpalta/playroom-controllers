@@ -3,6 +3,6 @@
 
 static const char PROTOVER_ATTR_VALUE[] = "1.1";
 
-static const char SERIAL_ATTR_VALUE[] = "UDH-TX143";
+static const char SERIAL_ATTR_VALUE[] = "UDH-TX145";
 
 #endif //__TABLE_CONTROLLER_VALID_PROTOCOL_VALUES_H__
