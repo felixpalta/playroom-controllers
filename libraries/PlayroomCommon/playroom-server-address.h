@@ -14,4 +14,6 @@ static const char PLAYROOM_SERVER_DNS_ADDRESS[] = "localhost";
 
 static const IPAddress PLAYROOM_SERVER_IP_ADDRESS(10,77,102,224);
 
+static const uint16_t PLAYROOM_SERVER_LISTENING_PORT = 10540;
+
 #endif // __PLAYROOM_SERVER_ADDRESS_H__
