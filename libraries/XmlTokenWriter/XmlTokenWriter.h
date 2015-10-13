@@ -48,6 +48,8 @@ public:
 	// attr_name="attr_value" + space
 	void write_attribute_text(const char* attr_name, const char *attr_value);
 	void write_attribute_num(const char* attr_name, int n);
+    
+    void write_newline();
 };
 
 #endif //__XMLTOKENWRITER_H__

@@ -47,16 +47,21 @@ void XmlTokenWriter::write_tag_opening(const char* str)
 	s.print(str);
 	s.print(" ");
 }
-// > + newline
+// >
 void XmlTokenWriter::write_right_simple_bracket()
 {
-	s.println(">");
+	s.print(">");
 }
 
-// /> + newline
+// />
 void XmlTokenWriter::write_right_closing_bracket()
 {
-	s.println("/>");
+	s.print("/>");
+}
+
+void XmlTokenWriter::write_newline()
+{
+    s.println();
 }
 
 // </tagname>
