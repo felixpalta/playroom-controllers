@@ -142,6 +142,7 @@ static void send_request(int rq_type, int n)
   {
     return;
   }
+  Serial.println("Connected to server");
   if (!client.connected())
   {
     Serial.println("Error: server instantly closed the connection");
@@ -172,10 +173,26 @@ static void send_request(int rq_type, int n)
     return;
   }
   Serial.println("Response from server: ");
-  while (client.available())
+  
+  static const unsigned long READ_TIMEOUT = 1000;
+  
+  static unsigned long last_read_time;
+  
+  last_read_time = millis();
+  
+  while (true)
   {
-    char c = client.read();
-    Serial.print(c);
+    if (client.available())
+    {
+      last_read_time = millis();
+      char c = client.read();
+      Serial.print(c);
+    }
+    if (millis() - last_read_time >= READ_TIMEOUT)
+    {
+      Serial.println("Read timeout!");
+      break;
+    }
   }
   if (!client.connected())
   {
