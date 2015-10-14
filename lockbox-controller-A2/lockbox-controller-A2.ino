@@ -72,6 +72,7 @@ void loop() {
       {
         InputRqParsingOutput data;
         InputReader::ErrorType status = xml_parser.process_stream(&data);
+        Serial.println();
         if (status != InputReader::ERROR_NONE)
         {
           Serial.print("XML Parser ERROR:");
