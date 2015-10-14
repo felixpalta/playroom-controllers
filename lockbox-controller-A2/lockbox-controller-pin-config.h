@@ -33,7 +33,7 @@ static const int lockbox_pins[LOCKBOX_PIN_NUMBER] =
   42, // Lockbox 21
   43, // Lockbox 22
   44, // Lockbox 23
-    45, // Lockbox 24
+  45, // Lockbox 24
 };
 
 #endif // __LOCKBOX_CONTROLLER_PIN_CONFIG_H__

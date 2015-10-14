@@ -1,6 +1,9 @@
 #include "LockBoxes.h"
 #include "lockbox-controller-pin-config.h"
 
+#define BLINK_DELAY_MS 200
+#define BLINK_N 5
+
 void LockBoxes::begin()
 {
   close_all();
@@ -33,7 +36,17 @@ boolean LockBoxes::check_number_convert_to_internal(int& n)
   return false;
 }
 
-
+static void blink(int n)
+{
+  pinMode(n, OUTPUT);
+  for (int i = 0; i < BLINK_N; ++i)
+  {
+    digitalWrite(n, HIGH);
+    delay(BLINK_DELAY_MS);
+    digitalWrite(n, LOW);
+    delay(BLINK_DELAY_MS);
+  }
+}
 
 boolean LockBoxes::open(int n)
 {
@@ -42,9 +55,7 @@ boolean LockBoxes::open(int n)
     error_code = ERROR_INVALID_LOCKBOX_NUMBER;
     return false;
   }
-
-  digitalWrite(lockbox_pins[n], HIGH);
-  pinMode(lockbox_pins[n], OUTPUT);
+  blink(lockbox_pins[n]);
   return true;
 }
 
