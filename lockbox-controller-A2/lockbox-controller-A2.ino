@@ -78,35 +78,42 @@ void loop() {
           Serial.print("XML Parser ERROR:");
           Serial.println(status);
           xml_resp_writer.send_err_repsonse("Unable to parse XML request");
+          delay(1);
+          disconnect_client(client);
           break;
         }
         else
         {
           Serial.println("XML Parser OK");
+          xml_resp_writer.send_ack_response();
+          Serial.println("ACK Sent");
+          
+          delay(1);
+          disconnect_client(client);
+          
           print_request(data);
           bool ok = verify_and_process_request(data);
           if (ok)
           {
             Serial.println("Request verified and executed OK");
-            xml_resp_writer.send_ack_response();
             break;
           }
           else
           {
             const char *err = get_request_error();
             Serial.println(err);
-            xml_resp_writer.send_err_repsonse(err);
             break;
           }
         }
       }
-      // give the web browser time to receive the data
-      delay(1);
-      // close the connection:
-      client.stop();
-      Serial.println("client disonnected");
     }
     
   }
+}
+
+static void disconnect_client(Client& client)
+{
+  client.stop();
+  Serial.println("client disonnected");
 }
 
