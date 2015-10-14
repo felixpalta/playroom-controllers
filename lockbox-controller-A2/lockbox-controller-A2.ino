@@ -3,7 +3,7 @@
 #include <XmlTokenParser.h>
 #include "request_processing.h"
 #include "XmlRespWriter.h"
-#include "XmlRqParser.h"
+#include "InputReader.h"
 #include <SPI.h>
 #include <EthernetV2_0.h>
 #include "lockbox-controller-server-config.h"
@@ -62,7 +62,7 @@ void loop() {
   EthernetClient client = server.available();
   if (client) 
   {
-    XmlRqParser xml_parser(client);
+    InputReader xml_parser(client);
     XmlRespWriter xml_resp_writer(client);
 
     Serial.println("\nnew client");
@@ -70,9 +70,9 @@ void loop() {
     {
       while (client.available()) 
       {
-        XmlRqParsingOutput data;
-        XmlRqParser::ErrorType status = xml_parser.process_stream(&data);
-        if (status != XmlRqParser::ERROR_NONE)
+        InputRqParsingOutput data;
+        InputReader::ErrorType status = xml_parser.process_stream(&data);
+        if (status != InputReader::ERROR_NONE)
         {
           Serial.print("XML Parser ERROR:");
           Serial.println(status);

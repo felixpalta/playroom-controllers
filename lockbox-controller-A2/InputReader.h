@@ -1,7 +1,7 @@
-// XmlRqParser.h
+// InputReader.h
 
-#ifndef _XMLRQPARSER_h
-#define _XMLRQPARSER_h
+#ifndef __INPUT_READER_H__
+#define __INPUT_READER_H__
 
 #if defined(ARDUINO) && ARDUINO >= 100
   #include "arduino.h"
@@ -37,9 +37,9 @@ typedef struct
   bool lockbox_attr_found;
   TokenBuffer lockbox_attr_buf;
 
-} XmlRqParsingOutput;
+} InputRqParsingOutput;
 
-class XmlRqParser
+class InputReader
 {
 public:
   typedef enum
@@ -60,9 +60,9 @@ public:
     ERROR_DATA_TAG_NAME,
   } ErrorType;
 
-  XmlRqParser(Stream& s) : token_parser(s) {}
+  InputReader(Stream& s) : token_parser(s) {}
 
-  ErrorType process_stream(XmlRqParsingOutput* out);
+  ErrorType process_stream(InputRqParsingOutput* out);
 
 private:
   bool parse_request_type(const char* str, RqType& request_type);

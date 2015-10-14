@@ -2,11 +2,11 @@
 // 
 // 
 
-#include "XmlRqParser.h"
+#include "InputReader.h"
 #include <playroom-protocol.h>
 #include "lockbox-controller-rq-valid-protocol-values.h"
 
-bool XmlRqParser::parse_request_type(const char* str, RqType& request_type)
+bool InputReader::parse_request_type(const char* str, RqType& request_type)
 {
   if (strncmp(str, TYPE_ATTR_ALIVE_VALUE, sizeof(TYPE_ATTR_ALIVE_VALUE) - 1) == 0)
   {
@@ -41,7 +41,7 @@ bool XmlRqParser::parse_request_type(const char* str, RqType& request_type)
   return false;
 }
 
-XmlRqParser::ErrorType XmlRqParser::process_stream(XmlRqParsingOutput* out)
+InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
 {
   if (!out)
     return ERROR_OUTPUT_NULLPTR;

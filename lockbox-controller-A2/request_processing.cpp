@@ -11,7 +11,7 @@ static const char *processing_err_msg = "No processing error";
 
 static bool processing_error_occured = false;
 
-static bool verify_request(XmlRqParsingOutput& data);
+static bool verify_request(InputRqParsingOutput& data);
 
 static const char* get_request_name(RqType rq);
 
@@ -84,7 +84,7 @@ static const char* get_request_name(RqType rq)
   }
 }
 
-void print_request(const XmlRqParsingOutput& data)
+void print_request(const InputRqParsingOutput& data)
 {
 
   Serial.println(get_request_name(data.request_type));
@@ -117,7 +117,7 @@ static const char* get_alive_error()
 }
 
 
-static bool process_request(XmlRqParsingOutput& data)
+static bool process_request(InputRqParsingOutput& data)
 {
   bool ok;
   int lockbox_number = atoi(data.lockbox_attr_buf);
@@ -175,7 +175,7 @@ static bool process_request(XmlRqParsingOutput& data)
   }
 }
 
-static bool verify_request(XmlRqParsingOutput& data)
+static bool verify_request(InputRqParsingOutput& data)
 {
   if (!data.proto_attr_buf)
   {
@@ -237,7 +237,7 @@ static bool verify_request(XmlRqParsingOutput& data)
   return true;
 }
 
-bool verify_and_process_request(XmlRqParsingOutput& data)
+bool verify_and_process_request(InputRqParsingOutput& data)
 {
   processing_error_occured = false;
   error_code = ERROR_NONE;
