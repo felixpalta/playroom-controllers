@@ -251,7 +251,7 @@ void sectors_rotation_started_callback()
 void sectors_rotation_stopped_callback(int sector_n)
 {
   Serial.print("ROTATION STOPPED CALLBACK: ");
-  Serial.println(sector_n);
+  Serial.println(sector_n + 1);
   
   send_request(BARREL_SECTOR_RQ, sector_n);
   blink(sector_n);

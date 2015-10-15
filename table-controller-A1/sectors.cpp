@@ -80,7 +80,8 @@ static bool check_number(int n)
 
 static bool check_number_convert_to_internal(int& n)
 {
-  int internal_number = n - 1;
+  //int internal_number = n - 1;
+  int internal_number = n;
   if (check_number(internal_number))
   {
     n = internal_number;
@@ -92,7 +93,10 @@ static bool check_number_convert_to_internal(int& n)
 static int convert_to_external(int n)
 {
   if (check_number(n))
-    return n + 1;
+  {
+    //return n + 1;
+    return n;
+  }
   return SECTOR_INVALID;
 }
 
