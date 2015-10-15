@@ -41,4 +41,18 @@ static const char ERR_TAG_NAME[] = "err";
 
 static const char TXT_ATTR_NAME[] = "txt";
 
+static const char TYPE_ATTR_SECTOR_NUMBER_ON_VALUE[] = "sector-number-on";
+static const char TYPE_ATTR_SECTOR_NUMBER_OFF_VALUE[] = "sector-number-off";
+
+static const char TYPE_ATTR_SECTOR_ARROW_ON_VALUE[] = "sector-arrow-on";
+static const char TYPE_ATTR_SECTOR_ARROW_OFF_VALUE[] = "sector-arrow-off";
+
+static const char TYPE_ATTR_SECTOR_NUMBER_ALL_ON_VALUE[] = "sector-number-all-on";
+static const char TYPE_ATTR_SECTOR_NUMBER_ALL_OFF_VALUE[] = "sector-number-all-off";
+
+static const char TYPE_ATTR_SECTOR_ARROW_ALL_ON_VALUE[] = "sector-arrow-all-on";
+static const char TYPE_ATTR_SECTOR_ARROW_ALL_OFF_VALUE[] = "sector-arrow-all-off";
+
+
+
 #endif // __PLAYROOM_PROTOCOL_H__
