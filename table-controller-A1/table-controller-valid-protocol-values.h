@@ -1,7 +1,7 @@
 #ifndef __TABLE_CONTROLLER_VALID_PROTOCOL_VALUES_H__
 #define __TABLE_CONTROLLER_VALID_PROTOCOL_VALUES_H__
 
-static const char PROTOVER_ATTR_VALUE[] = "1.1";
+static const char PROTOVER_ATTR_VALUE[] = "1.2";
 
 static const char SERIAL_ATTR_VALUE[] = "UDH-TX145";
 
