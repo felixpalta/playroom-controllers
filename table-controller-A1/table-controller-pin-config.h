@@ -11,7 +11,7 @@ static const size_t NUMBER_OF_SECTORS = 15;
 
 // NOTE: If active level is HIGH,
 // then external pull-down resistors should be connected to the pins.
-static const int SECTOR_PIN_ACTIVE_LEVEL = LOW;
+static const int SECTOR_PIN_ACTIVE_LEVEL = HIGH;
 
 struct SectorPins
 {
