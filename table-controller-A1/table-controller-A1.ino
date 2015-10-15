@@ -21,7 +21,7 @@ void setup()
   pinMode(DBG_PIN, OUTPUT);
   digitalWrite(DBG_PIN, LOW);
   
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Hello from Table Controller");
 
 #ifndef SECTOR_TEST_MODE
