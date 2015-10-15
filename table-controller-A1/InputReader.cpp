@@ -90,19 +90,10 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
     return ERROR_INVALID_PROTOVER;
   }
 
-  ok = token_parser.find_attribute(SERIAL_ATTR_NAME);
-  if (!ok)
-    return ERROR_SERIAL_ATTR_VALUE;
-
-  if (!strings_equal(token_parser.get_internal_buf(), SERIAL_ATTR_VALUE, sizeof(SERIAL_ATTR_VALUE) - 1))
-  {
-    return ERROR_INVALID_SERIAL;
-  }
-
   ok = token_parser.expect_right_simple_bracket();
   if (!ok)
     return ERROR_CLOSE_TAG;
-
+    
   switch (out->request_type)
   {
   case RQ_TYPE_SECTOR_NUMBER_ON:
@@ -112,13 +103,13 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
     ok = token_parser.expect_opening_tag(DATA_TAG_NAME);
     if (!ok)
       return ERROR_DATA_TAG_NAME;
-
+      
     ok = token_parser.find_attribute(SECTOR_ATTR_NAME);
     if (!ok)
       return ERROR_SECTOR_ATTR_VALUE;
     out->sector_attr_found = true;
     token_parser.null_terminated_copy_of_buf(&out->sector_attr_buf);
-
+    
     ok = token_parser.expect_right_closing_bracket();
     if (!ok)
       return ERROR_CLOSE_TAG;
@@ -126,7 +117,7 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
   default:
     break;
   }
-
+      
   ok = token_parser.expect_closing_tag(RQ_TAG_NAME);
   if (!ok)
     return ERROR_RQ_CLOSING_TAG_NAME;
