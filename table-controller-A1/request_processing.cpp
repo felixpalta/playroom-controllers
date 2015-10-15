@@ -14,6 +14,7 @@ typedef enum
   ERROR_SECTOR_ATTR_NOT_FOUND,
   ERROR_BAD_SECTOR_NUMBER,
   ERROR_INVALID_RQ_TYPE,
+  ERROR_REQUEST_PROCESSING,
 }
 RqVerfyError;
 
@@ -29,6 +30,8 @@ const char *get_request_error()
     return "sector attribute not found";
   case ERROR_BAD_SECTOR_NUMBER:
     return "sector attribute value incorrect";
+  case ERROR_REQUEST_PROCESSING:
+    return "Error while processing request, probably incorrect arguments?";
   case ERROR_NONE:
     return "Request processing: no error";
   default:
@@ -43,7 +46,7 @@ void print_request(const InputRqParsingOutput& data)
 
   if (data.sector_attr_found)
   {
-    Serial.print("ProtoVer: ");
+    Serial.print("Sector: ");
     Serial.println(data.sector_attr_buf);
   }
 
@@ -122,7 +125,8 @@ static bool process_request(InputRqParsingOutput& data)
   }
   else
     ok = false; // should be impossible to get here
-
+  if (!ok)
+    error_code = ERROR_REQUEST_PROCESSING;
   return ok;
 }
 

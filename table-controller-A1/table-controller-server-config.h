@@ -19,7 +19,7 @@ static const IPAddress SUBNET_MASK(255,255,255,0);
 
 static const IPAddress TABLE_CONTROLLER_IP(192, 168, 1, 10);
 
-static const uint16_t TABLE_CONTROLLER_LISTENING_PORT = 10541;
+static const uint16_t TABLE_CONTROLLER_LISTENING_PORT = 10542;
 
 #endif // __TABLE_CONTROLLER_SERVER_CONFIG_H__
 

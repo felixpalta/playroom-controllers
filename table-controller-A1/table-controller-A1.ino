@@ -10,8 +10,11 @@
 #include "table-controller-server-config.h"
 #include "sectors.h"
 #include "sector_test_mode.h"
+#include "InputReader.h"
+#include "request_processing.h"
 
 EthernetClient client;
+EthernetServer server(TABLE_CONTROLLER_LISTENING_PORT);
 
 void setup()
 {
@@ -50,6 +53,7 @@ void setup()
   Serial.print("Listening port: "); Serial.println(TABLE_CONTROLLER_LISTENING_PORT);
   Serial.print("Outgoing port: "); Serial.println(PLAYROOM_SERVER_LISTENING_PORT);
   
+  server.begin();
 #endif
 
   sectors_init();
@@ -61,6 +65,7 @@ void setup()
 
 void loop()
 {
+  process_incoming_connections();
   SectorEventData sector_event_data;
   if (is_sector_event_ready(&sector_event_data))
   {
@@ -79,6 +84,68 @@ void loop()
         break;
     }
   }
+}
+
+void process_incoming_connections()
+{
+  EthernetClient client = server.available();
+  if (client)
+  {
+    InputReader xml_parser(client);
+    OutWriter out_writer(client);
+
+    Serial.println("\nnew client");
+    if (client.connected())
+    {
+      while (client.available())
+      {
+        InputRqParsingOutput data;
+        InputReader::ErrorType status = xml_parser.process_stream(&data);
+        Serial.println();
+        if (status != InputReader::ERROR_NONE)
+        {
+          Serial.print("XML Parser ERROR:");
+          Serial.println(status);
+          out_writer.send_err_repsonse("Unable to parse XML request");
+          delay(1);
+          disconnect_client(client);
+          break;
+        }
+        else
+        {
+          Serial.println("XML Parser OK");
+          out_writer.send_ack_response();
+          Serial.println("ACK Sent");
+
+          delay(1);
+          disconnect_client(client);
+
+          print_request(data);
+          bool ok = verify_and_process_request(data);
+          if (ok)
+          {
+            Serial.println("Request verified and executed OK");
+            break;
+          }
+          else
+          {
+            const char *err = get_request_error();
+            Serial.println(err);
+            break;
+          }
+        }
+      }
+      Serial.println("Incoming request processing done");
+    }
+    else
+      Serial.println("Incoming client instantly closed the connection");
+  }
+}
+
+static void disconnect_client(Client& client)
+{
+  client.stop();
+  Serial.println("client disonnected");
 }
 
 static void blink(int n)
