@@ -33,13 +33,10 @@ public:
     ERROR_CLOSE_TAG,
     ERROR_RQ_TAG_NAME,
     ERROR_RQ_CLOSING_TAG_NAME,
-    ERROR_TYPE_ATTR_NAME,
     ERROR_TYPE_ATTR_VALUE,
     ERROR_TYPE_ATTR_INVALID,
-    ERROR_PROTOVER_ATTR_NAME,
     ERROR_PROTOVER_ATTR_VALUE,
     ERROR_INVALID_PROTOVER,
-    ERROR_SERIAL_ATTR_NAME,
     ERROR_SERIAL_ATTR_VALUE,
     ERROR_INVALID_SERIAL,
     ERROR_DATA_TAG_NAME,
@@ -49,6 +46,8 @@ public:
   InputReader(Stream& s) : token_parser(s) {}
 
   ErrorType process_stream(InputRqParsingOutput* out);
+
+  static const char* get_error(ErrorType err);
 
 private:
   XmlTokenParser token_parser;
