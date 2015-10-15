@@ -177,7 +177,7 @@ static bool process_request(InputRqParsingOutput& data)
 
 static bool verify_request(InputRqParsingOutput& data)
 {
-  if (!data.proto_attr_buf)
+  if (!data.proto_attr_found)
   {
     error_code = ERROR_PROTOVER_ATTR_NOT_FOUND;
     return false;
