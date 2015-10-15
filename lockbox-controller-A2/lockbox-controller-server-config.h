@@ -17,7 +17,7 @@ static const IPAddress SUBNET_MASK(255,255,255,0);
 
 //static const IPAddress lockbox_controller_ip(10,77,102,185);
 
-static const IPAddress lockbox_controller_ip(192, 168, 1, 77);
+static const IPAddress lockbox_controller_ip(192, 168, 1, 4);
 
 static const uint16_t lockbox_controller_port = 10541;
 
