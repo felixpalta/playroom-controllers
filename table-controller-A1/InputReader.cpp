@@ -6,32 +6,6 @@
 #include <playroom-protocol.h>
 #include "table-controller-valid-protocol-values.h"
 
-struct RqTypeString
-{
-  RqType rq_type;
-  const char *s;
-  size_t len;
-};
-
-#define RQ_TYPE_STRBUF_AND_LEN(rq_type, strbuf) { rq_type, strbuf, sizeof(strbuf) - 1 }
-
-static const RqTypeString rq_types[] =
-{
-  RQ_TYPE_STRBUF_AND_LEN(RQ_TYPE_ALIVE, TYPE_ATTR_ALIVE_VALUE),
-  RQ_TYPE_STRBUF_AND_LEN(RQ_TYPE_SECTOR_NUMBER_ON, TYPE_ATTR_SECTOR_NUMBER_ON_VALUE),
-  RQ_TYPE_STRBUF_AND_LEN(RQ_TYPE_SECTOR_NUMBER_OFF, TYPE_ATTR_SECTOR_NUMBER_OFF_VALUE),
-  RQ_TYPE_STRBUF_AND_LEN(RQ_TYPE_SECTOR_NUMBER_ALL_ON, TYPE_ATTR_SECTOR_NUMBER_ALL_ON_VALUE),
-  RQ_TYPE_STRBUF_AND_LEN(RQ_TYPE_SECTOR_NUMBER_ALL_OFF, TYPE_ATTR_SECTOR_NUMBER_ALL_OFF_VALUE),
-  RQ_TYPE_STRBUF_AND_LEN(RQ_TYPE_SECTOR_ARROW_ON, TYPE_ATTR_SECTOR_ARROW_ON_VALUE),
-  RQ_TYPE_STRBUF_AND_LEN(RQ_TYPE_SECTOR_ARROW_OFF, TYPE_ATTR_SECTOR_ARROW_OFF_VALUE),
-  RQ_TYPE_STRBUF_AND_LEN(RQ_TYPE_SECTOR_ARROW_ALL_ON, TYPE_ATTR_SECTOR_ARROW_ALL_ON_VALUE),
-  RQ_TYPE_STRBUF_AND_LEN(RQ_TYPE_SECTOR_ARROW_ALL_OFF, TYPE_ATTR_SECTOR_ARROW_ALL_OFF_VALUE),
-
-};
-
-
-#define N_ELEMS(a) (sizeof(a)/sizeof(a[0]))
-
 static bool strings_equal(const char *str, const char *other, size_t other_len)
 {
   if (strlen(str) == other_len)
@@ -44,21 +18,6 @@ static bool strings_equal(const char *str, const char *other, size_t other_len)
   return false;
 }
 
-bool InputReader::parse_request_type(const char* str, RqType& request_type)
-{
-  for (size_t i = 0; i < N_ELEMS(rq_types); ++i)
-  {
-    const RqTypeString& rq_type_string = rq_types[i];
-    if (strings_equal(str, rq_type_string.s, rq_type_string.len))
-    {
-      request_type = rq_type_string.rq_type;
-      return true;
-    }
-  }
-
-  request_type = RQ_TYPE_INVALID;
-  return false;
-}
 
 InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
 {
@@ -83,14 +42,11 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
   if (!ok)
     return ERROR_TYPE_ATTR_VALUE;
 
-  RqType request_type;
-  ok = parse_request_type(token_parser.get_internal_buf(), request_type);
-  if (!ok)
+  out->request_type = get_request_type(token_parser.get_internal_buf());
+  if (out->request_type == RQ_TYPE_INVALID)
   {
-    out->request_type = RQ_TYPE_INVALID;
     return ERROR_TYPE_ATTR_INVALID;
   }
-  out->request_type = request_type;
   
   ok = token_parser.find_attribute(PROTOVER_ATTR_NAME);
   if (!ok)
@@ -114,7 +70,7 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
   if (!ok)
     return ERROR_CLOSE_TAG;
 
-  switch (request_type)
+  switch (out->request_type)
   {
   case RQ_TYPE_SECTOR_NUMBER_ON:
   case RQ_TYPE_SECTOR_NUMBER_OFF:

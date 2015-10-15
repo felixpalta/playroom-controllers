@@ -83,6 +83,9 @@
   <ItemGroup>
     <ClInclude Include="InputReader.h" />
     <ClInclude Include="OutWriter.h" />
+    <ClInclude Include="request_names.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClInclude Include="sectors.h" />
     <ClInclude Include="sector_test_mode.h">
       <FileType>CppCode</FileType>
@@ -97,6 +100,7 @@
   <ItemGroup>
     <ClCompile Include="InputReader.cpp" />
     <ClCompile Include="OutWriter.cpp" />
+    <ClCompile Include="request_names.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

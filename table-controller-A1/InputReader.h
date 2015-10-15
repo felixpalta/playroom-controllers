@@ -12,21 +12,7 @@
 #include "table-controller-valid-protocol-values.h"
 #include "XmlTokenParser.h"
 #include "xml_token_max_length.h"
-
-typedef enum
-{
-  RQ_TYPE_INVALID,
-  RQ_TYPE_ALIVE,
-  RQ_TYPE_SECTOR_NUMBER_ON,
-  RQ_TYPE_SECTOR_NUMBER_OFF,
-  RQ_TYPE_SECTOR_NUMBER_ALL_ON,
-  RQ_TYPE_SECTOR_NUMBER_ALL_OFF,
-  RQ_TYPE_SECTOR_ARROW_ON,
-  RQ_TYPE_SECTOR_ARROW_OFF,
-  RQ_TYPE_SECTOR_ARROW_ALL_ON,
-  RQ_TYPE_SECTOR_ARROW_ALL_OFF,
-
-} RqType;
+#include "request_names.h"
 
 typedef struct
 {
@@ -65,7 +51,6 @@ public:
   ErrorType process_stream(InputRqParsingOutput* out);
 
 private:
-  bool parse_request_type(const char* str, RqType& request_type);
   XmlTokenParser token_parser;
   
 };
