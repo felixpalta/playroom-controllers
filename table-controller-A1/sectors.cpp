@@ -80,8 +80,8 @@ static bool check_number(int n)
 
 static bool check_number_convert_to_internal(int& n)
 {
-  //int internal_number = n - 1;
-  int internal_number = n;
+  int internal_number = n - 1;
+//  int internal_number = n;
   if (check_number(internal_number))
   {
     n = internal_number;
