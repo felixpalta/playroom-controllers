@@ -20,24 +20,28 @@ RqVerfyError;
 
 static RqVerfyError error_code;
 
+#define BAD_RQ "Request processing error: "
+
 const char *get_request_error()
 {
   switch (error_code)
   {
   case ERROR_INVALID_RQ_TYPE:
-    return "Invalid request type";
+    return BAD_RQ"Invalid request type";
   case ERROR_SECTOR_ATTR_NOT_FOUND:
-    return "sector attribute not found";
+    return BAD_RQ"Attribute \"sector\" not found";
   case ERROR_BAD_SECTOR_NUMBER:
-    return "sector attribute value incorrect";
+    return BAD_RQ"Attribute \"sector\" value incorrect";
   case ERROR_REQUEST_PROCESSING:
-    return "Error while processing request, probably incorrect arguments?";
+    return BAD_RQ"Internal error, probably incorrect arguments?";
   case ERROR_NONE:
-    return "Request processing: no error";
+    return BAD_RQ"No error";
   default:
-    return "Unexpected error";
+    return BAD_RQ"Unexpected error";
   }
 }
+
+#undef BAD_RQ
 
 void print_request(const InputRqParsingOutput& data)
 {
