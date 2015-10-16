@@ -18,40 +18,41 @@ static bool strings_equal(const char *str, const char *other, size_t other_len)
   return false;
 }
 
+#define BAD_RQ "Request parsing error: "
+
 const char* InputReader::get_error(ErrorType err)
 {
   switch (err)
   {
   case ERROR_NONE:
-    return "InputReader: no error";
+    return BAD_RQ "No error";
   case ERROR_OUTPUT_NULLPTR:
-    return "InputReader: nullptr to output buffer";
+    return BAD_RQ "Nullptr to output buffer";
   case ERROR_CLOSE_TAG:
-    return "Expected closing tag";
+    return BAD_RQ "Expected closing tag";
   case ERROR_RQ_TAG_NAME:
-    return "Expected request opeinng tag";
+    return BAD_RQ "Expected request opening tag";
   case ERROR_RQ_CLOSING_TAG_NAME:
-    return "Expected request closing tag";
+    return BAD_RQ "Expected request closing tag";
   case ERROR_TYPE_ATTR_VALUE:
-    return "Expected type attribute";
+    return BAD_RQ "Expected type attribute";
   case ERROR_TYPE_ATTR_INVALID:
-    return "Invalid type attribute value";
+    return BAD_RQ "Invalid type attribute value";
   case ERROR_PROTOVER_ATTR_VALUE:
-    return "Expected protoVer attribute";
+    return BAD_RQ "Expected protoVer attribute";
   case ERROR_INVALID_PROTOVER:
-    return "Invalid protoVer value";
-  case ERROR_SERIAL_ATTR_VALUE:
-    return "Expected serial attribute";
-  case ERROR_INVALID_SERIAL:
-    return "Invalid serial value";
+    return BAD_RQ "Invalid protoVer value";
   case ERROR_DATA_TAG_NAME:
-    return "Expected data opening tag";
+    return BAD_RQ "Expected data opening tag";
   case ERROR_SECTOR_ATTR_VALUE:
-    return "Expected sector attribute";
+    return BAD_RQ "Expected sector attribute";
   default:
-    return "Unexpected InputReader error code";
+    return BAD_RQ "Unexpected error";
   }
 }
+
+#undef BAD_RQ
+
 InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
 {
   if (!out)
