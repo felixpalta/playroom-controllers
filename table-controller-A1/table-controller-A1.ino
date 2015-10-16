@@ -105,8 +105,9 @@ void process_incoming_connections()
         if (status != InputReader::ERROR_NONE)
         {
           Serial.print("XML Parser ERROR: ");
-          Serial.println(xml_parser.get_error(status));
-          out_writer.send_err_repsonse("Unable to parse XML request");
+          const char *err_msg = xml_parser.get_error(status);
+          Serial.println(err_msg);
+          out_writer.send_err_repsonse(err_msg);
           delay(1);
           disconnect_client(client);
           break;
