@@ -80,17 +80,6 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
   out->proto_attr_found = true;
   token_parser.null_terminated_copy_of_buf(&out->proto_attr_buf);
 
-  ok = token_parser.find_attribute(SERIAL_ATTR_NAME);
-  if (!ok)
-    return ERROR_SERIAL_ATTR_VALUE;
-
-  out->serial_attr_found = true;
-  token_parser.null_terminated_copy_of_buf(&out->serial_attr_buf);
-
-  ok = token_parser.expect_right_simple_bracket();
-  if (!ok)
-    return ERROR_CLOSE_TAG;
-
   if (request_type == RQ_TYPE_LOCKBOX_CLOSE || request_type == RQ_TYPE_LOCKBOX_OPEN)
   {
     ok = token_parser.expect_opening_tag(DATA_TAG_NAME);
