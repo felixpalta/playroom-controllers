@@ -4,6 +4,7 @@
 
 #include "InputReader.h"
 #include <playroom-protocol.h>
+#include "request_names.h"
 
 static bool strings_equal(const char *str, const char *other)
 {

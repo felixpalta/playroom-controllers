@@ -11,7 +11,8 @@
 #include "table-controller-valid-protocol-values.h"
 #include "sectors.h"
 #include "sector_test_mode.h"
-#include "InputReader.h"
+#include <InputReader.h>
+#include <request_names.h>
 #include "request_processing.h"
 
 EthernetClient client;
