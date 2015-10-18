@@ -3,11 +3,13 @@
 #include <XmlTokenParser.h>
 #include "request_processing.h"
 #include "XmlRespWriter.h"
-#include "InputReader.h"
+#include <InputReader.h>
+#include <request_names.h>
 #include <SPI.h>
 #include <EthernetV2_0.h>
 #include "lockbox-controller-server-config.h"
 #include "lockbox-controller-pin-config.h"
+#include "lockbox-controller-rq-valid-protocol-values.h"
 #include "LockBoxes.h"
 
 // Initialize the Ethernet server library
@@ -62,7 +64,7 @@ void loop() {
   EthernetClient client = server.available();
   if (client) 
   {
-    InputReader xml_parser(client);
+    InputReader xml_parser(client, PROTOVER_ATTR_VALUE);
     XmlRespWriter xml_resp_writer(client);
 
     Serial.println("\nnew client");
