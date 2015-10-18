@@ -12,14 +12,14 @@ static const IPAddress SUBNET_MASK(255,255,255,0);
 
 ///////////////////////////////////////////////////
 
-// NOTE: This ip (lockbox_controller_ip) will be set,
+// NOTE: This ip (LOCKBOX_CONTROLLER_IP) will be set,
 // only if failed to obtain IP by DHCP.
 
-//static const IPAddress lockbox_controller_ip(10,77,102,185);
+//static const IPAddress LOCKBOX_CONTROLLER_IP(10,77,102,185);
 
-static const IPAddress lockbox_controller_ip(192, 168, 1, 4);
+static const IPAddress LOCKBOX_CONTROLLER_IP(192, 168, 1, 4);
 
-static const uint16_t lockbox_controller_port = 10541;
+static const uint16_t LOCKBOX_CONTROLLER_LISTENING_PORT = 10541;
 
 #endif //__LOCKBOX_CONTROLLER_SERVER_IP_H__
 

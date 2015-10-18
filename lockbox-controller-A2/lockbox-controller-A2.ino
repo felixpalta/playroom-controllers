@@ -7,6 +7,7 @@
 #include <request_names.h>
 #include <SPI.h>
 #include <EthernetV2_0.h>
+#include <playroom-server-address.h>
 #include "lockbox-controller-server-config.h"
 #include "lockbox-controller-pin-config.h"
 #include "lockbox-controller-rq-valid-protocol-values.h"
@@ -14,7 +15,7 @@
 
 // Initialize the Ethernet server library
 // with the IP address and port you want to use 
-EthernetServer server(lockbox_controller_port);
+EthernetServer server(LOCKBOX_CONTROLLER_LISTENING_PORT);
 
 LockBoxes lock_boxes;
 
@@ -42,8 +43,8 @@ void setup() {
   else
   {
     Serial.println("DHCP failed, trying to set IP manually...");
-    Ethernet.begin(lockbox_controller_mac, lockbox_controller_ip, DNS_IP, GATEWAY_IP, SUBNET_MASK);
-    Serial.print("Static IP: "); Serial.println(lockbox_controller_ip);
+    Ethernet.begin(lockbox_controller_mac, LOCKBOX_CONTROLLER_IP, DNS_IP, GATEWAY_IP, SUBNET_MASK);
+    Serial.print("Static IP: "); Serial.println(LOCKBOX_CONTROLLER_IP);
     Serial.print("Subnet mask: "); Serial.println(SUBNET_MASK);
     Serial.print("Gateway: "); Serial.println(GATEWAY_IP);
     Serial.print("DNS: "); Serial.println(DNS_IP);
@@ -52,7 +53,8 @@ void setup() {
   // give the Ethernet shield a second to initialize:
   delay(1000);
   
-  Serial.print("Server port: "); Serial.println(lockbox_controller_port);
+  Serial.print("Listening port: "); Serial.println(LOCKBOX_CONTROLLER_LISTENING_PORT);
+  Serial.print("Outgoing port: "); Serial.println(PLAYROOM_SERVER_LISTENING_PORT);
   
   server.begin();
   
@@ -77,9 +79,10 @@ void loop() {
         Serial.println();
         if (status != InputReader::ERROR_NONE)
         {
-          Serial.print("XML Parser ERROR:");
-          Serial.println(status);
-          xml_resp_writer.send_err_repsonse("Unable to parse XML request");
+          Serial.print("XML Parser ERROR: ");
+          const char *err_msg = xml_parser.get_error(status);
+          Serial.println(err_msg);
+          xml_resp_writer.send_err_repsonse(err_msg);
           delay(1);
           disconnect_client(client);
           break;
@@ -108,8 +111,10 @@ void loop() {
           }
         }
       }
+      Serial.println("Incoming request processing done");
     }
-    
+    else
+      Serial.println("Incoming client instantly closed the connection");
   }
 }
 
