@@ -48,10 +48,10 @@ void print_request(const InputRqParsingOutput& data)
 
   Serial.println(get_request_name(data.request_type));
 
-  if (data.sector_attr_found)
+  if (data.id_attr_found)
   {
     Serial.print("Sector: ");
-    Serial.println(data.sector_attr_buf);
+    Serial.println(data.id_attr_buf);
   }
 
 }
@@ -64,7 +64,7 @@ static bool process_alive_request()
 static bool process_request(InputRqParsingOutput& data)
 {
   bool ok;
-  int sector_number = atoi(data.sector_attr_buf);
+  int sector_number = atoi(data.id_attr_buf);
 
   bool(*no_arg_handler)() = NULL;
   bool(*single_arg_handler)(bool) = NULL;
@@ -153,7 +153,7 @@ static bool verify_request(InputRqParsingOutput& data)
     return false;
   }
 
-  data.sector_attr_buf[sizeof(data.sector_attr_buf) - 1] = '\0';
+  data.id_attr_buf[sizeof(data.id_attr_buf) - 1] = '\0';
 
   switch (data.request_type)
   {
@@ -162,15 +162,15 @@ static bool verify_request(InputRqParsingOutput& data)
   case RQ_TYPE_SECTOR_ARROW_ON:
   case RQ_TYPE_SECTOR_ARROW_OFF:
   {
-    if (!data.sector_attr_found)
+    if (!data.id_attr_found)
     {
       error_code = ERROR_SECTOR_ATTR_NOT_FOUND;
       return false;
     }
 
-    size_t sector_attr_len = strlen(data.sector_attr_buf);
+    size_t sector_attr_len = strlen(data.id_attr_buf);
 
-    if (sector_attr_len == 0 || sector_attr_len > sizeof(data.sector_attr_buf) - 1)
+    if (sector_attr_len == 0 || sector_attr_len > sizeof(data.id_attr_buf) - 1)
     {
       error_code = ERROR_BAD_SECTOR_NUMBER;
       return false;

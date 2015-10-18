@@ -23,8 +23,6 @@ static const char SERIAL_ATTR_NAME[] = "serial";
 
 static const char DATA_TAG_NAME[] = "data";
 
-static const char LOCKBOX_ATTR_NAME[] = "id";
-
 static const char TYPE_ATTR_ACK_VALUE[] = "ack";
 
 static const char TYPE_ATTR_ERR_VALUE[] = "err";
@@ -35,7 +33,7 @@ static const char TYPE_ATTR_BARREL_PLAY_VALUE[] = "barrel-play";
 
 static const char TYPE_ATTR_BARREL_SECTOR_VALUE[] = "barrel-sector";
 
-static const char SECTOR_ATTR_NAME[] = "id";
+static const char ID_ATTR_NAME[] = "id";
 
 static const char ERR_TAG_NAME[] = "err";
 

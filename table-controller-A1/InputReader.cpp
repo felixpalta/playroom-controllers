@@ -44,8 +44,8 @@ const char* InputReader::get_error(ErrorType err)
     return BAD_RQ "Invalid protoVer value";
   case ERROR_DATA_TAG_NAME:
     return BAD_RQ "Expected data opening tag";
-  case ERROR_SECTOR_ATTR_VALUE:
-    return BAD_RQ "Expected sector attribute";
+  case ERROR_ID_ATTR_VALUE:
+    return BAD_RQ "Expected id attribute";
   default:
     return BAD_RQ "Unexpected error";
   }
@@ -101,15 +101,17 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
   case RQ_TYPE_SECTOR_NUMBER_OFF:
   case RQ_TYPE_SECTOR_ARROW_ON:
   case RQ_TYPE_SECTOR_ARROW_OFF:
+  case RQ_TYPE_LOCKBOX_OPEN:
+  case RQ_TYPE_LOCKBOX_CLOSE:
     ok = token_parser.expect_opening_tag(DATA_TAG_NAME);
     if (!ok)
       return ERROR_DATA_TAG_NAME;
       
-    ok = token_parser.find_attribute(SECTOR_ATTR_NAME);
+    ok = token_parser.find_attribute(ID_ATTR_NAME);
     if (!ok)
-      return ERROR_SECTOR_ATTR_VALUE;
-    out->sector_attr_found = true;
-    token_parser.null_terminated_copy_of_buf(&out->sector_attr_buf);
+      return ERROR_ID_ATTR_VALUE;
+    out->id_attr_found = true;
+    token_parser.null_terminated_copy_of_buf(&out->id_attr_buf);
     
     ok = token_parser.expect_right_closing_bracket();
     if (!ok)

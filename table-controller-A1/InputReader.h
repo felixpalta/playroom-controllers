@@ -18,8 +18,8 @@ typedef struct
 {
   RqType request_type;
 
-  bool sector_attr_found;
-  TokenBuffer sector_attr_buf;
+  bool id_attr_found;
+  TokenBuffer id_attr_buf;
 
 } InputRqParsingOutput;
 
@@ -38,7 +38,7 @@ public:
     ERROR_PROTOVER_ATTR_VALUE,
     ERROR_INVALID_PROTOVER,
     ERROR_DATA_TAG_NAME,
-    ERROR_SECTOR_ATTR_VALUE,
+    ERROR_ID_ATTR_VALUE,
   } ErrorType;
 
   InputReader(Stream& s) : token_parser(s) {}

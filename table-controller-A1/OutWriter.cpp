@@ -77,7 +77,7 @@ void OutWriter::send_barrel_sector_request(int n)
 {
   write_request_open_tag(TYPE_ATTR_BARREL_SECTOR_VALUE);
   xml_writer.write_tag_opening(DATA_TAG_NAME);
-  xml_writer.write_attribute_num(SECTOR_ATTR_NAME, n);
+  xml_writer.write_attribute_num(ID_ATTR_NAME, n);
   xml_writer.write_right_closing_bracket();
   write_request_close_tag();
   finalize_message();
