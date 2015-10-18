@@ -4,13 +4,12 @@
 
 #include "InputReader.h"
 #include <playroom-protocol.h>
-#include "table-controller-valid-protocol-values.h"
 
-static bool strings_equal(const char *str, const char *other, size_t other_len)
+static bool strings_equal(const char *str, const char *other)
 {
-  if (strlen(str) == other_len)
+  if (strlen(str) == strlen(other))
   {
-    if (strncmp(str, other, other_len) == 0)
+    if (strcmp(str, other) == 0)
     {
       return true;
     }
@@ -86,7 +85,7 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
   if (!ok)
     return ERROR_PROTOVER_ATTR_VALUE;
 
-  if (!strings_equal(token_parser.get_internal_buf(), PROTOVER_ATTR_VALUE, sizeof(PROTOVER_ATTR_VALUE) - 1))
+  if (!strings_equal(token_parser.get_internal_buf(), valid_protover))
   {
     return ERROR_INVALID_PROTOVER;
   }

@@ -8,6 +8,7 @@
 #include "OutWriter.h"
 #include "table-controller-pin-config.h"
 #include "table-controller-server-config.h"
+#include "table-controller-valid-protocol-values.h"
 #include "sectors.h"
 #include "sector_test_mode.h"
 #include "InputReader.h"
@@ -91,7 +92,7 @@ void process_incoming_connections()
   EthernetClient client = server.available();
   if (client)
   {
-    InputReader xml_parser(client);
+    InputReader xml_parser(client, PROTOVER_ATTR_VALUE);
     OutWriter out_writer(client);
 
     Serial.println("\nnew client");

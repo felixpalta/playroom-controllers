@@ -9,9 +9,7 @@
   #include "WProgram.h"
 #endif
 
-#include "table-controller-valid-protocol-values.h"
 #include "XmlTokenParser.h"
-#include "xml_token_max_length.h"
 #include "request_names.h"
 
 typedef struct
@@ -41,7 +39,11 @@ public:
     ERROR_ID_ATTR_VALUE,
   } ErrorType;
 
-  InputReader(Stream& s) : token_parser(s) {}
+  InputReader(Stream& s, const char *protover_value) : 
+    token_parser(s),
+    valid_protover(protover_value)
+  {
+  }
 
   ErrorType process_stream(InputRqParsingOutput* out);
 
@@ -49,7 +51,7 @@ public:
 
 private:
   XmlTokenParser token_parser;
-  
+  const char *valid_protover;
 };
 
 #endif
