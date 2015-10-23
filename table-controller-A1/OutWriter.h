@@ -13,7 +13,7 @@
 class OutWriter
 {
 public:
-  OutWriter(Stream& s) : xml_writer(s) {}
+  OutWriter(Print& s) : xml_writer(s) {}
 
   void send_ack_response();
 

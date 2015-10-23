@@ -11,7 +11,7 @@ class XmlTokenWriter
 {
 private:
 
-	Stream& s;
+	Print& s;
 	// <
 	void write_left_simple_bracket();
 	// </
@@ -30,7 +30,7 @@ private:
 
 public:
 	
-	XmlTokenWriter(Stream& stream) : s(stream) {}
+	XmlTokenWriter(Print& stream) : s(stream) {}
 
 	const char* get_error();
 

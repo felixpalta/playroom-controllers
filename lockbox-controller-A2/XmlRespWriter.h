@@ -15,7 +15,7 @@ class XmlRespWriter
 {
  public:
 
-   XmlRespWriter(Stream& s) : xml_token_writer(s) {}
+   XmlRespWriter(Print& s) : xml_token_writer(s) {}
 
    void send_ack_response();
    void send_err_repsonse(const char* err_msg);
