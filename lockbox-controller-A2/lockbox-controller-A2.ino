@@ -67,7 +67,8 @@ void loop() {
   EthernetClient client = server.available();
   if (client) 
   {
-    InputReader xml_parser(client, PROTOVER_ATTR_VALUE);
+    XmlTokenParser xml_token_parser(/* input */ client, /* echo */ Serial);
+    InputReader xml_parser(xml_token_parser, PROTOVER_ATTR_VALUE);
     XmlRespWriter xml_resp_writer(client);
 
     Serial.println("\nnew client");

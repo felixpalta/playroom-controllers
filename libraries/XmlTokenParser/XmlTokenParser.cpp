@@ -13,7 +13,7 @@ void XmlTokenParser::skip_whitespace()
 		char c = s.peek();
 
     if (isSpace(c))
-      Serial.print((char) s.read());
+      echo_printer.print((char) s.read());
 		else
 			return;
 	}
@@ -30,7 +30,7 @@ bool XmlTokenParser::read_string_until_terminator(char terminator)
 	while (index < sizeof(buf))
 	{
 		int c = s.read();
-    Serial.print((char) c);
+    echo_printer.print((char) c);
 		if (c < 0)
 			break;
 		if (c == terminator)
@@ -63,7 +63,7 @@ bool XmlTokenParser::find_string_after_whitespace(const char* str)
 	while (index < next_token_length)
 	{
 		int c = s.read();
-    Serial.print((char) c);
+    echo_printer.print((char) c);
 		if (c == -1)
 			return false;
 		if (c != str[index])

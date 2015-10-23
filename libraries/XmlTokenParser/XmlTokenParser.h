@@ -13,7 +13,10 @@ class XmlTokenParser
 {
 public:
 
-	XmlTokenParser(Stream& stream) : s(stream) {}
+	XmlTokenParser(Stream& input_stream, Print& echo_stream) : 
+    s(input_stream),  
+    echo_printer(echo_stream)
+    {}
 
 	bool find_string_after_whitespace(const char* str);
 
@@ -45,8 +48,8 @@ public:
 	bool available() { return s.available(); }
 
 private:
-
-	Stream& s;
+    Stream& s;
+    Print& echo_printer;
 	TokenBuffer buf;
 };
 

@@ -83,7 +83,7 @@ void loop()
         sectors_rotation_stopped_callback(sector_event_data.sector_number);
         break;
       default:
-        Serial.print("Unexpected event type: "); Serial.println(event_type);
+        MySerial.print("Unexpected event type: "); MySerial.println(event_type);
         break;
     }
   }
@@ -94,10 +94,11 @@ void process_incoming_connections()
   EthernetClient client = server.available();
   if (client)
   {
-    InputReader xml_parser(client, PROTOVER_ATTR_VALUE);
+    XmlTokenParser xml_token_parser(/* input */ client, /* echo */ Serial);
+    InputReader xml_parser(xml_token_parser, PROTOVER_ATTR_VALUE);
     OutWriter out_writer(client);
 
-    Serial.println("\nnew client");
+    MySerial.println("\nnew client");
     if (client.connected())
     {
       while (client.available())
@@ -107,9 +108,9 @@ void process_incoming_connections()
         Serial.println();
         if (status != InputReader::ERROR_NONE)
         {
-          Serial.print("XML Parser ERROR: ");
+          MySerial.print("XML Parser ERROR: ");
           const char *err_msg = xml_parser.get_error(status);
-          Serial.println(err_msg);
+          MySerial.println(err_msg);
           out_writer.send_err_repsonse(err_msg);
           delay(1);
           disconnect_client(client);
@@ -117,9 +118,9 @@ void process_incoming_connections()
         }
         else
         {
-          Serial.println("XML Parser OK");
+          MySerial.println("XML Parser OK");
           out_writer.send_ack_response();
-          Serial.println("ACK Sent");
+          MySerial.println("ACK Sent");
 
           delay(1);
           disconnect_client(client);
@@ -128,28 +129,28 @@ void process_incoming_connections()
           bool ok = verify_and_process_request(data);
           if (ok)
           {
-            Serial.println("Request verified and executed OK");
+            MySerial.println("Request verified and executed OK");
             break;
           }
           else
           {
             const char *err = get_request_error();
-            Serial.println(err);
+            MySerial.println(err);
             break;
           }
         }
       }
-      Serial.println("Incoming request processing done");
+      MySerial.println("Incoming request processing done");
     }
     else
-      Serial.println("Incoming client instantly closed the connection");
+      MySerial.println("Incoming client instantly closed the connection");
   }
 }
 
 static void disconnect_client(Client& client)
 {
   client.stop();
-  Serial.println("client disonnected");
+  MySerial.println("client disonnected");
 }
 
 static void blink(int n)

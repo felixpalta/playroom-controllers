@@ -39,8 +39,8 @@ public:
     ERROR_ID_ATTR_VALUE,
   } ErrorType;
 
-  InputReader(Stream& s, const char *protover_value) : 
-    token_parser(s),
+  InputReader(XmlTokenParser& t, const char *protover_value) : 
+    token_parser(t),
     valid_protover(protover_value)
   {
   }
@@ -50,7 +50,7 @@ public:
   static const char* get_error(ErrorType err);
 
 private:
-  XmlTokenParser token_parser;
+  XmlTokenParser &token_parser;
   const char *valid_protover;
 };
 
