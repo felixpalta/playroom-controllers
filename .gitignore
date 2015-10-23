@@ -13,5 +13,5 @@ libraries/*
 !libraries/XmlTokenWriter
 !libraries/PlayroomCommon
 !libraries/MsTimer2
-
+!libraries/SwitchablePrinter
 

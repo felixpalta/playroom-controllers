@@ -1,3 +1,4 @@
+#include <SwitchablePrinter.h>
 #include <playroom-protocol.h>
 #include <XmlTokenWriter.h>
 #include <XmlTokenParser.h>
