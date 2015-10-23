@@ -15,6 +15,7 @@
 #include <InputReader.h>
 #include <request_names.h>
 #include "request_processing.h"
+#include "MySerial.h"
 
 EthernetClient client;
 EthernetServer server(TABLE_CONTROLLER_LISTENING_PORT);
@@ -203,38 +204,38 @@ static bool connect_to_server()
 
   if (DNS_SERVER_NAME_PRESENT)
   {
-    Serial.print("Connecting to server by DNS name: ");
-    Serial.println(PLAYROOM_SERVER_DNS_ADDRESS);
+    MySerial.print("Connecting to server by DNS name: ");
+    MySerial.println(PLAYROOM_SERVER_DNS_ADDRESS);
     code = client.connect(PLAYROOM_SERVER_DNS_ADDRESS, PLAYROOM_SERVER_LISTENING_PORT);
-    Serial.print("Code: ");
-    Serial.println(code);
+    MySerial.print("Code: ");
+    MySerial.println(code);
     connect_ok = get_connect_msg(code, &err_msg);
     if (!connect_ok)
     {
-      Serial.println("Connection to server by DNS name failed");
+      MySerial.println("Connection to server by DNS name failed");
       if (err_msg)
-        Serial.println(err_msg);
+        MySerial.println(err_msg);
     }
   }
 
   if (!connect_ok)
   {
-    Serial.print("Connecting to server by IP address: ");
-    Serial.println(PLAYROOM_SERVER_IP_ADDRESS);
+    MySerial.print("Connecting to server by IP address: ");
+    MySerial.println(PLAYROOM_SERVER_IP_ADDRESS);
     code = client.connect(PLAYROOM_SERVER_IP_ADDRESS, PLAYROOM_SERVER_LISTENING_PORT);
-    Serial.print("Code: ");
-    Serial.println(code);
+    MySerial.print("Code: ");
+    MySerial.println(code);
     err_msg = NULL;
     if (!get_connect_msg(code, &err_msg))
     {
-      Serial.println("Connection to server by IP address failed");
+      MySerial.println("Connection to server by IP address failed");
       if (err_msg)
-        Serial.println(err_msg);
+        MySerial.println(err_msg);
       return false;
     }
   }
   
-  Serial.println("Connection to server successfull");
+  MySerial.println("Connection to server successfull");
 
   return true;
 }
@@ -248,10 +249,10 @@ static void send_request(int rq_type, int n)
   {
     return;
   }
-  Serial.println("Connected to server");
+  MySerial.println("Connected to server");
   if (!client.connected())
   {
-    Serial.println("Error: server instantly closed the connection");
+    MySerial.println("Error: server instantly closed the connection");
     client.stop();
     return;
   }
@@ -267,14 +268,14 @@ static void send_request(int rq_type, int n)
       out_writer.send_barrel_sector_request(n);
       break;
     default:
-      Serial.print("Uknown request type: ");
-      Serial.println(rq_type);
+      MySerial.print("Uknown request type: ");
+      MySerial.println(rq_type);
       return;
   }
 
   if (!client.connected())
   {
-    Serial.println("Error: server closed connection right after receiving from client");
+    MySerial.println("Error: server closed connection right after receiving from client");
     client.stop();
     return;
   }
@@ -302,28 +303,28 @@ static void send_request(int rq_type, int n)
   }
   if (!client.connected())
   {
-    Serial.println("OK: Responce received, server closed the connection");
+    MySerial.println("OK: Responce received, server closed the connection");
   }
   else
   {
-    Serial.println("FAIL: Responce received, but server didn't close the connection");
+    MySerial.println("FAIL: Responce received, but server didn't close the connection");
   }
-  Serial.println("Stopping the client...");
+  MySerial.println("Stopping the client...");
   client.stop();
   return;
 }
 
 void sectors_rotation_started_callback()
 {
-  Serial.println("ROTATION STARTED CALLBACK");
+  MySerial.println("ROTATION STARTED CALLBACK");
 
   send_request(BARREL_PLAY_RQ, /* not used */ 0);
   blink(2);
 }
 void sectors_rotation_stopped_callback(int sector_n)
 {
-  Serial.print("ROTATION STOPPED CALLBACK: ");
-  Serial.println(sector_n + 1);
+  MySerial.print("ROTATION STOPPED CALLBACK: ");
+  MySerial.println(sector_n + 1);
   
   send_request(BARREL_SECTOR_RQ, sector_n);
   blink(sector_n);

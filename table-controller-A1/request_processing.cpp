@@ -4,6 +4,7 @@
 
 #include "request_processing.h"
 #include "sectors.h"
+#include "MySerial.h"
 #include <request_names.h>
 
 static bool verify_request(InputRqParsingOutput& data);
@@ -46,12 +47,12 @@ const char *get_request_error()
 void print_request(const InputRqParsingOutput& data)
 {
 
-  Serial.println(get_request_name(data.request_type));
+  MySerial.println(get_request_name(data.request_type));
 
   if (data.id_attr_found)
   {
-    Serial.print("Sector: ");
-    Serial.println(data.id_attr_buf);
+    MySerial.print("Sector: ");
+    MySerial.println(data.id_attr_buf);
   }
 
 }
