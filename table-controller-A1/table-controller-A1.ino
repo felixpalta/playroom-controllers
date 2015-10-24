@@ -65,6 +65,8 @@ void setup()
   Serial.println("Starting MsTimer2...");
   MsTimer2::set(10, sectors_process_sensors);
   MsTimer2::start();
+  
+  MySerial.print_enable(true);
 }
 
 void loop()
@@ -84,7 +86,7 @@ void loop()
         sectors_rotation_stopped_callback(sector_event_data.sector_number);
         break;
       default:
-        MySerial.print("Unexpected event type: "); MySerial.println(event_type);
+        Serial.print("Unexpected event type: "); Serial.println(event_type);
         break;
     }
   }
@@ -109,9 +111,9 @@ void process_incoming_connections()
         Serial.println();
         if (status != InputReader::ERROR_NONE)
         {
-          MySerial.print("XML Parser ERROR: ");
+          Serial.print("XML Parser ERROR: ");
           const char *err_msg = xml_parser.get_error(status);
-          MySerial.println(err_msg);
+          Serial.println(err_msg);
           out_writer.send_err_repsonse(err_msg);
           delay(1);
           disconnect_client(client);
@@ -136,7 +138,7 @@ void process_incoming_connections()
           else
           {
             const char *err = get_request_error();
-            MySerial.println(err);
+            Serial.println(err);
             break;
           }
         }
@@ -212,9 +214,9 @@ static bool connect_to_server()
     connect_ok = get_connect_msg(code, &err_msg);
     if (!connect_ok)
     {
-      MySerial.println("Connection to server by DNS name failed");
+      Serial.println("Connection to server by DNS name failed");
       if (err_msg)
-        MySerial.println(err_msg);
+        Serial.println(err_msg);
     }
   }
 
@@ -228,9 +230,9 @@ static bool connect_to_server()
     err_msg = NULL;
     if (!get_connect_msg(code, &err_msg))
     {
-      MySerial.println("Connection to server by IP address failed");
+      Serial.println("Connection to server by IP address failed");
       if (err_msg)
-        MySerial.println(err_msg);
+        Serial.println(err_msg);
       return false;
     }
   }
@@ -252,7 +254,7 @@ static void send_request(int rq_type, int n)
   MySerial.println("Connected to server");
   if (!client.connected())
   {
-    MySerial.println("Error: server instantly closed the connection");
+    Serial.println("Error: server instantly closed the connection");
     client.stop();
     return;
   }
@@ -268,14 +270,14 @@ static void send_request(int rq_type, int n)
       out_writer.send_barrel_sector_request(n);
       break;
     default:
-      MySerial.print("Uknown request type: ");
-      MySerial.println(rq_type);
+      Serial.print("Uknown request type: ");
+      Serial.println(rq_type);
       return;
   }
 
   if (!client.connected())
   {
-    MySerial.println("Error: server closed connection right after receiving from client");
+    Serial.println("Error: server closed connection right after receiving from client");
     client.stop();
     return;
   }
@@ -307,7 +309,7 @@ static void send_request(int rq_type, int n)
   }
   else
   {
-    MySerial.println("FAIL: Responce received, but server didn't close the connection");
+    Serial.println("FAIL: Responce received, but server didn't close the connection");
   }
   MySerial.println("Stopping the client...");
   client.stop();
@@ -316,15 +318,15 @@ static void send_request(int rq_type, int n)
 
 void sectors_rotation_started_callback()
 {
-  MySerial.println("ROTATION STARTED CALLBACK");
+  Serial.println("ROTATION STARTED CALLBACK");
 
   send_request(BARREL_PLAY_RQ, /* not used */ 0);
   blink(2);
 }
 void sectors_rotation_stopped_callback(int sector_n)
 {
-  MySerial.print("ROTATION STOPPED CALLBACK: ");
-  MySerial.println(sector_n + 1);
+  Serial.print("ROTATION STOPPED CALLBACK: ");
+  Serial.println(sector_n + 1);
   
   send_request(BARREL_SECTOR_RQ, sector_n);
   blink(sector_n);

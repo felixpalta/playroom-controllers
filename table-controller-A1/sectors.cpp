@@ -47,7 +47,7 @@ void reset_sector_event()
 
 void sectors_init()
 {
-  MySerial.println("Sector pins initialized");
+  Serial.println("Sector pins initialized");
 
   for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
   {
@@ -58,7 +58,7 @@ void sectors_init()
     else if (SECTOR_PIN_ACTIVE_LEVEL == LOW)
       pinMode(sp.sensor_pin, INPUT_PULLUP);
     else
-      MySerial.println("Invalid value for sector pin active level.");
+      Serial.println("Invalid value for sector pin active level.");
 
     pinMode(sp.number_led_pin, OUTPUT);
     digitalWrite(sp.number_led_pin, LOW);
@@ -74,8 +74,8 @@ static bool check_number(int n)
   {
     return true;
   }
-  MySerial.print("Invalid sector number: ");
-  MySerial.println(n);
+  Serial.print("Invalid sector number: ");
+  Serial.println(n);
   return false;
 }
 
@@ -152,8 +152,8 @@ static Sector next_right(const Sector s)
     return s + 1;
   if (s == SECTOR_MOST_RIGHT)
     return SECTOR_MOST_LEFT;
-  MySerial.print("ERROR: Invalid sector number: ");
-  MySerial.println(s);
+  Serial.print("ERROR: Invalid sector number: ");
+  Serial.println(s);
   return SECTOR_INVALID;
 }
 
@@ -163,8 +163,8 @@ static Sector prev_left(const Sector s)
     return s - 1;
   if (s == SECTOR_MOST_LEFT)
     return SECTOR_MOST_RIGHT;
-  MySerial.print("ERROR: Invalid sector number: ");
-  MySerial.println(s);
+  Serial.print("ERROR: Invalid sector number: ");
+  Serial.println(s);
   return SECTOR_INVALID;
 }
 
@@ -197,13 +197,13 @@ static Sector check_enabled_sector()
     {
       return enabled_sectors[0];
     }
-    MySerial.print("sectors not adjacent: ");
-    MySerial.print(enabled_sectors[0]);
-    MySerial.print(" ");
-    MySerial.println(enabled_sectors[1]);
+    Serial.print("sectors not adjacent: ");
+    Serial.print(enabled_sectors[0]);
+    Serial.print(" ");
+    Serial.println(enabled_sectors[1]);
     return SECTOR_INVALID;
   default:
-    MySerial.println("too many sectors are on");
+    Serial.println("too many sectors are on");
     return SECTOR_INVALID;
   }
 }
@@ -281,9 +281,9 @@ void sectors_process_sensors()
       prev_time = millis();
       prev_sector = s;
       state = STATE_WAIT_FOR_DIRECTION;
-      MySerial.print(prev_time);
-      MySerial.print(": First sector: ");
-      MySerial.println(s);
+      Serial.print(prev_time);
+      Serial.print(": First sector: ");
+      Serial.println(s);
       return;
     }
   }
@@ -291,7 +291,7 @@ void sectors_process_sensors()
   {
     if (millis() - prev_time >= 2 * SECTOR_TURN_TIME_MS)
     {
-      MySerial.println("Waited for direction detection for too long...");
+      Serial.println("Waited for direction detection for too long...");
       reset_sector_sensors_state();
       return;
     }
@@ -315,7 +315,7 @@ void sectors_process_sensors()
     }
     if (right_is_on && left_is_on)
     {
-      MySerial.println("ERROR: Both right and left movement are detected.");
+      Serial.println("ERROR: Both right and left movement are detected.");
       reset_sector_sensors_state();
       return;
     }
@@ -338,11 +338,11 @@ void sectors_process_sensors()
     correct_sectors_counter = 0; // maybe should be + 2
     
 
-    MySerial.print(prev_time);
-    MySerial.print(": Sector after first: ");
-    MySerial.println(s);
-    MySerial.print("Direction: ");
-    MySerial.println(dir == DIRECTION_RIGHT ? "RIGHT" : "LEFT");
+    Serial.print(prev_time);
+    Serial.print(": Sector after first: ");
+    Serial.println(s);
+    Serial.print("Direction: ");
+    Serial.println(dir == DIRECTION_RIGHT ? "RIGHT" : "LEFT");
     return;
   }
   else if (state == STATE_WAIT_FOR_NEXT_SECTOR)
@@ -350,7 +350,7 @@ void sectors_process_sensors()
     read_sector_sensors_and_light_their_leds();
     if (millis() - prev_time >= SECTOR_TURN_TIME_MS)
     {
-      MySerial.println("Waited too long for next sector");
+      Serial.println("Waited too long for next sector");
       reset_sector_sensors_state();
       return;
     }
@@ -406,12 +406,12 @@ void sectors_process_sensors()
         sector_event_data.set_event_stopped(convert_to_external(prev_sector));
         break;
       case SECTOR_INVALID:
-        MySerial.println("Invalid sector detected while waiting for STOP");
+        Serial.println("Invalid sector detected while waiting for STOP");
         break;
       default:
         if (!check_number(s))
         {
-          MySerial.println("Wrong number sector detected while waiting for STOP");
+          Serial.println("Wrong number sector detected while waiting for STOP");
           break;
         }
         event_is_ready = true;
