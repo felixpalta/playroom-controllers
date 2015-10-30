@@ -13,6 +13,7 @@
 #include "lockbox-controller-pin-config.h"
 #include "lockbox-controller-rq-valid-protocol-values.h"
 #include "LockBoxes.h"
+#include "dimmers.h"
 
 // Initialize the Ethernet server library
 // with the IP address and port you want to use 
@@ -60,6 +61,8 @@ void setup() {
   server.begin();
   
   lock_boxes.begin();
+
+  dimmers_init();
 }
 
 void loop() {

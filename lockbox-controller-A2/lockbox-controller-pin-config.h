@@ -36,4 +36,7 @@ static const int lockbox_pins[LOCKBOX_PIN_NUMBER] =
   45, // Lockbox 24
 };
 
+static const int DIMMER_TOP_LIGHT_ON_PIN = 2;
+static const int DIMMER_TOP_LIGHT_ZERO_FEEDBACK_PIN = 3;
+
 #endif // __LOCKBOX_CONTROLLER_PIN_CONFIG_H__
