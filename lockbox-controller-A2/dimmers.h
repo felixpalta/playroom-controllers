@@ -9,7 +9,11 @@
 	#include "WProgram.h"
 #endif
 
+
+
 void dimmers_init();
+
+void dimmers_irq_handler();
 
 #endif
 
