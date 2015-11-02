@@ -17,7 +17,7 @@ void setup()
 
 void loop()
 {
-  static const bool blinking = true;
+  static const bool blinking = false;
   static bool rising = true;
   
   if (blinking) 

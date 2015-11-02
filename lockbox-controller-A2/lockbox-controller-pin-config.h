@@ -36,13 +36,40 @@ static const int lockbox_pins[LOCKBOX_PIN_NUMBER] =
   45, // Lockbox 24
 };
 
-static const int DIMMER_TOP_LIGHT_ON_PIN = 2;
-static const int DIMMER_TOP_LIGHT_ZERO_CROSS_PIN = 3;
+typedef enum
+{
+  DIMMER_INVALID,
+  DIMMER_TOP_LIGHT,
+  DIMMER_SURROUND_LIGHT,
+  DIMMER_LOCKBOX_LIGHT,
+} DimmerEnum;
 
-static const int DIMMER_SURROUND_LIGHT_ON_PIN = 5;
-static const int DIMMER_SURROUND_LIGHT_ZERO_CROSS_PIN = 6;
+struct DimmerPin
+{
+  DimmerEnum number;
+  int pin;
+};
 
-static const int DIMMER_LOCKBOX_LIGHT_ON_PIN = 5;
-static const int DIMMER_LOCKBOX_LIGHT_ZERO_CROSS_PIN = 6;
+static const DimmerPin dimmer_pins[] = 
+{
+  { DIMMER_TOP_LIGHT , 5 },
+  { DIMMER_SURROUND_LIGHT, 7 },
+  { DIMMER_LOCKBOX_LIGHT, 9 },
+};
+
+struct InterruptPin
+{
+  int irq_n;
+  int pin;
+};
+
+static const InterruptPin common_zero_cross_irq_pin = 
+    {  0,  2 };
+// {  1,  3 };
+// {  2,  21 };
+// {  3,  20 };
+// {  4,  19 };
+// {  5,  18 };
+
 
 #endif // __LOCKBOX_CONTROLLER_PIN_CONFIG_H__

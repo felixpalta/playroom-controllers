@@ -1,3 +1,4 @@
+#include <MsTimer2.h>
 #include <SwitchablePrinter.h>
 #include <playroom-protocol.h>
 #include <XmlTokenWriter.h>
@@ -61,8 +62,8 @@ void setup() {
   server.begin();
   
   lock_boxes.begin();
-
   dimmers_init();
+  dimmers_light_set();
 }
 
 void loop() {
