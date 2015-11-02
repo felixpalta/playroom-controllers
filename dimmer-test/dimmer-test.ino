@@ -10,10 +10,9 @@ static int light = 0;
 
 void setup()
 {
-  dimmers_init();
   Serial.begin(9600);
-  light = 0;
-  dimmers_light_set(light);
+  Serial.println("Hello from dimmer!");
+  dimmers_init();
 }
 
 void loop()

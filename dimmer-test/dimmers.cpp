@@ -24,7 +24,7 @@ The Arduino Due has no standard interrupt pins as an iterrupt can be attached to
 #define DIMMING_STEP_WIDTH_US ((AC_HALF_PERIOD_US - TRIAC_ON_PULSE_WIDTH_US)/DIMMING_STEPS_NUMBER)
 
 #define AC_LOAD 5    // Output to Opto Triac pin
-#define DIMMING_START_LEVEL 90
+#define DIMMING_START_LEVEL 50
 
 static int dimming = DIM_MAX_LEVEL;  // Dimming level (0-100)  0 = ON, 100 = OFF
 static unsigned long dimming_delay = 0;
@@ -35,7 +35,8 @@ static void ms_timer_irq_handler();
 static void zero_cross_irq_handler()
 {
   last_zero_cross_time_us = micros();
-  MsTimer2::set(1, ms_timer_irq_handler);  
+  MsTimer2::set(1, ms_timer_irq_handler);
+  MsTimer2::start();  
 }
 
 static void triac_pulse()
@@ -57,13 +58,13 @@ static void ms_timer_irq_handler()
 void dimmers_init()
 {
   pinMode(AC_LOAD, OUTPUT);// Set AC Load pin as output
-  attachInterrupt(0, zero_cross_irq_handler, RISING);  // Choose the zero cross interrupt # from the table above
+
   dimming = DIMMING_START_LEVEL;
   dimming_delay = DIMMING_STEP_WIDTH_US * dimming;
+  Serial.println("Dimming step width, us: ");
+  Serial.println(DIMMING_STEP_WIDTH_US);
+  attachInterrupt(0, zero_cross_irq_handler, RISING);  // Choose the zero cross interrupt # from the table above
 }
-
-
-  
 
 void dimmers_light_set(int level)
 {
