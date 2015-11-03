@@ -169,6 +169,7 @@ static bool process_request(InputRqParsingOutput& data)
       processing_err_msg = "Dimmer request error";
       return false;
     }
+    return true;
   default:
     error_code = ERROR_INVALID_RQ_TYPE;
     return false;
