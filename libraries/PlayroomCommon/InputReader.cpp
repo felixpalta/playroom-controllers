@@ -46,6 +46,8 @@ const char* InputReader::get_error(ErrorType err)
     return BAD_RQ "Expected data opening tag";
   case ERROR_ID_ATTR_VALUE:
     return BAD_RQ "Expected id attribute";
+  case ERROR_PERCENT_ATTR_VALUE:
+    return BAD_RQ "Expected percent attribute";
   default:
     return BAD_RQ "Unexpected error";
   }
@@ -103,16 +105,31 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
   case RQ_TYPE_SECTOR_ARROW_OFF:
   case RQ_TYPE_LOCKBOX_OPEN:
   case RQ_TYPE_LOCKBOX_CLOSE:
+  case RQ_TYPE_TOP_LIGHT:
+  case RQ_TYPE_SURROUND_LIGHT:
+  case RQ_TYPE_LOCKBOX_LIGHT:
     ok = token_parser.expect_opening_tag(DATA_TAG_NAME);
     if (!ok)
       return ERROR_DATA_TAG_NAME;
-      
-    ok = token_parser.find_attribute(ID_ATTR_NAME);
-    if (!ok)
-      return ERROR_ID_ATTR_VALUE;
-    out->id_attr_found = true;
-    token_parser.null_terminated_copy_of_buf(&out->id_attr_buf);
     
+    if (out->request_type == RQ_TYPE_TOP_LIGHT ||
+      out->request_type == RQ_TYPE_SURROUND_LIGHT ||
+      out->request_type == RQ_TYPE_LOCKBOX_LIGHT)
+    {
+      ok = token_parser.find_attribute(PERCENT_ATTR_NAME);
+      if (!ok)
+        return ERROR_PERCENT_ATTR_VALUE;
+      out->percent_attr_found = true;
+      token_parser.null_terminated_copy_of_buf(&out->percent_attr_buf);
+    }
+    else
+    {
+      ok = token_parser.find_attribute(ID_ATTR_NAME);
+      if (!ok)
+        return ERROR_ID_ATTR_VALUE;
+      out->id_attr_found = true;
+      token_parser.null_terminated_copy_of_buf(&out->id_attr_buf);
+    }
     ok = token_parser.expect_right_closing_bracket();
     if (!ok)
       return ERROR_CLOSE_TAG;

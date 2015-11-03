@@ -19,6 +19,9 @@ typedef struct
   bool id_attr_found;
   TokenBuffer id_attr_buf;
 
+  bool percent_attr_found;
+  TokenBuffer percent_attr_buf;
+
 } InputRqParsingOutput;
 
 class InputReader
@@ -37,6 +40,7 @@ public:
     ERROR_INVALID_PROTOVER,
     ERROR_DATA_TAG_NAME,
     ERROR_ID_ATTR_VALUE,
+    ERROR_PERCENT_ATTR_VALUE,
   } ErrorType;
 
   InputReader(XmlTokenParser& t, const char *protover_value) : 

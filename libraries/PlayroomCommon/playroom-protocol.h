@@ -51,6 +51,11 @@ static const char TYPE_ATTR_SECTOR_NUMBER_ALL_OFF_VALUE[] = "sector-number-all-o
 static const char TYPE_ATTR_SECTOR_ARROW_ALL_ON_VALUE[] = "sector-arrow-all-on";
 static const char TYPE_ATTR_SECTOR_ARROW_ALL_OFF_VALUE[] = "sector-arrow-all-off";
 
+static const char TYPE_ATTR_TOP_LIGHT_VALUE[] = "top-light";
+static const char TYPE_ATTR_SURROUND_LIGHT_VALUE[] = "surround-light";
+static const char TYPE_ATTR_LOCKBOX_LIGHT_VALUE[] = "lockbox-light";
+
+static const char PERCENT_ATTR_NAME[] = "percent";
 
 
 #endif // __PLAYROOM_PROTOCOL_H__

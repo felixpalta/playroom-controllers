@@ -47,8 +47,6 @@ static void set_dimming_to_0(const Dimmer *dimmer);
 
 static void triac_pulse(const Dimmer *dimmer);
 
-static bool enabled_dimmers_present();
-
 static Dimmer *get_dimmer(DimmerEnum dimmer_id)
 {
   for (size_t i = 0; i < N_DIMMERS; ++i)
@@ -183,17 +181,6 @@ static void set_dimming_to_0(const Dimmer *dimmer)
     pinMode(dimmer->on_pin, OUTPUT);
     digitalWrite(dimmer->on_pin, HIGH);
   }
-}
-
-// Return true if there is at least one enabled dimmer in the list of dimmers.
-static bool enabled_dimmers_present()
-{
-  for (size_t i = 0; i < N_DIMMERS; ++i)
-  {
-    if (dimmers[i].dimming_enabled == true)
-      return true;
-  }
-  return false;
 }
 
 static void triac_pulse(const Dimmer *dimmer)
