@@ -36,26 +36,9 @@ static const int lockbox_pins[LOCKBOX_PIN_NUMBER] =
   45, // Lockbox 24
 };
 
-typedef enum
-{
-  DIMMER_INVALID,
-  DIMMER_TOP_LIGHT,
-  DIMMER_SURROUND_LIGHT,
-  DIMMER_LOCKBOX_LIGHT,
-} DimmerEnum;
-
-struct DimmerPin
-{
-  DimmerEnum number;
-  int pin;
-};
-
-static const DimmerPin dimmer_pins[] = 
-{
-  { DIMMER_TOP_LIGHT , 5 },
-  { DIMMER_SURROUND_LIGHT, 7 },
-  { DIMMER_LOCKBOX_LIGHT, 9 },
-};
+static const int DIMMER_TOP_LIGHT_ON_PIN = 5;
+static const int DIMMER_SURROUND_LIGHT_ON_PIN = 7;
+static const int DIMMER_LOCKBOX_LIGHT_ON_PIN = 9;
 
 struct InterruptPin
 {

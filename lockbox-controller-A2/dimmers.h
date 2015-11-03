@@ -7,7 +7,13 @@
 #include "WProgram.h"
 #endif
 
-#include "lockbox-controller-pin-config.h"
+typedef enum
+{
+  DIMMER_INVALID,
+  DIMMER_TOP_LIGHT,
+  DIMMER_SURROUND_LIGHT,
+  DIMMER_LOCKBOX_LIGHT,
+} DimmerEnum;
 
 void dimmers_init();
 bool dimmers_light_set(DimmerEnum dimmer_id, int light_level);

@@ -63,7 +63,7 @@ void setup() {
   
   lock_boxes.begin();
   dimmers_init();
-  dimmers_light_set();
+  dimmers_light_set(DIMMER_TOP_LIGHT, 50);
 }
 
 void loop() {
