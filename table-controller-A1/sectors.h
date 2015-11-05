@@ -31,4 +31,6 @@ bool is_sector_event_ready(SectorEventData *data);
 
 void reset_sector_event();
 
+void set_wait_for_spin_flag();
+
 #endif // __SECTORS_H__

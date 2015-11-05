@@ -27,6 +27,18 @@ static bool event_is_ready = false;
 
 static SectorEventData sector_event_data;
 
+static bool wait_for_spin_flag = false;;
+
+static void reset_sector_sensors_state();
+
+void set_wait_for_spin_flag()
+{
+  noInterrupts();
+  wait_for_spin_flag = true;
+  reset_sector_sensors_state();
+  interrupts();
+}
+
 bool is_sector_event_ready(SectorEventData *data)
 {
   noInterrupts();
@@ -258,6 +270,9 @@ void read_sector_sensors_and_light_their_leds()
 
 void sectors_process_sensors()
 {
+  if (!wait_for_spin_flag)
+    return;
+
 #ifdef SECTOR_TEST_MODE
   read_sector_sensors_and_light_their_leds();
 #else
@@ -404,6 +419,7 @@ void sectors_process_sensors()
       case SECTOR_NONE:
         event_is_ready = true;
         sector_event_data.set_event_stopped(convert_to_external(prev_sector));
+        wait_for_spin_flag = false;
         break;
       case SECTOR_INVALID:
         Serial.println("Invalid sector detected while waiting for STOP");
@@ -416,6 +432,7 @@ void sectors_process_sensors()
         }
         event_is_ready = true;
         sector_event_data.set_event_stopped(convert_to_external(s));
+        wait_for_spin_flag = false;
         break;
       }
       reset_sector_sensors_state();
@@ -427,6 +444,12 @@ void sectors_process_sensors()
       prev_sector = s;
     }
 
+  }
+  else
+  {
+    Serial.print("Invalid sector state: ");
+    Serial.println(state);
+    reset_sector_sensors_state();
   }
 #endif // SECTOR_TEST_MODE
 }

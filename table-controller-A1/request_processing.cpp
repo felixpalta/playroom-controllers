@@ -64,7 +64,7 @@ static bool process_alive_request()
 
 static bool process_barrel_wait_request()
 {
-  // STUB
+  set_wait_for_spin_flag();
   return true;
 }
 
