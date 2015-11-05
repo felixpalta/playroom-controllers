@@ -23,8 +23,8 @@ const char* LockBoxes::get_last_error() const
 
 boolean LockBoxes::check_number_convert_to_internal(int& n)
 {
-//  int internal_number = n - 1;
-  int internal_number = n;
+  int internal_number = n - 1;
+//  int internal_number = n;
   if (internal_number >= 0 && (size_t)internal_number < LOCKBOX_PIN_NUMBER)
   {
     n = internal_number;
