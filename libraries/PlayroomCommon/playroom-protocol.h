@@ -55,6 +55,8 @@ static const char TYPE_ATTR_TOP_LIGHT_VALUE[] = "top-light";
 static const char TYPE_ATTR_SURROUND_LIGHT_VALUE[] = "surround-light";
 static const char TYPE_ATTR_LOCKBOX_LIGHT_VALUE[] = "lockbox-light";
 
+static const char TYPE_ATTR_BARREL_WAIT_VALUE[] = "barrel-wait";
+
 static const char PERCENT_ATTR_NAME[] = "percent";
 
 

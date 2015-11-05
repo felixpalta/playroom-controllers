@@ -62,6 +62,12 @@ static bool process_alive_request()
   return true; // always successful
 }
 
+static bool process_barrel_wait_request()
+{
+  // STUB
+  return true;
+}
+
 static bool process_request(InputRqParsingOutput& data)
 {
   bool ok;
@@ -111,6 +117,9 @@ static bool process_request(InputRqParsingOutput& data)
     single_arg_handler = sector_all_arrow_leds_write;
     arg_on = false;
     break;
+  case RQ_TYPE_BARREL_WAIT:
+    no_arg_handler = process_barrel_wait_request;
+    break;
   default:
     error_code = ERROR_INVALID_RQ_TYPE;
     return false;
@@ -148,6 +157,7 @@ static bool verify_request(InputRqParsingOutput& data)
   case RQ_TYPE_SECTOR_ARROW_OFF:
   case RQ_TYPE_SECTOR_ARROW_ALL_ON:
   case RQ_TYPE_SECTOR_ARROW_ALL_OFF:
+  case RQ_TYPE_BARREL_WAIT:
     break;
   default:
     error_code = ERROR_INVALID_RQ_TYPE;
