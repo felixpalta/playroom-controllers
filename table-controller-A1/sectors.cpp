@@ -268,10 +268,21 @@ void read_sector_sensors_and_light_their_leds()
   }
 }
 
+void read_sector_sensors_and_light_all_leds()
+{  
+  for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
+  {
+    SectorPins sp = sector_pins[i];
+    digitalWrite(sp.number_led_pin, digitalRead(sp.sensor_pin));
+    digitalWrite(sp.arrow_led_pin, digitalRead(sp.sensor_pin));
+  }
+}
+
+
 void sectors_process_sensors()
 {
 #ifdef SECTOR_TEST_MODE
-  read_sector_sensors_and_light_their_leds();
+  read_sector_sensors_and_light_all_leds();
 #else
 
   if (!wait_for_spin_flag)
