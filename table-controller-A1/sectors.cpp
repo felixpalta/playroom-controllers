@@ -270,12 +270,13 @@ void read_sector_sensors_and_light_their_leds()
 
 void sectors_process_sensors()
 {
-  if (!wait_for_spin_flag)
-    return;
-
 #ifdef SECTOR_TEST_MODE
   read_sector_sensors_and_light_their_leds();
 #else
+
+  if (!wait_for_spin_flag)
+    return;
+
   // at this point s is either a valid sector number or a SECTOR_NONE.
   if (state == STATE_READY)
   {
