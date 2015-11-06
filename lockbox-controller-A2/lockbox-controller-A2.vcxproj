@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\libraries\XmlTokenParser\xml_token_max_length.h" />
+    <ClInclude Include="buttons.h" />
     <ClInclude Include="dimmers.h" />
     <ClInclude Include="lockbox-controller-pin-config.h">
       <FileType>CppCode</FileType>
@@ -99,6 +100,7 @@
     <ClInclude Include="__vm\.lockbox-controller-A2.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="buttons.cpp" />
     <ClCompile Include="dimmers.cpp" />
     <ClCompile Include="LockBoxes.cpp" />
     <ClCompile Include="request_processing.cpp" />

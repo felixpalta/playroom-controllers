@@ -1,3 +1,4 @@
+#include "buttons.h"
 #include <MsTimer2.h>
 #include <SwitchablePrinter.h>
 #include <playroom-protocol.h>
@@ -63,6 +64,8 @@ void setup() {
   
   lock_boxes.begin();
   dimmers_init();
+  buttons_init();
+
 #if 0
   dimmers_light_set(DIMMER_TOP_LIGHT, 10);
   dimmers_light_set(DIMMER_SURROUND_LIGHT, 60);
@@ -70,9 +73,16 @@ void setup() {
 #endif
 }
 
-void loop() 
+void loop()
 {
   lock_boxes.process();
+
+
+  ButtonEvent button_event;
+  if (buttons_process(&button_event))
+  {
+    process_button_event(&button_event);
+  }
 
   // listen for incoming clients
   EthernetClient client = server.available();
@@ -137,3 +147,8 @@ static void disconnect_client(Client& client)
   Serial.println("client disonnected");
 }
 
+static void process_button_event(const ButtonEvent *button_event)
+{
+  if (!button_event)
+    return;
+}

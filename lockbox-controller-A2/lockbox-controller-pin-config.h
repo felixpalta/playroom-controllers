@@ -40,6 +40,10 @@ static const int DIMMER_TOP_LIGHT_ON_PIN = 5;
 static const int DIMMER_SURROUND_LIGHT_ON_PIN = 7;
 static const int DIMMER_LOCKBOX_LIGHT_ON_PIN = 9;
 
+static const int GAME_START_BUTTON_PIN = 11;
+static const int STANDBY_BUTTON_PIN = 12;
+static const int CLEANING_BUTTON_PIN = 14;
+
 struct InterruptPin
 {
   int irq_n;
