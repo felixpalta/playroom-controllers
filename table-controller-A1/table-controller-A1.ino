@@ -1,3 +1,4 @@
+#include <RqSender.h>
 #include <SwitchablePrinter.h>
 #include <playroom-protocol.h>
 #include <XmlTokenWriter.h>
@@ -18,6 +19,7 @@
 #include "MySerial.h"
 
 EthernetClient client;
+RqSender rq_sender(client, MySerial, PROTOVER_ATTR_VALUE, SERIAL_ATTR_VALUE);
 EthernetServer server(TABLE_CONTROLLER_LISTENING_PORT);
 
 void setup()
@@ -167,160 +169,11 @@ static void blink(int n)
   }
 }
 
-static bool get_connect_msg(int code, const char **msg)
-{
-  static const int SUCCESS = 1;
-  static const int TIMED_OUT = -1;
-  static const int INVALID_SERVER = -2;
-  static const int TRUNCATED = -3;
-  static const int INVALID_RESPONSE = -4;
-
-  switch (code)
-  {
-  case SUCCESS:
-    *msg = "Connection OK";
-    return true;
-  case TIMED_OUT:
-    *msg = "Connection timed out";
-    return false;
-  case INVALID_SERVER:
-    *msg = "Invalid server";
-    return false;
-  case TRUNCATED:
-    *msg = "Truncated";
-    return false;
-  case INVALID_RESPONSE:
-    *msg = "Invalid response";
-    return false;
-  default:
-    *msg = "Unknown code";
-    return false;
-  }
-}
-
-static bool connect_to_server()
-{
-  int code;
-  const char *err_msg = NULL;
-  bool connect_ok = false;
-
-  if (DNS_SERVER_NAME_PRESENT)
-  {
-    MySerial.print("Connecting to server by DNS name: ");
-    MySerial.println(PLAYROOM_SERVER_DNS_ADDRESS);
-    code = client.connect(PLAYROOM_SERVER_DNS_ADDRESS, PLAYROOM_SERVER_LISTENING_PORT);
-    MySerial.print("Code: ");
-    MySerial.println(code);
-    connect_ok = get_connect_msg(code, &err_msg);
-    if (!connect_ok)
-    {
-      Serial.println("Connection to server by DNS name failed");
-      if (err_msg)
-        Serial.println(err_msg);
-    }
-  }
-
-  if (!connect_ok)
-  {
-    MySerial.print("Connecting to server by IP address: ");
-    MySerial.println(PLAYROOM_SERVER_IP_ADDRESS);
-    code = client.connect(PLAYROOM_SERVER_IP_ADDRESS, PLAYROOM_SERVER_LISTENING_PORT);
-    MySerial.print("Code: ");
-    MySerial.println(code);
-    err_msg = NULL;
-    if (!get_connect_msg(code, &err_msg))
-    {
-      Serial.println("Connection to server by IP address failed");
-      if (err_msg)
-        Serial.println(err_msg);
-      return false;
-    }
-  }
-  
-  MySerial.println("Connection to server successfull");
-
-  return true;
-}
-
-#define BARREL_PLAY_RQ 1
-#define BARREL_SECTOR_RQ 2
-
-static void send_request(int rq_type, int n)
-{
-  if (!connect_to_server())
-  {
-    return;
-  }
-  MySerial.println("Connected to server");
-  if (!client.connected())
-  {
-    Serial.println("Error: server instantly closed the connection");
-    client.stop();
-    return;
-  }
-
-  OutWriter out_writer(client, PROTOVER_ATTR_VALUE, SERIAL_ATTR_VALUE);
-
-  switch (rq_type)
-  {
-    case BARREL_PLAY_RQ:
-      out_writer.send_barrel_play_request();
-      break;
-    case BARREL_SECTOR_RQ:
-      out_writer.send_barrel_sector_request(n);
-      break;
-    default:
-      Serial.print("Uknown request type: ");
-      Serial.println(rq_type);
-      return;
-  }
-
-  if (!client.connected())
-  {
-    Serial.println("Error: server closed connection right after receiving from client");
-    client.stop();
-    return;
-  }
-  Serial.println("Raw response from server: ");
-  
-  static const unsigned long READ_TIMEOUT = 1000;
-  
-  static unsigned long last_read_time;
-  
-  last_read_time = millis();
-  
-  while (true)
-  {
-    if (client.available())
-    {
-      last_read_time = millis();
-      char c = client.read();
-      Serial.print(c);
-    }
-    if (millis() - last_read_time >= READ_TIMEOUT)
-    {
-      Serial.println("\nRead timeout!");
-      break;
-    }
-  }
-  if (!client.connected())
-  {
-    MySerial.println("OK: Responce received, server closed the connection");
-  }
-  else
-  {
-    Serial.println("FAIL: Responce received, but server didn't close the connection");
-  }
-  MySerial.println("Stopping the client...");
-  client.stop();
-  return;
-}
-
 void sectors_rotation_started_callback()
 {
   Serial.println("ROTATION STARTED CALLBACK");
 
-  send_request(BARREL_PLAY_RQ, /* not used */ 0);
+  rq_sender.send_request(OUT_RQ_TYPE_BARREL_PLAY, /* not used */ 0);
   blink(2);
 }
 void sectors_rotation_stopped_callback(int sector_n)
@@ -328,6 +181,6 @@ void sectors_rotation_stopped_callback(int sector_n)
   Serial.print("ROTATION STOPPED CALLBACK: ");
   Serial.println(sector_n + 1);
   
-  send_request(BARREL_SECTOR_RQ, sector_n);
+  rq_sender.send_request(OUT_RQ_TYPE_BARREL_SECTOR, sector_n);
   blink(sector_n);
 }

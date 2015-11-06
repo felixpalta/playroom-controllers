@@ -1,0 +1,15 @@
+#ifndef __OUT_REQUEST_NAMES_H__
+#define __OUT_REQUEST_NAMES_H__
+
+typedef enum
+{
+    OUT_RQ_TYPE_INVALID,
+    OUT_RQ_TYPE_BARREL_PLAY,
+    OUT_RQ_TYPE_BARREL_SECTOR,
+    OUT_RQ_TYPE_GAME_START,
+    OUT_RQ_TYPE_STANDBY,
+    OUT_RQ_TYPE_CLEANING,
+    
+} OutRqType;
+
+#endif // __OUT_REQUEST_NAMES_H__
