@@ -151,4 +151,40 @@ static void process_button_event(const ButtonEvent *button_event)
 {
   if (!button_event)
     return;
+
+  switch (button_event->game_start_state)
+  {
+  case ButtonEvent::BUTTON_STATE_PUSHED:
+    Serial.println("GAME START button PUSHED");
+    break;
+  case ButtonEvent::BUTTON_STATE_RELEASED:
+    Serial.println("GAME START button RELEASED");
+    break;
+  default:
+    break;
+  }
+
+  switch (button_event->standby_state)
+  {
+  case ButtonEvent::BUTTON_STATE_PUSHED:
+    Serial.println("STANDBY button PUSHED");
+    break;
+  case ButtonEvent::BUTTON_STATE_RELEASED:
+    Serial.println("STANDBY button RELEASED");
+    break;
+  default:
+    break;
+  }
+
+  switch (button_event->cleaning_state)
+  {
+  case ButtonEvent::BUTTON_STATE_PUSHED:
+    Serial.println("CLEANING button PUSHED");
+    break;
+  case ButtonEvent::BUTTON_STATE_RELEASED:
+    Serial.println("CLEANING button RELEASED");
+    break;
+  default:
+    break;
+  }
 }
