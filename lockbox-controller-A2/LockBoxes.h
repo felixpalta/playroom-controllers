@@ -12,7 +12,7 @@
 class LockBoxes
 {
 public:
-  LockBoxes() {};
+  LockBoxes();
   void begin();
   boolean open(int n);
   boolean open_all();
@@ -21,8 +21,16 @@ public:
 
   const char *get_last_error() const;
 
+  // This should be called regularly in the main loop.
+  void process();
+
 private:
   static boolean check_number_convert_to_internal(int& n);
+  void blink_once();
+
+  int n_blinks_left;
+  int current_blinking_lockbox;
+  unsigned long last_blink_time;
 
   typedef enum
   {

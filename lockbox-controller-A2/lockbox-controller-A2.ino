@@ -70,7 +70,10 @@ void setup() {
 #endif
 }
 
-void loop() {
+void loop() 
+{
+  lock_boxes.process();
+
   // listen for incoming clients
   EthernetClient client = server.available();
   if (client) 
