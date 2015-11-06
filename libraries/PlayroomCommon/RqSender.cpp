@@ -102,6 +102,15 @@ void RqSender::send_request(OutRqType rq_type, int n)
   case OUT_RQ_TYPE_BARREL_SECTOR:
     out_writer.send_barrel_sector_request(n);
     break;
+  case OUT_RQ_TYPE_GAME_START:
+    out_writer.send_game_start_request();
+    break;
+  case OUT_RQ_TYPE_STANDBY:
+    out_writer.send_standby_request();
+    break;
+  case OUT_RQ_TYPE_CLEANING:
+    out_writer.send_cleaning_request();
+    break;
   default:
     Serial.print("Unexpected request type: ");
     Serial.println(rq_type);
