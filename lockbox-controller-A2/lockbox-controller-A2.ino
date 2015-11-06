@@ -1,6 +1,6 @@
 #include <RqSender.h>
 #include "buttons.h"
-#include <MsTimer2.h>
+#include <FlexiTimer2.h>
 #include <SwitchablePrinter.h>
 #include <playroom-protocol.h>
 #include <XmlTokenWriter.h>

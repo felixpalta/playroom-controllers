@@ -1,6 +1,6 @@
 #include "dimmers.h"
 #include "lockbox-controller-pin-config.h"
-#include <MsTimer2.h>
+#include <FlexiTimer2.h>
 
 #define N_ELEMS(arr) (sizeof(arr)/sizeof(arr[0]))
 
@@ -78,7 +78,7 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
   Dimmer *dimmer = get_dimmer(dimmer_id);
   if (dimmer)
   {
-    // covert light percent to dimming percent
+    // convert light percent to dimming percent
     light_level = constrain(light_level, 0, 100);
     int dimming_level = 100 - light_level;
 
@@ -103,7 +103,7 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     {
       dimmer->dimming_delay_us = dimming_level * DIMMING_STEP_WIDTH_US;
       dimmer->dimming_enabled = true;
-      dimmer->pulse_pending = true;
+      dimmer->pulse_pending = false;
       Serial.print("Dimmer #"); Serial.print(dimmer_id); Serial.print(" set to "); Serial.println(dimming_level);
     }
 
@@ -120,7 +120,7 @@ static void zero_cross_irq_handler()
 {
   last_zero_cross_time_us = micros();
   
-  MsTimer2::stop();
+  FlexiTimer2::stop();
   
   n_pending_dimmers = 0;
   
@@ -135,8 +135,9 @@ static void zero_cross_irq_handler()
 
   if (n_pending_dimmers != 0)
   {
-    MsTimer2::set(1, ms_timer_irq_handler);
-    MsTimer2::start();
+    // Timer ticks every 100 us, providing 1% resolution over 10ms span of AC half-period.
+    FlexiTimer2::set(1, 1.0/10000, ms_timer_irq_handler);
+    FlexiTimer2::start();
   }
 }
 
@@ -155,7 +156,7 @@ static void ms_timer_irq_handler()
   
   if (n_pending_dimmers == 0)
   {
-    MsTimer2::stop();
+    FlexiTimer2::stop();
     for (size_t i = 0; i < N_DIMMERS; ++i)
     {
       dimmers[i].pulse_pending = false;
