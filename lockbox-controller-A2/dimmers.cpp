@@ -12,20 +12,24 @@
 
 #define DIMMING_START_LEVEL 50
 
+#define FADE_SKIP_FACTOR 5
+
 struct Dimmer
 {
   DimmerEnum id;
   int on_pin;
   uint8_t dimming_percent;
+  uint8_t expected_percent;
+  uint8_t skip_counter;
   bool dimming_enabled;
   bool pulse_pending;
 };
 
 static volatile Dimmer dimmers[] =
 {
-  { DIMMER_TOP_LIGHT, DIMMER_TOP_LIGHT_ON_PIN, 0, false, false },
-  { DIMMER_SURROUND_LIGHT, DIMMER_SURROUND_LIGHT_ON_PIN, 0, false, false },
-  { DIMMER_LOCKBOX_LIGHT, DIMMER_LOCKBOX_LIGHT_ON_PIN, 0, false, false },
+  { DIMMER_TOP_LIGHT, DIMMER_TOP_LIGHT_ON_PIN, 0, 0, 0, false, false },
+  { DIMMER_SURROUND_LIGHT, DIMMER_SURROUND_LIGHT_ON_PIN, 0, 0, 0, false, false },
+  { DIMMER_LOCKBOX_LIGHT, DIMMER_LOCKBOX_LIGHT_ON_PIN, 0, 0, 0, false, false },
 };
 
 #define N_DIMMERS N_ELEMS(dimmers)
@@ -85,6 +89,8 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     {
       noInterrupts();
       dimmer->dimming_percent = 0;
+      dimmer->expected_percent = 0;
+      dimmer->skip_counter = 0;
       dimmer->dimming_enabled = false;
       dimmer->pulse_pending = false;
       set_dimming_to_0(dimmer);
@@ -95,6 +101,8 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     {
       noInterrupts();
       dimmer->dimming_percent = 0;
+      dimmer->expected_percent = 0;
+      dimmer->skip_counter = 0;
       dimmer->dimming_enabled = false;
       dimmer->pulse_pending = false;
       set_dimming_to_100(dimmer);
@@ -105,7 +113,8 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     else
     {
       noInterrupts();
-      dimmer->dimming_percent = dimming_level;
+      dimmer->expected_percent = dimming_level;
+      dimmer->skip_counter = FADE_SKIP_FACTOR;
       dimmer->dimming_enabled = true;
       dimmer->pulse_pending = false;
       interrupts();
@@ -131,10 +140,24 @@ static void zero_cross_irq_handler()
   
   for (uint8_t i = 0; i < N_DIMMERS; ++i)
   {
-    if (dimmers[i].dimming_enabled)
+    volatile Dimmer& d = dimmers[i];
+    if (d.dimming_enabled)
     {
       ++n_pending_dimmers;
-      dimmers[i].pulse_pending = true;
+      d.pulse_pending = true;
+      if (d.skip_counter > 0)
+      {
+        --d.skip_counter;
+      }
+      else
+      {
+        d.skip_counter = FADE_SKIP_FACTOR;
+        int_fast8_t diff = (int_fast8_t) d.dimming_percent - (int_fast8_t) d.expected_percent;
+        if (diff < 0)
+          ++d.dimming_percent;
+        else if (diff > 0)
+          --d.dimming_percent;
+      }
     }
   }
 
