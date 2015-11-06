@@ -71,3 +71,16 @@ void XmlRespWriter::send_game_start_request()
   write_request_close_tag();
   finalize_message();
 }
+
+void XmlRespWriter::send_cleaning_request()
+{
+  write_request_open_tag(TYPE_ATTR_CLEANING_VALUE);
+  write_request_close_tag();
+  finalize_message();
+}
+void XmlRespWriter::send_standby_request()
+{
+  write_request_open_tag(TYPE_ATTR_STANDBY_VALUE);
+  write_request_close_tag();
+  finalize_message();
+}

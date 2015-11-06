@@ -28,6 +28,8 @@ static const char TYPE_ATTR_ACK_VALUE[] = "ack";
 static const char TYPE_ATTR_ERR_VALUE[] = "err";
 
 static const char TYPE_ATTR_GAME_START_VALUE[] = "game-start";
+static const char TYPE_ATTR_CLEANING_VALUE[] = "cleaning";
+static const char TYPE_ATTR_STANDBY_VALUE[] = "standby";
 
 static const char TYPE_ATTR_BARREL_PLAY_VALUE[] = "barrel-play";
 

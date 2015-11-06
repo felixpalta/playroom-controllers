@@ -21,6 +21,8 @@ class XmlRespWriter
    void send_err_repsonse(const char* err_msg);
 
    void send_game_start_request();
+   void send_cleaning_request();
+   void send_standby_request();
 
 private:
   void write_response_open_tag(const char* type_attr_value);
