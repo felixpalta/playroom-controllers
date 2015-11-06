@@ -1,3 +1,4 @@
+#include <RqSender.h>
 #include "buttons.h"
 #include <MsTimer2.h>
 #include <SwitchablePrinter.h>
@@ -20,6 +21,9 @@
 // Initialize the Ethernet server library
 // with the IP address and port you want to use 
 EthernetServer server(LOCKBOX_CONTROLLER_LISTENING_PORT);
+
+EthernetClient client;
+RqSender rq_sender(client, Serial, PROTOVER_ATTR_VALUE, SERIAL_ATTR_VALUE);
 
 LockBoxes lock_boxes;
 
@@ -76,7 +80,6 @@ void setup() {
 void loop()
 {
   lock_boxes.process();
-
 
   ButtonEvent button_event;
   if (buttons_process(&button_event))
@@ -156,6 +159,7 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("GAME START button PUSHED");
+    rq_sender.send_request(OUT_RQ_TYPE_GAME_START, /*unused*/ 0);
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
     Serial.println("GAME START button RELEASED");
@@ -168,6 +172,7 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("STANDBY button PUSHED");
+    rq_sender.send_request(OUT_RQ_TYPE_STANDBY, /*unused*/ 0);
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
     Serial.println("STANDBY button RELEASED");
@@ -180,6 +185,7 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("CLEANING button PUSHED");
+    rq_sender.send_request(OUT_RQ_TYPE_CLEANING, /*unused*/ 0);
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
     Serial.println("CLEANING button RELEASED");
