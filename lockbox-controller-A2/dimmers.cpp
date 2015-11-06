@@ -9,7 +9,6 @@
 #define DIM_MAX_LEVEL 90
 #define TRIAC_ON_PULSE_WIDTH_US 10
 #define AC_HALF_PERIOD_US 10000UL
-#define DIMMING_STEP_WIDTH_US ((AC_HALF_PERIOD_US - TRIAC_ON_PULSE_WIDTH_US)/DIMMING_STEPS_NUMBER)
 
 #define DIMMING_START_LEVEL 50
 
@@ -17,7 +16,7 @@ struct Dimmer
 {
   DimmerEnum id;
   int on_pin;
-  unsigned long dimming_delay_us;
+  uint8_t dimming_percent;
   bool dimming_enabled;
   bool pulse_pending;
 };
@@ -31,9 +30,9 @@ static Dimmer dimmers[] =
 
 #define N_DIMMERS N_ELEMS(dimmers)
 
-static unsigned long last_zero_cross_time_us = 0;
+static uint8_t percent_ticker = 0;
 
-static byte n_pending_dimmers = 0;
+static uint8_t n_pending_dimmers = 0;
 
 ////////////////////////////////////////////////////////////////////
 
@@ -49,7 +48,7 @@ static void triac_pulse(const Dimmer *dimmer);
 
 static Dimmer *get_dimmer(DimmerEnum dimmer_id)
 {
-  for (size_t i = 0; i < N_DIMMERS; ++i)
+  for (uint8_t i = 0; i < N_DIMMERS; ++i)
   {
     if (dimmers[i].id == dimmer_id)
       return &dimmers[i];
@@ -61,7 +60,7 @@ static Dimmer *get_dimmer(DimmerEnum dimmer_id)
 
 void dimmers_init()
 {
-  for (size_t i = 0; i < N_DIMMERS; ++i)
+  for (uint8_t i = 0; i < N_DIMMERS; ++i)
   {
     pinMode(dimmers[i].on_pin, OUTPUT);
     digitalWrite(dimmers[i].on_pin, LOW);
@@ -84,7 +83,7 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
 
     if (dimming_level < DIM_MIN_LEVEL)
     {
-      dimmer->dimming_delay_us = 0;
+      dimmer->dimming_percent = 0;
       dimmer->dimming_enabled = false;
       dimmer->pulse_pending = false;
       set_dimming_to_0(dimmer);
@@ -92,7 +91,7 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     }
     else if (dimming_level > DIM_MAX_LEVEL)
     {
-      dimmer->dimming_delay_us = 0;
+      dimmer->dimming_percent = 0;
       dimmer->dimming_enabled = false;
       dimmer->pulse_pending = false;
       set_dimming_to_100(dimmer);
@@ -101,7 +100,7 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     }
     else
     {
-      dimmer->dimming_delay_us = dimming_level * DIMMING_STEP_WIDTH_US;
+      dimmer->dimming_percent = dimming_level;
       dimmer->dimming_enabled = true;
       dimmer->pulse_pending = false;
       Serial.print("Dimmer #"); Serial.print(dimmer_id); Serial.print(" set to "); Serial.println(dimming_level);
@@ -118,13 +117,13 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
 
 static void zero_cross_irq_handler()
 {
-  last_zero_cross_time_us = micros();
+  percent_ticker = 0;
   
   FlexiTimer2::stop();
   
   n_pending_dimmers = 0;
   
-  for (size_t i = 0; i < N_DIMMERS; ++i)
+  for (uint8_t i = 0; i < N_DIMMERS; ++i)
   {
     if (dimmers[i].dimming_enabled)
     {
@@ -143,10 +142,11 @@ static void zero_cross_irq_handler()
 
 static void ms_timer_irq_handler()
 {
-  for (size_t i = 0; i < N_DIMMERS; ++i)
+  ++percent_ticker;
+  for (uint8_t i = 0; i < N_DIMMERS; ++i)
   {
     Dimmer& d = dimmers[i];
-    if (d.dimming_enabled && d.pulse_pending && ((micros() - last_zero_cross_time_us) >= d.dimming_delay_us))
+    if (d.dimming_enabled && d.pulse_pending && (percent_ticker >= d.dimming_percent))
     {
       triac_pulse(&d);
       d.pulse_pending = false;
@@ -157,7 +157,7 @@ static void ms_timer_irq_handler()
   if (n_pending_dimmers == 0)
   {
     FlexiTimer2::stop();
-    for (size_t i = 0; i < N_DIMMERS; ++i)
+    for (uint8_t i = 0; i < N_DIMMERS; ++i)
     {
       dimmers[i].pulse_pending = false;
     }
@@ -194,8 +194,5 @@ static void triac_pulse(const Dimmer *dimmer)
     digitalWrite(dimmer->on_pin, LOW);
   }
 }
-
-
-
 
 
