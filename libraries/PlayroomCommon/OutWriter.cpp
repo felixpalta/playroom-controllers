@@ -5,7 +5,6 @@
 #include "OutWriter.h"
 
 #include <playroom-protocol.h>
-#include "table-controller-valid-protocol-values.h"
 
 void OutWriter::finalize_message()
 {
@@ -34,7 +33,7 @@ void OutWriter::write_response_open_tag(const char* type_attr_value)
 
   xml_writer.write_tag_opening(RESP_TAG_NAME);
   xml_writer.write_attribute_text(TYPE_ATTR_NAME, type_attr_value);
-  xml_writer.write_attribute_text(PROTOVER_ATTR_NAME, PROTOVER_ATTR_VALUE);
+  xml_writer.write_attribute_text(PROTOVER_ATTR_NAME, valid_protover);
   xml_writer.write_right_simple_bracket();
 
 }
@@ -57,8 +56,8 @@ void OutWriter::write_request_open_tag(const char* type_attr_value)
 
   xml_writer.write_tag_opening(RQ_TAG_NAME);
   xml_writer.write_attribute_text(TYPE_ATTR_NAME, type_attr_value);
-  xml_writer.write_attribute_text(PROTOVER_ATTR_NAME, PROTOVER_ATTR_VALUE);
-  xml_writer.write_attribute_text(SERIAL_ATTR_NAME, SERIAL_ATTR_VALUE);
+  xml_writer.write_attribute_text(PROTOVER_ATTR_NAME, valid_protover);
+  xml_writer.write_attribute_text(SERIAL_ATTR_NAME, valid_serial);
   xml_writer.write_right_simple_bracket();
 }
 void OutWriter::write_request_close_tag()
@@ -79,6 +78,27 @@ void OutWriter::send_barrel_sector_request(int n)
   xml_writer.write_tag_opening(DATA_TAG_NAME);
   xml_writer.write_attribute_num(ID_ATTR_NAME, n);
   xml_writer.write_right_closing_bracket();
+  write_request_close_tag();
+  finalize_message();
+}
+
+
+void OutWriter::send_game_start_request()
+{
+  write_request_open_tag(TYPE_ATTR_GAME_START_VALUE);
+  write_request_close_tag();
+  finalize_message();
+}
+
+void OutWriter::send_cleaning_request()
+{
+  write_request_open_tag(TYPE_ATTR_CLEANING_VALUE);
+  write_request_close_tag();
+  finalize_message();
+}
+void OutWriter::send_standby_request()
+{
+  write_request_open_tag(TYPE_ATTR_STANDBY_VALUE);
   write_request_close_tag();
   finalize_message();
 }

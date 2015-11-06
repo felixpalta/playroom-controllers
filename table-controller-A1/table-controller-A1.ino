@@ -6,7 +6,7 @@
 #include <EthernetV2_0.h>
 #include <MsTimer2.h>
 #include <playroom-server-address.h>
-#include "OutWriter.h"
+#include <OutWriter.h>
 #include "table-controller-pin-config.h"
 #include "table-controller-server-config.h"
 #include "table-controller-valid-protocol-values.h"
@@ -99,7 +99,7 @@ void process_incoming_connections()
   {
     XmlTokenParser xml_token_parser(/* input */ client, /* echo */ Serial);
     InputReader xml_parser(xml_token_parser, PROTOVER_ATTR_VALUE);
-    OutWriter out_writer(client);
+    OutWriter out_writer(client, PROTOVER_ATTR_VALUE, SERIAL_ATTR_VALUE);
 
     MySerial.println("\nnew client");
     if (client.connected())
@@ -259,7 +259,7 @@ static void send_request(int rq_type, int n)
     return;
   }
 
-  OutWriter out_writer(client);
+  OutWriter out_writer(client, PROTOVER_ATTR_VALUE, SERIAL_ATTR_VALUE);
 
   switch (rq_type)
   {
