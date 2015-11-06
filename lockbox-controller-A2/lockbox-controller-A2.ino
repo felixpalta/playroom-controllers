@@ -5,7 +5,7 @@
 #include <XmlTokenWriter.h>
 #include <XmlTokenParser.h>
 #include "request_processing.h"
-#include "XmlRespWriter.h"
+#include <OutWriter.h>
 #include <InputReader.h>
 #include <request_names.h>
 #include <SPI.h>
@@ -90,7 +90,7 @@ void loop()
   {
     XmlTokenParser xml_token_parser(/* input */ client, /* echo */ Serial);
     InputReader xml_parser(xml_token_parser, PROTOVER_ATTR_VALUE);
-    XmlRespWriter xml_resp_writer(client);
+    OutWriter xml_resp_writer(client, PROTOVER_ATTR_VALUE, SERIAL_ATTR_VALUE);
 
     Serial.println("\nnew client");
     if (client.connected())
