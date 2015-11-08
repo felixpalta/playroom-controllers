@@ -73,6 +73,7 @@ void setup()
 
 void loop()
 {
+  process_serial_input();
   process_incoming_connections();
   SectorEventData sector_event_data;
   if (is_sector_event_ready(&sector_event_data))
@@ -90,6 +91,30 @@ void loop()
       default:
         Serial.print("Unexpected event type: "); Serial.println(event_type);
         break;
+    }
+  }
+}
+
+void process_serial_input()
+{
+  enum
+  {
+    SECTOR_TEST_ON = '1',
+    SECTOR_TEST_OFF = '2',
+  };
+  if (Serial.available())
+  {
+    char c = Serial.read();
+    switch (c)
+    {
+    case SECTOR_TEST_ON:
+      sector_test_mode_enable(true);
+      break;
+    case SECTOR_TEST_OFF:
+      sector_test_mode_enable(false);
+      break;
+    default:
+      break;
     }
   }
 }

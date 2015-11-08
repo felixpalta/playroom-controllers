@@ -281,9 +281,11 @@ void read_sector_sensors_and_light_all_leds()
 
 void sectors_process_sensors()
 {
-#ifdef SECTOR_TEST_MODE
-  read_sector_sensors_and_light_all_leds();
-#else
+  if (sector_test_mode_is_enabled())
+  {
+    read_sector_sensors_and_light_all_leds();
+    return;
+  }
 
   if (!wait_for_spin_flag)
     return;
@@ -463,5 +465,4 @@ void sectors_process_sensors()
     Serial.println(state);
     reset_sector_sensors_state();
   }
-#endif // SECTOR_TEST_MODE
 }
