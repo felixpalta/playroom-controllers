@@ -94,7 +94,7 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     {}
     noInterrupts();
     dimmer->expected_percent = dimming_level;
-    dimmer->skip_counter = FADE_SKIP_FACTOR;
+    dimmer->skip_counter = 0;
     dimmer->dimming_enabled = true;
     interrupts();
     Serial.print("Dimmer #"); Serial.print(dimmer_id); Serial.print(" set to "); Serial.println(dimming_level);
@@ -122,13 +122,13 @@ static void zero_cross_irq_handler()
     if (d.dimming_enabled)
     {
       ++n_pending_dimmers;
-      if (d.skip_counter > 0)
+      if (d.skip_counter < FADE_SKIP_FACTOR)
       {
-        --d.skip_counter;
+        ++d.skip_counter;
       }
       else
       {
-        d.skip_counter = FADE_SKIP_FACTOR;
+        d.skip_counter = 0;
         int_fast8_t diff = (int_fast8_t) d.dimming_percent - (int_fast8_t) d.expected_percent;
         if (diff < 0)
           ++d.dimming_percent;
