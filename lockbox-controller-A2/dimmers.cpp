@@ -43,8 +43,6 @@ static volatile uint8_t percent_ticker = 0;
 
 static volatile uint8_t n_pending_dimmers = 0;
 
-static volatile bool dimmers_working = false;
-
 ////////////////////////////////////////////////////////////////////
 
 static void ms_timer_irq_handler();
@@ -90,7 +88,7 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     light_level = constrain(light_level, 0, 100);
     int dimming_level = 100 - light_level;
     
-    while (dimmers_working)
+    while (n_pending_dimmers)
     {}
     noInterrupts();
     dimmer->expected_percent = dimming_level;
@@ -154,13 +152,10 @@ static void zero_cross_irq_handler()
 
   if (n_pending_dimmers != 0)
   {
-    dimmers_working = true;
     // Timer ticks every 100 us, providing 1% resolution over 10ms span of AC half-period.
     FlexiTimer2::set(1, 1.0/10000, ms_timer_irq_handler);
     FlexiTimer2::start();
   }
-  else
-    dimmers_working = false;
 }
 
 static void ms_timer_irq_handler()
@@ -176,7 +171,7 @@ static void ms_timer_irq_handler()
       {
         digitalWrite(d.on_pin, HIGH);
       }
-      else if (diff > 0)
+      else if (diff == 1)
       {
         digitalWrite(d.on_pin, LOW);
         --n_pending_dimmers;
@@ -188,7 +183,6 @@ static void ms_timer_irq_handler()
   if (n_pending_dimmers == 0)
   {
     FlexiTimer2::stop();
-    dimmers_working = false;
   }
 }
 
