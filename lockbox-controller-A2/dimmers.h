@@ -7,6 +7,10 @@
 #include "WProgram.h"
 #endif
 
+#define TOP_LIGHT_START_LEVEL 50
+#define SURROUND_LIGHT_START_LEVEL 50
+#define LOCKBOX_LIGHT_START_LEVEL 50
+
 typedef enum
 {
   DIMMER_INVALID,

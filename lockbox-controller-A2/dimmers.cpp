@@ -23,13 +23,23 @@ struct Dimmer
   uint8_t skip_counter;
   bool dimming_enabled;
   bool pulse_pending;
+  Dimmer(DimmerEnum num, int pin, uint8_t start_level) : 
+    id(num),
+    on_pin(pin),
+    dimming_percent(start_level),
+    expected_percent(start_level),
+    skip_counter(0),
+    dimming_enabled(true),
+    pulse_pending(false)
+  {
+  }
 };
 
 static volatile Dimmer dimmers[] =
 {
-  { DIMMER_TOP_LIGHT, DIMMER_TOP_LIGHT_ON_PIN, 0, 0, 0, false, false },
-  { DIMMER_SURROUND_LIGHT, DIMMER_SURROUND_LIGHT_ON_PIN, 0, 0, 0, false, false },
-  { DIMMER_LOCKBOX_LIGHT, DIMMER_LOCKBOX_LIGHT_ON_PIN, 0, 0, 0, false, false },
+  Dimmer(DIMMER_TOP_LIGHT, DIMMER_TOP_LIGHT_ON_PIN, TOP_LIGHT_START_LEVEL),
+  Dimmer(DIMMER_SURROUND_LIGHT, DIMMER_SURROUND_LIGHT_ON_PIN, SURROUND_LIGHT_START_LEVEL),
+  Dimmer(DIMMER_LOCKBOX_LIGHT, DIMMER_LOCKBOX_LIGHT_ON_PIN, LOCKBOX_LIGHT_START_LEVEL),
 };
 
 #define N_DIMMERS N_ELEMS(dimmers)
