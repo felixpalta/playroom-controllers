@@ -85,41 +85,13 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     light_level = constrain(light_level, 0, 100);
     int dimming_level = 100 - light_level;
 
-    if (dimming_level < DIM_MIN_LEVEL)
-    {
-      noInterrupts();
-      dimmer->dimming_percent = 0;
-      dimmer->expected_percent = 0;
-      dimmer->skip_counter = 0;
-      dimmer->dimming_enabled = false;
-      dimmer->pulse_pending = false;
-      set_dimming_to_0(dimmer);
-      interrupts();
-      Serial.print("Dimmer #"); Serial.print(dimmer_id); Serial.print(" set to ");Serial.println("0% and stopped");
-    }
-    else if (dimming_level > DIM_MAX_LEVEL)
-    {
-      noInterrupts();
-      dimmer->dimming_percent = 0;
-      dimmer->expected_percent = 0;
-      dimmer->skip_counter = 0;
-      dimmer->dimming_enabled = false;
-      dimmer->pulse_pending = false;
-      set_dimming_to_100(dimmer);
-      interrupts();
-      Serial.print("Dimmer #"); Serial.print(dimmer_id); Serial.print(" set to ");Serial.println("100% and stopped");
-      
-    }
-    else
-    {
-      noInterrupts();
-      dimmer->expected_percent = dimming_level;
-      dimmer->skip_counter = FADE_SKIP_FACTOR;
-      dimmer->dimming_enabled = true;
-      dimmer->pulse_pending = false;
-      interrupts();
-      Serial.print("Dimmer #"); Serial.print(dimmer_id); Serial.print(" set to "); Serial.println(dimming_level);
-    }
+    noInterrupts();
+    dimmer->expected_percent = dimming_level;
+    dimmer->skip_counter = FADE_SKIP_FACTOR;
+    dimmer->dimming_enabled = true;
+    dimmer->pulse_pending = false;
+    interrupts();
+    Serial.print("Dimmer #"); Serial.print(dimmer_id); Serial.print(" set to "); Serial.println(dimming_level);
 
     return true;
   }
@@ -157,6 +129,20 @@ static void zero_cross_irq_handler()
           ++d.dimming_percent;
         else if (diff > 0)
           --d.dimming_percent;
+        if (d.dimming_percent < DIM_MIN_LEVEL)
+        {
+          d.dimming_percent = DIM_MIN_LEVEL;
+          d.dimming_enabled = false;
+          set_dimming_to_0(&d);
+          --n_pending_dimmers;
+        }
+        else if (d.dimming_percent > DIM_MAX_LEVEL)
+        {
+          d.dimming_percent = DIM_MAX_LEVEL;
+          d.dimming_enabled = false;
+          set_dimming_to_100(&d);
+          --n_pending_dimmers;
+        }
       }
     }
   }
