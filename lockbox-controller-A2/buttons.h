@@ -40,9 +40,5 @@ void buttons_init();
 
 bool buttons_process(ButtonEvent *button_event);
 
-bool buttons_event_check_ready_and_reset(ButtonEvent *button_event);
-
-void buttons_event_reset();
-
 #endif
 

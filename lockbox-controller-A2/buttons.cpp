@@ -5,7 +5,7 @@
 #include "buttons.h"
 #include "lockbox-controller-pin-config.h"
 
-#define DEBOUNCE_MS 1000
+#define DEBOUNCE_MS 200
 
 struct Button
 {
