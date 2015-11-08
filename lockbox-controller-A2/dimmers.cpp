@@ -9,8 +9,6 @@
 #define DIM_MAX_LEVEL 90
 #define AC_HALF_PERIOD_US 10000UL
 
-#define DIMMING_START_LEVEL 50
-
 #define FADE_SKIP_FACTOR 5
 
 struct Dimmer
