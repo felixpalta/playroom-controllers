@@ -159,10 +159,12 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("GAME START button PUSHED");
+    digitalWrite(GAME_START_BUTTON_LIGHT_PIN, HIGH);
     rq_sender.send_request(OUT_RQ_TYPE_GAME_START, /*unused*/ 0);
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
     Serial.println("GAME START button RELEASED");
+    digitalWrite(GAME_START_BUTTON_LIGHT_PIN, LOW);
     break;
   default:
     break;
@@ -173,9 +175,11 @@ static void process_button_event(const ButtonEvent *button_event)
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("STANDBY button PUSHED");
     rq_sender.send_request(OUT_RQ_TYPE_STANDBY, /*unused*/ 0);
+    digitalWrite(STANDBY_BUTTON_LIGHT_PIN, HIGH);
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
     Serial.println("STANDBY button RELEASED");
+    digitalWrite(STANDBY_BUTTON_LIGHT_PIN, LOW);
     break;
   default:
     break;

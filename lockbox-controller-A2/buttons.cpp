@@ -59,6 +59,8 @@ static Button cleaning_button(CLEANING_BUTTON_PIN);
 
 void buttons_init()
 {
+  pinMode(GAME_START_BUTTON_LIGHT_PIN, OUTPUT);
+  pinMode(STANDBY_BUTTON_LIGHT_PIN, OUTPUT);
   Serial.println("Buttons initialized!");
 }
 
