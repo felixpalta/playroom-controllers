@@ -1,7 +1,6 @@
 #include "sectors.h"
 #include "table-controller-pin-config.h"
 #include "sector_test_mode.h"
-#include "MySerial.h"
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
@@ -278,6 +277,7 @@ void read_sector_sensors_and_light_all_leds()
   }
 }
 
+//#define SECTORS_DEBUG_MSG
 
 void sectors_process_sensors()
 {
@@ -289,7 +289,9 @@ void sectors_process_sensors()
 
   if (!wait_for_spin_flag)
     return;
-
+  
+  read_sector_sensors_and_light_their_leds();
+  
   // at this point s is either a valid sector number or a SECTOR_NONE.
   if (state == STATE_READY)
   {
@@ -310,9 +312,11 @@ void sectors_process_sensors()
       prev_time = millis();
       prev_sector = s;
       state = STATE_WAIT_FOR_DIRECTION;
+      #ifdef SECTORS_DEBUG_MSG
       Serial.print(prev_time);
       Serial.print(": First sector: ");
       Serial.println(s);
+      #endif
       return;
     }
   }
@@ -320,7 +324,9 @@ void sectors_process_sensors()
   {
     if (millis() - prev_time >= 2 * SECTOR_TURN_TIME_MS)
     {
+      #ifdef SECTORS_DEBUG_MSG
       Serial.println("Waited for direction detection for too long...");
+      #endif
       reset_sector_sensors_state();
       return;
     }
@@ -344,7 +350,9 @@ void sectors_process_sensors()
     }
     if (right_is_on && left_is_on)
     {
+      #ifdef SECTORS_DEBUG_MSG
       Serial.println("ERROR: Both right and left movement are detected.");
+      #endif
       reset_sector_sensors_state();
       return;
     }
@@ -366,20 +374,22 @@ void sectors_process_sensors()
     state = STATE_WAIT_FOR_NEXT_SECTOR;
     correct_sectors_counter = 0; // maybe should be + 2
     
-
+    #ifdef SECTORS_DEBUG_MSG
     Serial.print(prev_time);
     Serial.print(": Sector after first: ");
     Serial.println(s);
     Serial.print("Direction: ");
     Serial.println(dir == DIRECTION_RIGHT ? "RIGHT" : "LEFT");
+    #endif
     return;
   }
   else if (state == STATE_WAIT_FOR_NEXT_SECTOR)
   {
-    read_sector_sensors_and_light_their_leds();
     if (millis() - prev_time >= SECTOR_TURN_TIME_MS)
     {
+      #ifdef SECTORS_DEBUG_MSG
       Serial.println("Waited too long for next sector");
+      #endif
       reset_sector_sensors_state();
       return;
     }
@@ -424,7 +434,6 @@ void sectors_process_sensors()
   }
   else if (state == STATE_WAIT_FOR_STOP)
   {
-    read_sector_sensors_and_light_their_leds();
     Sector s = check_enabled_sector();
     if (millis() - prev_time >= SECTOR_TURN_TIME_MS)
     {
@@ -436,12 +445,16 @@ void sectors_process_sensors()
         wait_for_spin_flag = false;
         break;
       case SECTOR_INVALID:
+        #ifdef SECTORS_DEBUG_MSG
         Serial.println("Invalid sector detected while waiting for STOP");
+        #endif
         break;
       default:
         if (!check_number(s))
         {
+          #ifdef SECTORS_DEBUG_MSG
           Serial.println("Wrong number sector detected while waiting for STOP");
+          #endif
           break;
         }
         event_is_ready = true;
@@ -461,8 +474,10 @@ void sectors_process_sensors()
   }
   else
   {
+    #ifdef SECTORS_DEBUG_MSG
     Serial.print("Invalid sector state: ");
     Serial.println(state);
+    #endif
     reset_sector_sensors_state();
   }
 }
