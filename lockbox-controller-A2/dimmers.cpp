@@ -7,7 +7,6 @@
 #define DIMMING_STEPS_NUMBER 100
 #define DIM_MIN_LEVEL 10
 #define DIM_MAX_LEVEL 90
-#define TRIAC_ON_PULSE_WIDTH_US 10
 #define AC_HALF_PERIOD_US 10000UL
 
 #define DIMMING_START_LEVEL 50
@@ -22,15 +21,13 @@ struct Dimmer
   uint8_t expected_percent;
   uint8_t skip_counter;
   bool dimming_enabled;
-  bool pulse_pending;
   Dimmer(DimmerEnum num, int pin, uint8_t start_level) : 
     id(num),
     on_pin(pin),
     dimming_percent(start_level),
     expected_percent(start_level),
     skip_counter(0),
-    dimming_enabled(true),
-    pulse_pending(false)
+    dimming_enabled(true)
   {
   }
 };
@@ -59,8 +56,6 @@ static void zero_cross_irq_handler();
 static void set_dimming_to_100(const volatile Dimmer *dimmer);
 
 static void set_dimming_to_0(const volatile Dimmer *dimmer);
-
-static void triac_pulse(const volatile Dimmer *dimmer);
 
 static volatile Dimmer *get_dimmer(DimmerEnum dimmer_id)
 {
@@ -103,7 +98,6 @@ bool dimmers_light_set(DimmerEnum dimmer_id, int light_level)
     dimmer->expected_percent = dimming_level;
     dimmer->skip_counter = FADE_SKIP_FACTOR;
     dimmer->dimming_enabled = true;
-    dimmer->pulse_pending = false;
     interrupts();
     Serial.print("Dimmer #"); Serial.print(dimmer_id); Serial.print(" set to "); Serial.println(dimming_level);
 
@@ -130,7 +124,6 @@ static void zero_cross_irq_handler()
     if (d.dimming_enabled)
     {
       ++n_pending_dimmers;
-      d.pulse_pending = true;
       if (d.skip_counter > 0)
       {
         --d.skip_counter;
@@ -178,11 +171,19 @@ static void ms_timer_irq_handler()
   for (uint8_t i = 0; i < N_DIMMERS; ++i)
   {
     volatile Dimmer& d = dimmers[i];
-    if (d.dimming_enabled && d.pulse_pending && (percent_ticker >= d.dimming_percent))
+    if (d.dimming_enabled)
     {
-      triac_pulse(&d);
-      d.pulse_pending = false;
-      --n_pending_dimmers;
+      int8_t diff = percent_ticker - d.dimming_percent;
+      if (diff == 0)
+      {
+        digitalWrite(d.on_pin, HIGH);
+      }
+      else if (diff > 0)
+      {
+        digitalWrite(d.on_pin, LOW);
+        --n_pending_dimmers;
+      }
+      
     }
   }
   
@@ -190,10 +191,6 @@ static void ms_timer_irq_handler()
   {
     FlexiTimer2::stop();
     dimmers_working = false;
-    for (uint8_t i = 0; i < N_DIMMERS; ++i)
-    {
-      dimmers[i].pulse_pending = false;
-    }
   }
 }
 
@@ -217,13 +214,3 @@ static void set_dimming_to_0(const volatile Dimmer *dimmer)
   }
 }
 
-static void triac_pulse(const volatile Dimmer *dimmer)
-{
-  if (dimmer)
-  {
-    pinMode(dimmer->on_pin, OUTPUT);
-    digitalWrite(dimmer->on_pin, HIGH);
-    delayMicroseconds(TRIAC_ON_PULSE_WIDTH_US);
-    digitalWrite(dimmer->on_pin, LOW);
-  }
-}
