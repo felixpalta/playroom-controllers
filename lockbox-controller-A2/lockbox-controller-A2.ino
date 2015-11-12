@@ -81,6 +81,9 @@ ButtonEvent button_event;
 
 void loop()
 {
+  
+  process_serial_input();
+  
   lock_boxes.process();
 
   if (buttons_process(&button_event))
@@ -197,5 +200,44 @@ static void process_button_event(const ButtonEvent *button_event)
     break;
   default:
     break;
+  }
+}
+
+void process_serial_input()
+{
+  enum
+  {
+    CURTAIN_ON = '1',
+    CURTAIN_OFF = '2',
+    LOCK_ON = '3',
+    LOCK_OFF = '4',
+  };
+  
+  static bool curtain_state_pulse = false;
+  
+  if (Serial.available())
+  {
+    char c = Serial.read();
+    switch (c)
+    {
+    case CURTAIN_ON:
+      pinMode(CURTAIN_OPEN_PIN, OUTPUT);
+      digitalWrite(CURTAIN_OPEN_PIN, HIGH);
+      delay(100);
+      digitalWrite(CURTAIN_OPEN_PIN, LOW);
+      break;
+    case CURTAIN_OFF:
+      pinMode(CURTAIN_OPEN_PIN, OUTPUT);
+      digitalWrite(CURTAIN_CLOSE_PIN, HIGH);
+      delay(100);
+      digitalWrite(CURTAIN_CLOSE_PIN, LOW);
+      break;
+    case LOCK_ON:
+      break;
+    case LOCK_OFF:
+      break;  
+    default:
+      break;
+    }
   }
 }
