@@ -61,5 +61,7 @@ static const char TYPE_ATTR_BARREL_WAIT_VALUE[] = "barrel-wait";
 
 static const char PERCENT_ATTR_NAME[] = "percent";
 
+static const char TYPE_ATTR_DOOR_LOCK_VALUE[] = "door-lock";
+static const char TYPE_ATTR_DOOR_UNLOCK_VALUE[] = "door-unlock";
 
 #endif // __PLAYROOM_PROTOCOL_H__
