@@ -6,6 +6,7 @@
 #include "LockBoxes.h"
 #include "dimmers.h"
 #include <request_names.h>
+#include "door_lock.h"
 
 extern LockBoxes lock_boxes;
 
@@ -170,6 +171,24 @@ static bool process_request(InputRqParsingOutput& data)
       return false;
     }
     return true;
+  case RQ_TYPE_DOOR_LOCK:
+    ok = door_lock_close();
+    if (!ok)
+    {
+      processing_error_occured = true;
+      processing_err_msg = "door_lock_close() request error";
+      return false;
+    }
+    return true;
+  case RQ_TYPE_DOOR_UNLOCK:
+    ok = door_lock_open();
+    if (!ok)
+    {
+      processing_error_occured = true;
+      processing_err_msg = "door_lock_open() request error";
+      return false;
+    }
+    return true;
   default:
     error_code = ERROR_INVALID_RQ_TYPE;
     return false;
@@ -189,6 +208,8 @@ static bool verify_request(InputRqParsingOutput& data)
   case RQ_TYPE_TOP_LIGHT:
   case RQ_TYPE_SURROUND_LIGHT:
   case RQ_TYPE_LOCKBOX_LIGHT:
+  case RQ_TYPE_DOOR_LOCK:
+  case RQ_TYPE_DOOR_UNLOCK:
     break;
   default:
     error_code = ERROR_INVALID_RQ_TYPE;
