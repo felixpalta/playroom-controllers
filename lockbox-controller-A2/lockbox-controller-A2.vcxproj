@@ -60,11 +60,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\variants\standard;C:\Users\user\Dropbox\Arduino\lockbox-controller-A2;C:\Users\user\Dropbox\Arduino\libraries\EthernetV2_0;C:\Users\user\Dropbox\Arduino\libraries\EthernetV2_0\utility;C:\Users\user\Dropbox\Arduino\libraries\MsTimer2;C:\Users\user\Dropbox\Arduino\libraries\MsTimer2\utility;C:\Users\user\Dropbox\Arduino\libraries\PlayroomCommon;C:\Users\user\Dropbox\Arduino\libraries\PlayroomCommon\utility;C:\Program Files (x86)\Arduino\libraries\SPI;C:\Program Files (x86)\Arduino\libraries\SPI\utility;C:\Users\user\Dropbox\Arduino\libraries\SwitchablePrinter;C:\Users\user\Dropbox\Arduino\libraries\SwitchablePrinter\utility;C:\Users\user\Dropbox\Arduino\libraries\XmlTokenParser;C:\Users\user\Dropbox\Arduino\libraries\XmlTokenParser\utility;C:\Users\user\Dropbox\Arduino\libraries\XmlTokenWriter;C:\Users\user\Dropbox\Arduino\libraries\XmlTokenWriter\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\libraries;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\Extensions\cs0zvdln.5fc\Micro Platforms\default\debuggers;C:\Users\user\Dropbox\Arduino\libraries;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\avr\;c:\program files (x86)\arduino\hardware\tools\avr\avr\;c:\program files (x86)\arduino\hardware\tools\avr\lib\gcc\avr\4.3.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>C:\Users\user\Dropbox\Arduino\lockbox-controller-A2\__vm\.lockbox-controller-A2.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\variants\mega;D:\Dropbox\Arduino\lockbox-controller-A2;D:\Dropbox\Arduino\libraries\EthernetV2_0;D:\Dropbox\Arduino\libraries\EthernetV2_0\utility;D:\Dropbox\Arduino\libraries\FlexiTimer2;D:\Dropbox\Arduino\libraries\FlexiTimer2\utility;D:\Dropbox\Arduino\libraries\PlayroomCommon;D:\Dropbox\Arduino\libraries\PlayroomCommon\utility;C:\Program Files (x86)\Arduino\libraries\SPI;C:\Program Files (x86)\Arduino\libraries\SPI\utility;D:\Dropbox\Arduino\libraries\SwitchablePrinter;D:\Dropbox\Arduino\libraries\SwitchablePrinter\utility;D:\Dropbox\Arduino\libraries\XmlTokenParser;D:\Dropbox\Arduino\libraries\XmlTokenParser\utility;D:\Dropbox\Arduino\libraries\XmlTokenWriter;D:\Dropbox\Arduino\libraries\XmlTokenWriter\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\libraries;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\Extensions\4rczadkg.qhd\Micro Platforms\default\debuggers;D:\Dropbox\Arduino\libraries;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\avr\;c:\program files (x86)\arduino\hardware\tools\avr\avr\;c:\program files (x86)\arduino\hardware\tools\avr\lib\gcc\avr\4.3.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>D:\Dropbox\Arduino\lockbox-controller-A2\__vm\.lockbox-controller-A2.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>__AVR_ATmega2560__;ARDUINO=106;ARDUINO_MAIN;__AVR__;__avr__;F_CPU=16000000L;__cplusplus;GCC_VERSION=40302;ARDUINO_ARCH_AVR;ARDUINO_AVR_UNO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AVR_ATmega2560__;ARDUINO=106;ARDUINO_MAIN;__AVR__;__avr__;F_CPU=16000000L;__cplusplus;GCC_VERSION=40302;ARDUINO_ARCH_AVR;ARDUINO_AVR_MEGA2560;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -80,7 +80,9 @@
   <ItemGroup>
     <ClInclude Include="..\libraries\XmlTokenParser\xml_token_max_length.h" />
     <ClInclude Include="buttons.h" />
+    <ClInclude Include="curtain.h" />
     <ClInclude Include="dimmers.h" />
+    <ClInclude Include="door_lock.h" />
     <ClInclude Include="lockbox-controller-pin-config.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -93,6 +95,14 @@
     <ClInclude Include="LockBoxes.h">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClInclude Include="PlayroomStateCleaning.h" />
+    <ClInclude Include="PlayroomStateDoneCleaning.h" />
+    <ClInclude Include="PlayroomStateGame.h" />
+    <ClInclude Include="PlayroomStateInterface.h" />
+    <ClInclude Include="PlayroomStateMachine.h" />
+    <ClInclude Include="PlayroomStateMachineInterface.h" />
+    <ClInclude Include="PlayroomStateNull.h" />
+    <ClInclude Include="PlayroomStateStandby.h" />
     <ClInclude Include="request_processing.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -100,8 +110,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="buttons.cpp" />
+    <ClCompile Include="curtain.cpp" />
     <ClCompile Include="dimmers.cpp" />
+    <ClCompile Include="door_lock.cpp" />
     <ClCompile Include="LockBoxes.cpp" />
+    <ClCompile Include="playroomstatecleaning.cpp" />
+    <ClCompile Include="playroomstatedonecleaning.cpp" />
+    <ClCompile Include="PlayroomStateGame.cpp" />
+    <ClCompile Include="PlayroomStateMachine.cpp" />
+    <ClCompile Include="PlayroomStateStandby.cpp" />
     <ClCompile Include="request_processing.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
