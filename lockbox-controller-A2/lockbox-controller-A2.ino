@@ -1,3 +1,4 @@
+#include "door_lock.h"
 #include <RqSender.h>
 #include "buttons.h"
 #include <FlexiTimer2.h>
@@ -75,6 +76,8 @@ void setup() {
   dimmers_light_set(DIMMER_SURROUND_LIGHT, 60);
   dimmers_light_set(DIMMER_LOCKBOX_LIGHT, 80);
 #endif
+
+  door_lock_init();
 }
 
 ButtonEvent button_event;
