@@ -1,3 +1,4 @@
+#include "curtain.h"
 #include "door_lock.h"
 #include <RqSender.h>
 #include "buttons.h"
@@ -78,6 +79,7 @@ void setup() {
 #endif
 
   door_lock_init();
+  curtain_init();
 }
 
 ButtonEvent button_event;
@@ -212,8 +214,8 @@ void process_serial_input()
   {
     CURTAIN_ON = '1',
     CURTAIN_OFF = '2',
-    LOCK_ON = '3',
-    LOCK_OFF = '4',
+    LOCK_CLOSE = '3',
+    LOCK_OPEN = '4',
   };
   
   if (Serial.available())
@@ -222,20 +224,16 @@ void process_serial_input()
     switch (c)
     {
     case CURTAIN_ON:
-      pinMode(CURTAIN_OPEN_PIN, OUTPUT);
-      digitalWrite(CURTAIN_OPEN_PIN, HIGH);
-      delay(100);
-      digitalWrite(CURTAIN_OPEN_PIN, LOW);
+      curtain_signal_open();
       break;
     case CURTAIN_OFF:
-      pinMode(CURTAIN_OPEN_PIN, OUTPUT);
-      digitalWrite(CURTAIN_CLOSE_PIN, HIGH);
-      delay(100);
-      digitalWrite(CURTAIN_CLOSE_PIN, LOW);
+      curtain_signal_close();
       break;
-    case LOCK_ON:
+    case LOCK_CLOSE:
+      door_lock_close();
       break;
-    case LOCK_OFF:
+    case LOCK_OPEN:
+      door_lock_open();
       break;  
     default:
       break;
