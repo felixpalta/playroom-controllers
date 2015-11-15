@@ -213,8 +213,6 @@ void process_serial_input()
     LOCK_OFF = '4',
   };
   
-  static bool curtain_state_pulse = false;
-  
   if (Serial.available())
   {
     char c = Serial.read();
