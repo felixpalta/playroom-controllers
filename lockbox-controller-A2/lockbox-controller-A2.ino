@@ -39,10 +39,15 @@ void setup() {
   
   pinMode(SDCARD_CS, OUTPUT);
   digitalWrite(SDCARD_CS, HIGH);//Deselect the SD card
+  
+  lock_boxes.begin();
+  dimmers_init();
+  buttons_init();
+  door_lock_init();
+  curtain_init();
 
-  
   Serial.println("Attempting to lease IP via DHCP...");
-  
+
   // start the Ethernet connection and the server:
   if (Ethernet.begin(lockbox_controller_mac))
   {
@@ -59,27 +64,14 @@ void setup() {
     Serial.print("Gateway: "); Serial.println(GATEWAY_IP);
     Serial.print("DNS: "); Serial.println(DNS_IP);
   }
-  
+
   // give the Ethernet shield a second to initialize:
   delay(1000);
-  
+
   Serial.print("Listening port: "); Serial.println(LOCKBOX_CONTROLLER_LISTENING_PORT);
   Serial.print("Outgoing port: "); Serial.println(PLAYROOM_SERVER_LISTENING_PORT);
-  
+
   server.begin();
-  
-  lock_boxes.begin();
-  dimmers_init();
-  buttons_init();
-
-#if 0
-  dimmers_light_set(DIMMER_TOP_LIGHT, 10);
-  dimmers_light_set(DIMMER_SURROUND_LIGHT, 60);
-  dimmers_light_set(DIMMER_LOCKBOX_LIGHT, 80);
-#endif
-
-  door_lock_init();
-  curtain_init();
 }
 
 ButtonEvent button_event;
