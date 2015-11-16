@@ -60,8 +60,20 @@ static Button cleaning_button(CLEANING_BUTTON_PIN);
 void buttons_init()
 {
   pinMode(GAME_START_BUTTON_LIGHT_PIN, OUTPUT);
+  digitalWrite(GAME_START_BUTTON_LIGHT_PIN, LOW);
   pinMode(STANDBY_BUTTON_LIGHT_PIN, OUTPUT);
+  digitalWrite(STANDBY_BUTTON_LIGHT_PIN, LOW);
   Serial.println("Buttons initialized!");
+}
+
+void button_set_light_game_start(bool on)
+{
+  digitalWrite(GAME_START_BUTTON_LIGHT_PIN, on);
+}
+
+void button_set_light_standby(bool on)
+{
+  digitalWrite(STANDBY_BUTTON_LIGHT_PIN, on);
 }
 
 bool buttons_process(ButtonEvent *event)

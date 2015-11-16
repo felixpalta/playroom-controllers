@@ -40,5 +40,9 @@ void buttons_init();
 
 bool buttons_process(ButtonEvent *button_event);
 
+void button_set_light_game_start(bool on);
+
+void button_set_light_standby(bool on);
+
 #endif
 
