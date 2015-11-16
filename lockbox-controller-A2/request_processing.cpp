@@ -7,6 +7,7 @@
 #include "dimmers.h"
 #include <request_names.h>
 #include "door_lock.h"
+#include "curtain.h"
 
 extern LockBoxes lock_boxes;
 
@@ -189,6 +190,24 @@ static bool process_request(InputRqParsingOutput& data)
       return false;
     }
     return true;
+  case RQ_TYPE_CURTAIN_OPEN:
+    ok = curtain_signal_open();
+    if (!ok)
+    {
+      processing_error_occured = true;
+      processing_err_msg = "curtain_signal_open() request error";
+      return false;
+    }
+    return true;
+  case RQ_TYPE_CURTAIN_CLOSE:
+    ok = curtain_signal_close();
+    if (!ok)
+    {
+      processing_error_occured = true;
+      processing_err_msg = "curtain_signal_close() request error";
+      return false;
+    }
+    return true;
   default:
     error_code = ERROR_INVALID_RQ_TYPE;
     return false;
@@ -210,6 +229,8 @@ static bool verify_request(InputRqParsingOutput& data)
   case RQ_TYPE_LOCKBOX_LIGHT:
   case RQ_TYPE_DOOR_LOCK:
   case RQ_TYPE_DOOR_UNLOCK:
+  case RQ_TYPE_CURTAIN_OPEN:
+  case RQ_TYPE_CURTAIN_CLOSE:
     break;
   default:
     error_code = ERROR_INVALID_RQ_TYPE;
