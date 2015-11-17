@@ -22,9 +22,6 @@ typedef enum
   ERROR_NONE,
   ERROR_LOCKBOX_ATTR_NOT_FOUND,
   ERROR_PERCENT_ATTR_NOT_FOUND,
-  ERROR_BAD_TYPE,
-  ERROR_BAD_PROTOVER,
-  ERROR_BAD_SERIAL,
   ERROR_BAD_LOCKBOX_NUMBER,
   ERROR_BAD_PERCENT_VALUE,
   ERROR_INVALID_RQ_TYPE,
@@ -44,12 +41,6 @@ const char *get_request_error()
     return "Lockbox attribute not found";
   case ERROR_PERCENT_ATTR_NOT_FOUND:
     return "Percent attribute not found";
-  case ERROR_BAD_TYPE:
-    return "Invalid type attribute";
-  case ERROR_BAD_PROTOVER:
-    return "Invalid protocol version";
-  case ERROR_BAD_SERIAL:
-    return "Invalid serial number";
   case ERROR_BAD_LOCKBOX_NUMBER:
     return "Invalid lockbox number value";
   case ERROR_BAD_PERCENT_VALUE:
