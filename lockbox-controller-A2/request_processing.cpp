@@ -280,12 +280,5 @@ bool verify_and_process_request(InputRqParsingOutput& data)
   processing_error_occured = false;
   error_code = ERROR_NONE;
 
-  bool ok = verify_request(data);
-  if (!ok)
-    return false;
-
-  ok = process_request(data);
-  if (!ok)
-    return false;
-  return true;
+  return verify_request(data) && process_request(data);
 }
