@@ -64,6 +64,11 @@ void print_request(const InputRqParsingOutput& data)
     Serial.print("Lockbox: ");
     Serial.println(data.id_attr_buf);
   }
+  if (data.percent_attr_found)
+  {
+    Serial.print("Percent: ");
+    Serial.println(data.percent_attr_buf);
+  }
 }
 
 static bool process_alive_request()
