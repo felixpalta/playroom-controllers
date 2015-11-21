@@ -53,7 +53,7 @@ static const SectorPins sector_pins[NUMBER_OF_SECTORS] =
 
 };
 
-static const unsigned long SECTOR_TURN_TIME_MS = 2000;
+static const unsigned long SECTOR_TURN_TIME_MS = 4000;
 
 static const int FULL_TURN_LIMIT = 15;
 
