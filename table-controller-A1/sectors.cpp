@@ -112,6 +112,16 @@ static int convert_to_external(int n)
   return SECTOR_INVALID;
 }
 
+bool sectors_all_leds_write(bool on)
+{
+  for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
+  {
+    SectorPins sp = sector_pins[i];
+    digitalWrite(sp.number_led_pin, on);
+    digitalWrite(sp.arrow_led_pin, on);
+  }
+  return true;
+}
 
 bool sector_all_number_leds_write(bool on)
 {
@@ -177,6 +187,27 @@ static Sector prev_left(const Sector s)
   Serial.print("ERROR: Invalid sector number: ");
   Serial.println(s);
   return SECTOR_INVALID;
+}
+
+bool sectors_show_playing_sector(int actual_sector, int playing_sector)
+{
+  if (!check_number_convert_to_internal(actual_sector) || !check_number_convert_to_internal(playing_sector))
+    return false;
+
+  if (actual_sector == playing_sector)
+  {
+    sector_number_led_pin_write(actual_sector, true);
+  }
+  else
+  {
+    do
+    {
+      sector_arrow_led_pin_write(actual_sector, true);
+      actual_sector = next_right(actual_sector);
+    } while (actual_sector != playing_sector);
+    sector_number_led_pin_write(playing_sector, true);
+  }
+  return true;
 }
 
 static Sector check_enabled_sector()

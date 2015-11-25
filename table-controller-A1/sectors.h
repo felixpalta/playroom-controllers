@@ -7,6 +7,8 @@ bool sector_number_led_pin_write(int n, bool on);
 bool sector_arrow_led_pin_write(int n, bool on);
 bool sector_all_number_leds_write(bool on);
 bool sector_all_arrow_leds_write(bool on);
+bool sectors_all_leds_write(bool on);
+bool sectors_show_playing_sector(int actual_sector, int playing_sector);
 void sectors_process_sensors();
 
 typedef enum
