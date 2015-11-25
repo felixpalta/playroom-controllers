@@ -53,6 +53,10 @@ static const char TYPE_ATTR_SECTOR_NUMBER_ALL_OFF_VALUE[] = "sector-number-all-o
 static const char TYPE_ATTR_SECTOR_ARROW_ALL_ON_VALUE[] = "sector-arrow-all-on";
 static const char TYPE_ATTR_SECTOR_ARROW_ALL_OFF_VALUE[] = "sector-arrow-all-off";
 
+static const char TYPE_ATTR_SECTORS_ALL_ON_VALUE[] = "sectors-all-on";
+static const char TYPE_ATTR_SECTORS_ALL_OFF_VALUE[] = "sectors-all-off";
+static const char TYPE_ATTR_SECTOR_PLAY_VALUE[] = "sector-play";
+
 static const char TYPE_ATTR_TOP_LIGHT_VALUE[] = "top-light";
 static const char TYPE_ATTR_SURROUND_LIGHT_VALUE[] = "surround-light";
 static const char TYPE_ATTR_LOCKBOX_LIGHT_VALUE[] = "lockbox-light";

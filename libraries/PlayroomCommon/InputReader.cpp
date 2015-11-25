@@ -103,6 +103,7 @@ InputReader::ErrorType InputReader::process_stream(InputRqParsingOutput* out)
   case RQ_TYPE_SECTOR_NUMBER_OFF:
   case RQ_TYPE_SECTOR_ARROW_ON:
   case RQ_TYPE_SECTOR_ARROW_OFF:
+  case RQ_TYPE_SECTOR_PLAY:
   case RQ_TYPE_LOCKBOX_OPEN:
   case RQ_TYPE_LOCKBOX_CLOSE:
   case RQ_TYPE_TOP_LIGHT:
