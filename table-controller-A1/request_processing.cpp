@@ -15,6 +15,7 @@ typedef enum
   ERROR_SECTOR_ATTR_NOT_FOUND,
   ERROR_BAD_SECTOR_NUMBER,
   ERROR_INVALID_RQ_TYPE,
+  ERROR_INVALID_SECTOR_NUMBER,
   ERROR_REQUEST_PROCESSING,
 }
 RqVerfyError;
@@ -35,6 +36,8 @@ const char *get_request_error()
     return BAD_RQ"Attribute \"sector\" value incorrect";
   case ERROR_REQUEST_PROCESSING:
     return BAD_RQ"Internal error, probably incorrect arguments?";
+  case ERROR_INVALID_SECTOR_NUMBER:
+    return BAD_RQ"Invalid sector number parsing";
   case ERROR_NONE:
     return BAD_RQ"No error";
   default:
@@ -71,13 +74,29 @@ static bool process_barrel_wait_request()
 static bool process_request(InputRqParsingOutput& data)
 {
   bool ok;
-  int sector_number = atoi(data.id_attr_buf);
+  int arg_sector_number = 0;
+  int arg_playing_sector = 0;
+
+  // Depending on a request type, id attribute can contain one or two numbers.
+  int scan_result = sscanf(data.id_attr_buf, "%d,%d", &arg_sector_number, &arg_playing_sector);
+
+  switch (scan_result)
+  {
+  case 2:
+    break;
+  case 1:
+    arg_playing_sector = arg_sector_number;
+    break;
+  default:
+    error_code = ERROR_INVALID_SECTOR_NUMBER;
+    return false;
+  }
 
   bool(*no_arg_handler)() = NULL;
   bool(*single_arg_handler)(bool) = NULL;
   bool(*two_arg_handler)(int, bool) = NULL;
+  bool(*two_int_handler)(int, int) = NULL;
 
-  int arg_sector_number = sector_number;
   bool arg_on;
 
   switch (data.request_type)
@@ -117,6 +136,17 @@ static bool process_request(InputRqParsingOutput& data)
     single_arg_handler = sector_all_arrow_leds_write;
     arg_on = false;
     break;
+  case RQ_TYPE_SECTORS_ALL_ON:
+    single_arg_handler = sectors_all_leds_write;
+    arg_on = true;
+    break;
+  case RQ_TYPE_SECTORS_ALL_OFF:
+    single_arg_handler = sectors_all_leds_write;
+    arg_on = false;
+    break;
+  case RQ_TYPE_SECTOR_PLAY:
+    two_int_handler = sectors_show_playing_sector;
+    break;
   case RQ_TYPE_BARREL_WAIT:
     no_arg_handler = process_barrel_wait_request;
     break;
@@ -136,6 +166,10 @@ static bool process_request(InputRqParsingOutput& data)
   else if (two_arg_handler)
   {
     ok = two_arg_handler(arg_sector_number, arg_on);
+  }
+  else if (two_int_handler)
+  {
+    ok = two_int_handler(arg_sector_number, arg_playing_sector);
   }
   else
     ok = false; // should be impossible to get here
@@ -158,6 +192,9 @@ static bool verify_request(InputRqParsingOutput& data)
   case RQ_TYPE_SECTOR_ARROW_ALL_ON:
   case RQ_TYPE_SECTOR_ARROW_ALL_OFF:
   case RQ_TYPE_BARREL_WAIT:
+  case RQ_TYPE_SECTORS_ALL_ON:
+  case RQ_TYPE_SECTORS_ALL_OFF:
+  case RQ_TYPE_SECTOR_PLAY:
     break;
   default:
     error_code = ERROR_INVALID_RQ_TYPE;
@@ -172,6 +209,7 @@ static bool verify_request(InputRqParsingOutput& data)
   case RQ_TYPE_SECTOR_NUMBER_OFF:
   case RQ_TYPE_SECTOR_ARROW_ON:
   case RQ_TYPE_SECTOR_ARROW_OFF:
+  case RQ_TYPE_SECTOR_PLAY:
   {
     if (!data.id_attr_found)
     {
