@@ -76,22 +76,25 @@ static bool process_request(InputRqParsingOutput& data)
   bool ok;
   int arg_sector_number = 0;
   int arg_playing_sector = 0;
-
-  // Depending on a request type, id attribute can contain one or two numbers.
-  int scan_result = sscanf(data.id_attr_buf, "%d,%d", &arg_sector_number, &arg_playing_sector);
-
-  switch (scan_result)
+  
+  if (data.id_attr_found)
   {
-  case 2:
-    break;
-  case 1:
-    arg_playing_sector = arg_sector_number;
-    break;
-  default:
-    error_code = ERROR_INVALID_SECTOR_NUMBER;
-    return false;
+    // Depending on a request type, id attribute can contain one or two numbers.
+    int scan_result = sscanf(data.id_attr_buf, "%d,%d", &arg_sector_number, &arg_playing_sector);
+  
+    switch (scan_result)
+    {
+    case 2:
+      break;
+    case 1:
+      arg_playing_sector = arg_sector_number;
+      break;
+    default:
+      error_code = ERROR_INVALID_SECTOR_NUMBER;
+      return false;
+    }
   }
-
+  
   bool(*no_arg_handler)() = NULL;
   bool(*single_arg_handler)(bool) = NULL;
   bool(*two_arg_handler)(int, bool) = NULL;
