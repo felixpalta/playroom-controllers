@@ -106,8 +106,7 @@ static int convert_to_external(int n)
 {
   if (check_number(n))
   {
-    //return n + 1;
-    return n;
+    return n + 1;
   }
   return SECTOR_INVALID;
 }
