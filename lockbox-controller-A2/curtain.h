@@ -15,5 +15,7 @@ bool curtain_signal_open();
 
 bool curtain_signal_close();
 
+void curtain_process();
+
 #endif
 

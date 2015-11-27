@@ -83,6 +83,8 @@ void loop()
   
   lock_boxes.process();
 
+  curtain_process();
+
   if (buttons_process(&button_event))
   {
     process_button_event(&button_event);
