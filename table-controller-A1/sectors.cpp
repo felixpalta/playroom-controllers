@@ -85,7 +85,7 @@ static bool check_number(int n)
   {
     return true;
   }
-  Serial.print("Invalid sector number: ");
+  Serial.print("check_number(): Invalid sector number: ");
   Serial.println(n);
   return false;
 }
@@ -193,19 +193,27 @@ bool sectors_show_playing_sector(int actual_sector, int playing_sector)
 {
   if (!check_number_convert_to_internal(actual_sector) || !check_number_convert_to_internal(playing_sector))
     return false;
-
+    
   if (actual_sector == playing_sector)
   {
-    sector_number_led_pin_write(actual_sector, true);
+    SectorPins sp = sector_pins[actual_sector];
+    pinMode(sp.number_led_pin, OUTPUT);
+    digitalWrite(sp.number_led_pin, true);
   }
   else
   {
     do
     {
-      sector_arrow_led_pin_write(actual_sector, true);
+      SectorPins sp = sector_pins[actual_sector];
+      pinMode(sp.arrow_led_pin, OUTPUT);
+      digitalWrite(sp.arrow_led_pin, true);
+      
       actual_sector = next_right(actual_sector);
     } while (actual_sector != playing_sector);
-    sector_number_led_pin_write(playing_sector, true);
+    
+    SectorPins sp = sector_pins[actual_sector];
+    pinMode(sp.number_led_pin, OUTPUT);
+    digitalWrite(sp.number_led_pin, true);
   }
   return true;
 }
