@@ -19,6 +19,7 @@
 #include "lockbox-controller-rq-valid-protocol-values.h"
 #include "LockBoxes.h"
 #include "dimmers.h"
+#include "PlayroomStateMachine.h"
 
 // Initialize the Ethernet server library
 // with the IP address and port you want to use 
@@ -28,6 +29,8 @@ EthernetClient client;
 RqSender rq_sender(client, Serial, PROTOVER_ATTR_VALUE, SERIAL_ATTR_VALUE);
 
 LockBoxes lock_boxes;
+
+PlayroomStateMachine state_machine(PlayroomStateMachine::STATE_CLEANING_DONE);
 
 void setup() {
   pinMode(DBG_PIN, OUTPUT);
@@ -162,12 +165,10 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("GAME START button PUSHED");
-    digitalWrite(GAME_START_BUTTON_LIGHT_PIN, HIGH);
-//    rq_sender.send_request(OUT_RQ_TYPE_GAME_START, /*unused*/ 0);
+    state_machine.game_start_button_pressed_handler();
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
     Serial.println("GAME START button RELEASED");
-    digitalWrite(GAME_START_BUTTON_LIGHT_PIN, LOW);
     break;
   default:
     break;
@@ -177,12 +178,10 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("STANDBY button PUSHED");
-//    rq_sender.send_request(OUT_RQ_TYPE_STANDBY, /*unused*/ 0);
-    digitalWrite(STANDBY_BUTTON_LIGHT_PIN, HIGH);
+    state_machine.standby_button_pressed_handler();
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
     Serial.println("STANDBY button RELEASED");
-    digitalWrite(STANDBY_BUTTON_LIGHT_PIN, LOW);
     break;
   default:
     break;
@@ -192,10 +191,10 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("CLEANING button PUSHED");
-//    rq_sender.send_request(OUT_RQ_TYPE_CLEANING, /*unused*/ 0);
+    state_machine.cleaning_key_enabled_handler();
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
-    Serial.println("CLEANING button RELEASED");
+    state_machine.cleaning_key_disabled_handler();
     break;
   default:
     break;
