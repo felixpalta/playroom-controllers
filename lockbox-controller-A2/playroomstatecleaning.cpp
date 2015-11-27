@@ -1,4 +1,8 @@
 #include "PlayroomStateCleaning.h"
+#include "door_lock.h"
+#include "curtain.h"
+#include "dimmers.h"
+#include "buttons.h"
 
 PlayroomStateCleaning::PlayroomStateCleaning(PlayroomStateMachineInterface &p)
     : state_machine(p)
@@ -7,7 +11,13 @@ PlayroomStateCleaning::PlayroomStateCleaning(PlayroomStateMachineInterface &p)
 
 void PlayroomStateCleaning::init()
 {
-    // Send 'game-stop' request to server.
+  door_lock_open();
+  curtain_signal_open();
+  dimmers_light_set(DIMMER_TOP_LIGHT, 100);
+  dimmers_light_set(DIMMER_SURROUND_LIGHT, 100);
+  dimmers_light_set(DIMMER_LOCKBOX_LIGHT, 100);
+  button_set_light_standby(false);
+  button_set_light_game_start(false);
 }
 
 void PlayroomStateCleaning::game_start_button_pressed()
