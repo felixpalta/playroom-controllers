@@ -5,9 +5,9 @@
 #include "curtain.h"
 #include "lockbox-controller-pin-config.h"
 
-#define PULSE_MS 200
+#define PULSE_MS 50
 
-#define FULL_MOVE_TIME_MS 10000
+#define FULL_MOVE_TIME_MS 15000
 
 typedef enum
 {
