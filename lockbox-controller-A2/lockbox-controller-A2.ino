@@ -165,7 +165,7 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("GAME START button PUSHED");
-    state_machine.game_start_button_pressed_handler();
+    //state_machine.game_start_button_pressed_handler();
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
     Serial.println("GAME START button RELEASED");
@@ -178,7 +178,7 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("STANDBY button PUSHED");
-    state_machine.standby_button_pressed_handler();
+    //state_machine.standby_button_pressed_handler();
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
     Serial.println("STANDBY button RELEASED");
@@ -191,10 +191,10 @@ static void process_button_event(const ButtonEvent *button_event)
   {
   case ButtonEvent::BUTTON_STATE_PUSHED:
     Serial.println("CLEANING button PUSHED");
-    state_machine.cleaning_key_enabled_handler();
+    //state_machine.cleaning_key_enabled_handler();
     break;
   case ButtonEvent::BUTTON_STATE_RELEASED:
-    state_machine.cleaning_key_disabled_handler();
+    //state_machine.cleaning_key_disabled_handler();
     break;
   default:
     break;

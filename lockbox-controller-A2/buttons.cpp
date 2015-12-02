@@ -22,13 +22,13 @@ struct Button
     debounce_start_ms(0),
     press_detected(false) 
   {
-    pinMode(pin, INPUT_PULLUP);
+    pinMode(pin, INPUT);
   }
 };
 
 ButtonEvent::ButtonState Button::check()
 {
-  bool state = !digitalRead(pin);
+  bool state = digitalRead(pin);
   if (delay && millis() - debounce_start_ms > DEBOUNCE_MS)
   {
     delay = false;
