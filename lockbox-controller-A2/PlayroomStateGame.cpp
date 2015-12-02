@@ -22,7 +22,7 @@ void PlayroomStateGame::init()
   dimmers_light_set(DIMMER_LOCKBOX_LIGHT, 0);
   button_set_light_standby(false);
   button_set_light_game_start(true);
-  rq_sender.send_request(OUT_RQ_TYPE_GAME_START, /*unused*/ 0);
+  //rq_sender.send_request(OUT_RQ_TYPE_GAME_START, /*unused*/ 0);
 }
 
 void PlayroomStateGame::game_start_button_pressed()
