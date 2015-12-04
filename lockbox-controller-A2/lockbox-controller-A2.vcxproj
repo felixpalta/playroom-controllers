@@ -83,6 +83,7 @@
     <ClInclude Include="curtain.h" />
     <ClInclude Include="dimmers.h" />
     <ClInclude Include="door_lock.h" />
+    <ClInclude Include="heartbeat.h" />
     <ClInclude Include="lockbox-controller-pin-config.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -103,6 +104,7 @@
     <ClInclude Include="PlayroomStateMachineInterface.h" />
     <ClInclude Include="PlayroomStateNull.h" />
     <ClInclude Include="PlayroomStateStandby.h" />
+    <ClInclude Include="PlayroomStateStart.h" />
     <ClInclude Include="request_processing.h">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -113,12 +115,14 @@
     <ClCompile Include="curtain.cpp" />
     <ClCompile Include="dimmers.cpp" />
     <ClCompile Include="door_lock.cpp" />
+    <ClCompile Include="heartbeat.cpp" />
     <ClCompile Include="LockBoxes.cpp" />
     <ClCompile Include="playroomstatecleaning.cpp" />
     <ClCompile Include="playroomstatedonecleaning.cpp" />
     <ClCompile Include="PlayroomStateGame.cpp" />
     <ClCompile Include="PlayroomStateMachine.cpp" />
     <ClCompile Include="PlayroomStateStandby.cpp" />
+    <ClCompile Include="PlayroomStateStart.cpp" />
     <ClCompile Include="request_processing.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

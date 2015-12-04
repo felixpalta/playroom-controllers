@@ -1,3 +1,4 @@
+#include "heartbeat.h"
 #include "curtain.h"
 #include "door_lock.h"
 #include <RqSender.h>
@@ -34,9 +35,8 @@ PlayroomStateMachine state_machine(PlayroomStateMachine::STATE_START);
 
 void setup() 
 {
-  pinMode(DBG_PIN, OUTPUT);
-  digitalWrite(DBG_PIN, LOW);
-  
+  heart_beat_init(DBG_PIN);
+
   // Open serial communications and wait for port to open:
   Serial.begin(115200);
   Serial.println("Hello from Lockbox Controller");
@@ -88,6 +88,8 @@ void loop()
   
   process_serial_input();
   
+  heart_beat_process();
+
   lock_boxes.process();
 
   curtain_process();
