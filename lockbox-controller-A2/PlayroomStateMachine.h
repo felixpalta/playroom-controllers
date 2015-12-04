@@ -6,6 +6,7 @@
 #include "PlayroomStateDoneCleaning.h"
 #include "PlayroomStateStandby.h"
 #include "PlayroomStateGame.h"
+#include "PlayroomStateStart.h"
 #include "PlayroomStateNull.h"
 
 class PlayroomStateMachine : public PlayroomStateMachineInterface
@@ -25,6 +26,7 @@ private:
     PlayroomStateCleaning cleaning;
     PlayroomStateDoneCleaning done_cleaning;
     PlayroomStateStandby standby;
+    PlayroomStateStart start;
 
     PlayroomStateNull state_null;
 

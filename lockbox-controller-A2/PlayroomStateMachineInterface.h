@@ -7,6 +7,7 @@ public:
 
 typedef enum
 {
+    STATE_START,
     STATE_CLEANING,
     STATE_CLEANING_DONE,
     STATE_STANDBY,

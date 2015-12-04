@@ -30,9 +30,10 @@ RqSender rq_sender(client, Serial, PROTOVER_ATTR_VALUE, SERIAL_ATTR_VALUE);
 
 LockBoxes lock_boxes;
 
-PlayroomStateMachine state_machine(PlayroomStateMachine::STATE_CLEANING_DONE);
+PlayroomStateMachine state_machine(PlayroomStateMachine::STATE_START);
 
-void setup() {
+void setup() 
+{
   pinMode(DBG_PIN, OUTPUT);
   digitalWrite(DBG_PIN, LOW);
   
