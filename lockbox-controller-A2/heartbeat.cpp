@@ -10,7 +10,7 @@ static int HEARTBEAT_LED;
 
 static bool state;
 
-static const int PERIOD_MS = 200;
+static const unsigned PERIOD_MS = 200;
 
 static unsigned long last_toggle_ms;
 

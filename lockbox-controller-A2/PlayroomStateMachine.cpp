@@ -12,6 +12,17 @@ PlayroomStateMachine::PlayroomStateMachine(State init_state) :
     set_state(init_state);
 }
 
+PlayroomStateMachine::PlayroomStateMachine() :
+    game(*this),
+    cleaning(*this),
+    done_cleaning(*this),
+    standby(*this),
+    start(*this),
+    state_null(),
+    state(&state_null)
+{
+}
+
 void PlayroomStateMachine::set_state(State state_name)
 {
     switch (state_name)

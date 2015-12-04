@@ -12,7 +12,8 @@
 class PlayroomStateMachine : public PlayroomStateMachineInterface
 {
 public:
-    PlayroomStateMachine(State init_state);
+    explicit PlayroomStateMachine(State init_state);
+    PlayroomStateMachine();
 
     void game_start_button_pressed_handler();
     void standby_button_pressed_handler();

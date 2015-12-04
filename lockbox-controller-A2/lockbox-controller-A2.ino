@@ -31,7 +31,7 @@ RqSender rq_sender(client, Serial, PROTOVER_ATTR_VALUE, SERIAL_ATTR_VALUE);
 
 LockBoxes lock_boxes;
 
-PlayroomStateMachine state_machine(PlayroomStateMachine::STATE_START);
+PlayroomStateMachine state_machine;
 
 void setup() 
 {
@@ -50,8 +50,7 @@ void setup()
   door_lock_init();
   curtain_init();
   
-  button_set_light_game_start(true);
-  button_set_light_standby(true);
+  state_machine.set_state(PlayroomStateMachine::STATE_START);
 
   Serial.println("Attempting to lease IP via DHCP...");
 
