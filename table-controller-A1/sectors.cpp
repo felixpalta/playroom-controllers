@@ -26,16 +26,24 @@ static bool event_is_ready = false;
 
 static SectorEventData sector_event_data;
 
-static bool wait_for_spin_flag = false;;
+static volatile bool wait_for_spin_flag = false;;
 
 static void reset_sector_sensors_state();
+
+static void reset_wait_for_spin_flag()
+{
+  noInterrupts();
+  wait_for_spin_flag = false;
+  interrupts();
+}
 
 void set_wait_for_spin_flag()
 {
   noInterrupts();
   wait_for_spin_flag = true;
-  reset_sector_sensors_state();
   interrupts();
+  reset_sector_sensors_state();
+  
 }
 
 bool is_sector_event_ready(SectorEventData *data)
@@ -77,6 +85,7 @@ void sectors_init()
     pinMode(sp.arrow_led_pin, OUTPUT);
     digitalWrite(sp.arrow_led_pin, LOW);
   }
+  reset_wait_for_spin_flag();
 }
 
 static bool check_number(int n)
@@ -113,6 +122,7 @@ static int convert_to_external(int n)
 
 bool sectors_all_leds_write(bool on)
 {
+  reset_wait_for_spin_flag();
   for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
   {
     SectorPins sp = sector_pins[i];
@@ -124,6 +134,7 @@ bool sectors_all_leds_write(bool on)
 
 bool sector_all_number_leds_write(bool on)
 {
+  reset_wait_for_spin_flag();
   for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
   {
     SectorPins sp = sector_pins[i];
@@ -133,6 +144,7 @@ bool sector_all_number_leds_write(bool on)
 }
 bool sector_all_arrow_leds_write(bool on)
 {
+  reset_wait_for_spin_flag();
   for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
   {
     SectorPins sp = sector_pins[i];
@@ -143,6 +155,7 @@ bool sector_all_arrow_leds_write(bool on)
 
 bool sector_number_led_pin_write(int n, bool on)
 {
+  reset_wait_for_spin_flag();
   if (!check_number_convert_to_internal(n))
     return false;
 
@@ -155,6 +168,7 @@ bool sector_number_led_pin_write(int n, bool on)
 
 bool sector_arrow_led_pin_write(int n, bool on)
 {
+  reset_wait_for_spin_flag();
   if (!check_number_convert_to_internal(n))
     return false;
 
@@ -292,8 +306,12 @@ static void reset_sector_sensors_state()
 {
   state = STATE_READY;
   correct_sectors_counter = 0;
-  sector_all_number_leds_write(false);
-  sector_all_arrow_leds_write(false);
+  for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
+  {
+    SectorPins sp = sector_pins[i];
+    digitalWrite(sp.number_led_pin, false);
+    digitalWrite(sp.arrow_led_pin, false);
+  }
 }
 
 void read_sector_sensors_and_light_their_leds()
