@@ -91,8 +91,7 @@ void XmlTokenWriter::write_attribute_text(const char* attr_name, const char *att
 	s.print(attr_name);
 	s.print("=\"");
 	s.print(attr_value);
-	s.print("\"");
-	s.print(" ");
+	s.print("\" ");
 }
 void XmlTokenWriter::write_attribute_num(const char* attr_name, int n)
 {
@@ -101,15 +100,8 @@ void XmlTokenWriter::write_attribute_num(const char* attr_name, int n)
 		return;
 	}
 
-	const size_t BUFLEN = 20;
-	char buf[BUFLEN];
-	snprintf(buf, BUFLEN, "%d", n);
-	buf[sizeof(BUFLEN) - 1] = '\0';
-	
-
 	s.print(attr_name);
 	s.print("=\"");
-	s.print(buf);
-	s.print("\"");
-	s.print(" ");
+	s.print(n);
+	s.print("\" ");
 }
