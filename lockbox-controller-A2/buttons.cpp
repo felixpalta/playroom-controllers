@@ -5,22 +5,31 @@
 #include "buttons.h"
 #include "lockbox-controller-pin-config.h"
 
-#define DEBOUNCE_MS 200
+#define DEBOUNCE_MS 1000
 
 struct Button
 {
   int pin;
-  bool delay;
-  unsigned long debounce_start_ms;
-  bool press_detected;
+  unsigned long last_change_time_ms;
+
+  typedef enum
+  {
+    RELEASED,
+    PRESS_STARTED,
+    PRESSED,
+    RELEASE_STARTED,
+  } State;
+
+  State state;
 
   ButtonEvent::ButtonState check();
 
+  
+
   Button(int pin_number) :
     pin(pin_number),
-    delay(false),
-    debounce_start_ms(0),
-    press_detected(false) 
+    last_change_time_ms(0),
+    state(RELEASED) 
   {
     pinMode(pin, INPUT_PULLUP);
   }
@@ -28,27 +37,44 @@ struct Button
 
 ButtonEvent::ButtonState Button::check()
 {
-  bool state = !digitalRead(pin);
-  if (delay && millis() - debounce_start_ms > DEBOUNCE_MS)
+  bool pressed = !digitalRead(pin);
+
+  switch (state)
   {
-    delay = false;
-  }
-  else if (!delay)
-  {
-    if (!press_detected && state)
+  case RELEASED:
+    if (pressed)
     {
-      press_detected = true;
-      delay = true;
-      debounce_start_ms = millis();
+      last_change_time_ms = millis();
+      state = PRESS_STARTED;
+    }
+    break;
+  case PRESS_STARTED:
+    if (!pressed)
+      state = RELEASED;
+    if (millis() - last_change_time_ms >= DEBOUNCE_MS)
+    {
+      state = PRESSED;
       return ButtonEvent::BUTTON_STATE_PUSHED;
     }
-    else if (press_detected && !state)
+    break;
+  case PRESSED:
+    if (!pressed)
     {
-      press_detected = false;
-      delay = true;
-      debounce_start_ms = millis();
+      last_change_time_ms = millis();
+      state = RELEASE_STARTED;
+    }
+    break;
+  case RELEASE_STARTED:
+    if (pressed)
+      state = PRESSED;
+    if (millis() - last_change_time_ms >= DEBOUNCE_MS)
+    {
+      state = RELEASED;
       return ButtonEvent::BUTTON_STATE_RELEASED;
     }
+    break;
+  default:
+    break;
   }
   return ButtonEvent::BUTTON_STATE_INVALID;
 }
