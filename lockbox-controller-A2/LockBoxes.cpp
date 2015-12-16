@@ -2,8 +2,8 @@
 #include "lockbox-controller-pin-config.h"
 
 #define BLINK_PULSE_MS 200
-#define BLINK_PAUSE_MS 2000
-#define BLINK_NUMBER 10
+#define BLINK_PAUSE_MS 1500
+#define BLINK_NUMBER 20
 
 LockBoxes::LockBoxes() : 
   n_blinks_left(0),
@@ -68,7 +68,7 @@ boolean LockBoxes::open(int n)
   close_all();
   current_blinking_lockbox = n;
   blink_once();
-  n_blinks_left = BLINK_NUMBER;
+  n_blinks_left = BLINK_NUMBER - 1;
   last_blink_time = millis();
   return true;
 }
