@@ -44,7 +44,7 @@ static const int GAME_START_BUTTON_PIN = 11;
 static const int STANDBY_BUTTON_PIN = 14;
 static const int CLEANING_BUTTON_PIN = 12;
 
-static const int GAME_START_BUTTON_LIGHT_PIN = 15;
+static const int GAME_START_BUTTON_LIGHT_PIN = 8;
 static const int STANDBY_BUTTON_LIGHT_PIN = 16;
 
 static const int DOOR_LOCK_PIN = 17;
