@@ -31,7 +31,9 @@ void PlayroomStateGame::game_start_button_pressed()
 }
 void PlayroomStateGame::standby_button_pressed()
 {
-    // Ignored.
+  button_set_light_standby(true);
+  door_lock_switch();
+  button_set_light_standby(false);
 }
 void PlayroomStateGame::cleaning_key_enabled()
 {

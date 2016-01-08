@@ -16,7 +16,6 @@ public:
     void cleaning_key_disabled();
 private:
     PlayroomStateMachineInterface& state_machine;
-
 };
 
 #endif // PLAYROOMSTATEGAME_H

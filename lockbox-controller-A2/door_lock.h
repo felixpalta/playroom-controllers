@@ -13,6 +13,7 @@ void door_lock_init();
 
 bool door_lock_open();
 bool door_lock_close();
+bool door_lock_switch();
 
 #endif
 
