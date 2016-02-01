@@ -55,6 +55,6 @@ static const SectorPins sector_pins[NUMBER_OF_SECTORS] =
 
 static const unsigned long SECTOR_TURN_TIME_MS = 4000;
 
-static const int FULL_TURN_LIMIT = 5;
+static const int FULL_TURN_LIMIT = 3;
 
 #endif // __TABLE_CONTROLLER_PIN_CONFIG_H__
