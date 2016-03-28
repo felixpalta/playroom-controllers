@@ -271,13 +271,6 @@ static Sector check_enabled_sector()
   }
 }
 
-static bool check_sector_is_on(Sector s)
-{
-  if (!check_number(s))
-    return false;
-  return digitalRead(sector_pins[s].sensor_pin) == SECTOR_PIN_ACTIVE_LEVEL;
-}
-
 typedef enum
 {
   STATE_READY,
@@ -286,11 +279,7 @@ typedef enum
   STATE_WAIT_FOR_STOP,
 } State;
 
-static Sector prev_sector;
-
 static State state = STATE_READY;
-
-unsigned long prev_time;
 
 static void reset_sector_sensors_state()
 {
@@ -326,6 +315,10 @@ void read_sector_sensors_and_light_all_leds()
 
 void sectors_process_sensors()
 {
+  static Sector prev_sector;
+
+  static unsigned long prev_time;
+
   if (sector_test_mode_is_enabled())
   {
     read_sector_sensors_and_light_all_leds();
@@ -336,8 +329,7 @@ void sectors_process_sensors()
     return;
   
   read_sector_sensors_and_light_their_leds();
-  
-  // at this point s is either a valid sector number or a SECTOR_NONE.
+
   if (state == STATE_READY)
   {
     Sector s = check_enabled_sector();
@@ -376,57 +368,31 @@ void sectors_process_sensors()
       return;
     }
 
-    Sector second_right_sector = next_right(next_right(prev_sector));
-    Sector second_left_sector = prev_left(prev_left(prev_sector));
-
     Sector s = check_enabled_sector();
-    bool right_is_on = (digitalRead(sector_pins[second_right_sector].sensor_pin) == SECTOR_PIN_ACTIVE_LEVEL);
-    bool left_is_on = (digitalRead(sector_pins[second_left_sector].sensor_pin) == SECTOR_PIN_ACTIVE_LEVEL);
 
-    if (s == prev_sector)
+    switch (s)
     {
-      prev_time = millis();
+    case SECTOR_NONE:
       return;
-    }
-
-    if (s == SECTOR_NONE || (!right_is_on && !left_is_on))
-    {
-      return;
-    }
-    if (right_is_on && left_is_on)
-    {
-      #ifdef SECTORS_DEBUG_MSG
-      Serial.println("ERROR: Both right and left movement are detected.");
-      #endif
+    case SECTOR_INVALID:
       reset_sector_sensors_state();
       return;
-    }
-    // at this point either right_is_on == true or left_is_on == true.
-    
-    
-    if (right_is_on)
-    {
-      prev_sector = second_right_sector;
-    }
-    else
-    {
-      prev_sector = second_left_sector;
-    }
+    default:
+      if (s == prev_sector)
+      {
+        prev_time = millis();
+      }
+      else
+      {
+        prev_sector = s;
+        prev_time = millis();
 
-    prev_time = millis();
-
-    event_is_ready = true;
-    sector_event_data.set_event_started();
-    state = STATE_WAIT_FOR_STOP;
-    
-    #ifdef SECTORS_DEBUG_MSG
-    Serial.print(prev_time);
-    Serial.print(": Sector after first: ");
-    Serial.println(s);
-    Serial.print("Direction: ");
-    Serial.println(right_is_on ? "RIGHT" : "LEFT");
-    #endif
-    return;
+        event_is_ready = true;
+        sector_event_data.set_event_started();
+        state = STATE_WAIT_FOR_STOP;
+      }
+      return;
+    }
   }
   else if (state == STATE_WAIT_FOR_STOP)
   {
