@@ -26,7 +26,7 @@ static bool event_is_ready = false;
 
 static SectorEventData sector_event_data;
 
-static volatile bool wait_for_spin_flag = false;;
+static volatile bool wait_for_spin_flag = false;
 
 static void reset_sector_sensors_state();
 
@@ -286,26 +286,15 @@ typedef enum
   STATE_WAIT_FOR_STOP,
 } State;
 
-typedef enum
-{
-  DIRECTION_RIGHT,
-  DIRECTION_LEFT,
-} Direction;
-
 static Sector prev_sector;
-
-static Sector correct_sectors_counter;
 
 static State state = STATE_READY;
 
 unsigned long prev_time;
 
-Direction dir;
-
 static void reset_sector_sensors_state()
 {
   state = STATE_READY;
-  correct_sectors_counter = 0;
   for (size_t i = 0; i < N_ELEMS(sector_pins); ++i)
   {
     SectorPins sp = sector_pins[i];
@@ -417,76 +406,27 @@ void sectors_process_sensors()
     
     if (right_is_on)
     {
-      dir = DIRECTION_RIGHT;
       prev_sector = second_right_sector;
     }
     else
     {
-      dir = DIRECTION_LEFT;
       prev_sector = second_left_sector;
     }
 
     prev_time = millis();
-    state = STATE_WAIT_FOR_NEXT_SECTOR;
-    correct_sectors_counter = 0; // maybe should be + 2
+
+    event_is_ready = true;
+    sector_event_data.set_event_started();
+    state = STATE_WAIT_FOR_STOP;
     
     #ifdef SECTORS_DEBUG_MSG
     Serial.print(prev_time);
     Serial.print(": Sector after first: ");
     Serial.println(s);
     Serial.print("Direction: ");
-    Serial.println(dir == DIRECTION_RIGHT ? "RIGHT" : "LEFT");
+    Serial.println(right_is_on ? "RIGHT" : "LEFT");
     #endif
     return;
-  }
-  else if (state == STATE_WAIT_FOR_NEXT_SECTOR)
-  {
-    if (millis() - prev_time >= SECTOR_TURN_TIME_MS)
-    {
-      #ifdef SECTORS_DEBUG_MSG
-      Serial.println("Waited too long for next sector");
-      #endif
-      reset_sector_sensors_state();
-      return;
-    }
-
-    Sector expected_sector;
-    Sector next_expected_sector;
-    if (dir == DIRECTION_RIGHT)
-    {
-      expected_sector = next_right(prev_sector);
-      next_expected_sector = next_right(expected_sector);
-    }
-    else
-    {
-      expected_sector = prev_left(prev_sector);
-      next_expected_sector = prev_left(expected_sector);
-    }
-
-    bool ok = check_sector_is_on(expected_sector);
-    
-    if (!ok)
-    {
-      ok = check_sector_is_on(next_expected_sector);
-      if (ok)
-        expected_sector = next_expected_sector;
-    }
-    if (ok)
-    {
-      prev_time = millis();
-      prev_sector = expected_sector;
-      ++correct_sectors_counter;
-
-      if (correct_sectors_counter >= FULL_TURN_LIMIT)
-      {
-        event_is_ready = true;
-        sector_event_data.set_event_started();
-        state = STATE_WAIT_FOR_STOP;
-        correct_sectors_counter = 0;
-        return;
-      }
-    }
-    
   }
   else if (state == STATE_WAIT_FOR_STOP)
   {

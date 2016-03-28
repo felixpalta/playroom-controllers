@@ -22,11 +22,11 @@ struct SectorEventData
 {
   SectorEvent event;
   int sector_number;
-  void set_event_started() { event = SECTOR_EVENT_STARTED; };
+  void set_event_started() { event = SECTOR_EVENT_STARTED; }
   void set_event_stopped(int sector) { event = SECTOR_EVENT_STOPPED; sector_number = sector; }
   void reset() { event = SECTOR_EVENT_NONE; sector_number = -1; }
   SectorEventData()
-    : event(SECTOR_EVENT_NONE), sector_number(-1) {};
+    : event(SECTOR_EVENT_NONE), sector_number(-1) {}
 };
   
 bool is_sector_event_ready(SectorEventData *data);
