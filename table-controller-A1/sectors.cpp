@@ -191,17 +191,6 @@ static Sector next_right(const Sector s)
   return SECTOR_INVALID;
 }
 
-static Sector prev_left(const Sector s)
-{
-  if (s > SECTOR_MOST_LEFT && s <= SECTOR_MOST_RIGHT)
-    return s - 1;
-  if (s == SECTOR_MOST_LEFT)
-    return SECTOR_MOST_RIGHT;
-  Serial.print("ERROR: Invalid sector number: ");
-  Serial.println(s);
-  return SECTOR_INVALID;
-}
-
 bool sectors_show_playing_sector(int actual_sector, int playing_sector)
 {
   if (!check_number_convert_to_internal(actual_sector) || !check_number_convert_to_internal(playing_sector))
@@ -231,44 +220,17 @@ bool sectors_show_playing_sector(int actual_sector, int playing_sector)
   return true;
 }
 
+// either returns SECTOR_NONE or any one of enabled sectors, never returns SECTOR_INVALID
 static Sector check_enabled_sector()
 {
-  int on_count = 0;
-  Sector enabled_sectors[2];
   for (Sector i = 0; i < (Sector) N_ELEMS(sector_pins); ++i)
   {
     const SectorPins sp = sector_pins[i];
     bool on = (digitalRead(sp.sensor_pin) == SECTOR_PIN_ACTIVE_LEVEL);
     if (on)
-    {
-      ++on_count;
-      if (on_count >= 3)
-        break;
-      enabled_sectors[on_count - 1] = i;
-    }
+      return i;
   }
-
-  switch (on_count)
-  {
-  case 0:
-    return SECTOR_NONE;
-  case 1:
-    return enabled_sectors[0];
-  case 2:
-    if ((enabled_sectors[1] == next_right(enabled_sectors[0])) ||
-      (enabled_sectors[1] == prev_left(enabled_sectors[0])))
-    {
-      return enabled_sectors[0];
-    }
-    Serial.print("sectors not adjacent: ");
-    Serial.print(enabled_sectors[0]);
-    Serial.print(" ");
-    Serial.println(enabled_sectors[1]);
-    return SECTOR_INVALID;
-  default:
-    Serial.println("too many sectors are on");
-    return SECTOR_INVALID;
-  }
+  return SECTOR_NONE;
 }
 
 typedef enum
@@ -432,7 +394,6 @@ void sectors_process_sensors()
       prev_time = millis();
       prev_sector = s;
     }
-
   }
   else
   {
